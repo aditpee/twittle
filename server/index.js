@@ -16,7 +16,7 @@ mongoose.connect(process.env.MONGO_URL);
 const app = express();
 const PORT = process.env.PORT;
 
-app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
+app.use(helmet({ crossOriginResourcePolicy: false }));
 app.use(express.json());
 app.use(morgan("common"));
 app.use(cors({ origin: process.env.BASE_URL }));
