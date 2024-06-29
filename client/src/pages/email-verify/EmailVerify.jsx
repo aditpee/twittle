@@ -23,7 +23,7 @@ const EmailVerify = () => {
 
     const getData = async () => {
       try {
-        const urlApi = `http://localhost:8080/api/users/${userId}/verify/${tokenEmail}`;
+        const urlApi = `${API_URL}/api/users/${userId}/verify/${tokenEmail}`;
         const res = await axios.put(urlApi);
         toast.update(id, {
           render: `${res.data.message}`,
