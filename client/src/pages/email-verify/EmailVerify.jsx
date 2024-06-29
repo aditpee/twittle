@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast, Bounce } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../../config";
 // import "react-toastify/dist/ReactToastify.css";
 
 const EmailVerify = () => {
@@ -33,6 +34,7 @@ const EmailVerify = () => {
         });
         navigate("/login");
       } catch (err) {
+        console.log(err);
         toast.update(id, {
           render: `${err.response.data.error}`,
           type: "error",
