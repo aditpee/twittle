@@ -1,0 +1,96 @@
+@use "../../style/abstracts/" as *;
+
+.search-bar {
+  @include mq(small) {
+    position: relative;
+    z-index: 999999;
+  }
+}
+
+.search-bar > *:first-child {
+  margin-top: 0;
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 1rem;
+  border-radius: 5rem;
+
+  @include mq(small) {
+    padding-block: 0.75rem;
+  }
+
+  & > *:first-child {
+    width: 100%;
+  }
+
+  input {
+    font-family: inherit;
+    display: block;
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background-color: transparent;
+  }
+}
+
+.search-bar:has(:not(.search-bar-autocomplete.hide)) > * {
+  &:has(:is(input:focus, .search-bar-icon-cancel:hover)) {
+    background-color: $color-neutral-000;
+    color: $color-primary-000;
+    outline: 1px solid $color-primary-000;
+    path {
+      fill: $color-primary-000;
+    }
+
+    input {
+      color: $color-neutral-800;
+    }
+
+    .search-bar-icon-cancel {
+      display: flex;
+    }
+
+    & + .search-bar-autocomplete {
+      display: block;
+    }
+  }
+}
+
+.search-bar-icon > svg {
+  transform: scale(0.8);
+
+  @include mq(small) {
+    transform: scale(1);
+  }
+}
+
+.search-bar-autocomplete {
+  position: fixed;
+  left: 0;
+  inset-inline: 0;
+  min-height: 100vh;
+  transform: translateY(1px);
+  &.hide {
+    display: none;
+  }
+
+  @include mq(small) {
+    position: absolute;
+    inset-inline: 0;
+    min-height: 10rem;
+    top: 100%;
+    border: 1px solid $color-neutral-400;
+    box-shadow: 0px 0px 20px
+      color-mix(in srgb, $color-neutral-800 20%, transparent);
+    border-radius: 0.5rem;
+  }
+
+  & > * {
+    padding: 1rem;
+  }
+}
+
+.search-bar-autocomplete-header {
+  border-bottom: 1px solid $color-neutral-400;
+}

@@ -1,0 +1,21 @@
+@use "../../style/abstracts/" as *;
+@use "react-toastify/scss/main.scss";
+
+:root {
+  --toastify-toast-width: auto;
+  --toastify-toast-min-height: unset;
+  --toastify-color-success: var(--primary-000);
+  --toastify-font-family: inherit;
+}
+
+@media (max-width: 500px) {
+  .Toastify__toast-container {
+    bottom: 3rem;
+  }
+
+  body:has(.Toastify__toast-container) {
+    .mobile-post {
+      bottom: 7rem;
+    }
+  }
+}

@@ -1,0 +1,126 @@
+@use "../../style/abstracts/" as *;
+
+.postform {
+  display: grid;
+  padding-inline: 1rem;
+  padding-top: 1rem;
+  grid-template-columns: 40px 1fr;
+  gap: 0.75rem;
+  border-bottom: 1px solid $color-neutral-400;
+
+  &.loading-post {
+    position: relative;
+    padding-bottom: 0.75rem;
+
+    & > * {
+      opacity: 0.7;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 0.2rem;
+      width: 0%;
+      border-radius: 0.25rem;
+      background-color: $color-primary-000;
+      animation: loadingPost 3s ease infinite;
+    }
+  }
+}
+
+@keyframes loadingPost {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.postform-input > * {
+  border: none;
+  outline: none;
+  padding-block: 0.5rem;
+  font-family: inherit;
+  width: 100%;
+  overflow: hidden;
+  resize: none;
+}
+
+.postform-img {
+  position: relative;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  max-height: 20rem;
+  display: flex;
+  justify-content: center;
+
+  img {
+    border-radius: 0.5rem;
+    max-height: 20rem;
+    min-width: 70%;
+    object-fit: cover;
+
+    @include mq(medium) {
+      max-height: 30rem;
+    }
+  }
+
+  &-close {
+    display: flex;
+    position: absolute;
+    background-color: rgba(black, 0.5);
+    backdrop-filter: blur(3px);
+    border-radius: 50%;
+    padding: 0.3rem;
+    top: 0.5rem;
+    right: 0.5rem;
+
+    svg {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.postform-canreply {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding-block: 0.5rem;
+  border-bottom: 1px solid $color-neutral-400;
+
+  svg {
+    font-size: 1.2rem;
+  }
+}
+
+.postform-submit {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1rem;
+
+  & > * {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    svg {
+      font-size: 1.2rem;
+    }
+  }
+}
+
+.postform-bar {
+  margin-right: 0.25rem;
+
+  &-track {
+    stroke: $color-neutral-400;
+  }
+
+  &-progress {
+    stroke: $color-primary-000;
+  }
+}

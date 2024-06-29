@@ -1,0 +1,13 @@
+@use "../abstracts/" as *;
+
+.radius-circle {
+  border-radius: 50%;
+}
+
+.radius-1 {
+  border-radius: 2rem;
+}
+
+.radius-2 {
+  border-radius: 5rem;
+}

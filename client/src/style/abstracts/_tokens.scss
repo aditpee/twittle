@@ -1,0 +1,19 @@
+@use "sass:map";
+@use "./colors" as *;
+@use "./typography" as *;
+@use "./sizes" as *;
+@use "./breakpoints" as *;
+
+$theme: $light;
+
+// contextual
+$color-text-default: $color-neutral-000;
+
+// body
+$body-font-family: $font-family-base;
+$body-font-weight: $font-weight-default;
+$body-font-size: $font-size-300;
+$body-text-color: $color-neutral-800;
+$body-line-height: 1.5;
+$body-background-image: var(--background-image, "");
+$body-background-color: $color-neutral-000;

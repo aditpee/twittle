@@ -1,0 +1,132 @@
+@use "../../style/abstracts/" as *;
+
+.left-bar {
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: sticky;
+  top: 0;
+}
+
+.left-bar-container {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+
+  & > * > * {
+    padding: 1rem;
+
+    &:has(.hidden) {
+      display: flex;
+      justify-content: center;
+    }
+
+    &:hover {
+      .left-bar-content {
+        &.hidden {
+          .left-bar-icon::after {
+            transition: opacity 0;
+            opacity: 0.1;
+          }
+
+          h4 {
+            display: none;
+          }
+        }
+        &:not(.hidden).post-button::after {
+          opacity: 0.2;
+        }
+        &:not(.hidden)::after {
+          transition: opacity 0;
+          opacity: 0.1;
+        }
+      }
+    }
+  }
+}
+
+.left-bar-content {
+  overflow: visible;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 1.25rem;
+  position: relative;
+
+  &.post-button {
+    padding-block: 0.75rem;
+    width: 16rem;
+    justify-content: center;
+
+    &::after {
+      inset: 0;
+    }
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset-inline: -0.75rem -1rem;
+    inset-block: -0.5rem;
+    background-color: $color-neutral-800;
+    border-radius: 5rem;
+    opacity: 0;
+    transition: opacity 300ms;
+  }
+
+  svg {
+    font-size: 2rem;
+  }
+
+  &.hidden {
+    h4 {
+      display: none;
+    }
+  }
+}
+
+.left-bar-logo {
+  img {
+    width: 2rem;
+  }
+}
+
+.left-bar-icon {
+  position: relative;
+
+  &::after {
+    content: "";
+    transition: opacity 300ms;
+    position: absolute;
+    inset: 0;
+    aspect-ratio: 1;
+    background-color: $color-neutral-800;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(1.5);
+  }
+}
+
+.left-bar-bottom > * {
+  display: flex;
+  align-items: center;
+  margin-block: 2rem;
+  justify-content: center;
+
+  @include mq(x-large) {
+    justify-content: space-between;
+  }
+}
+
+.left-bar-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.left-bar-avatar {
+  img {
+    border-radius: 50%;
+  }
+}

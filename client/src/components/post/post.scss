@@ -1,0 +1,128 @@
+@use "../../style/abstracts/" as *;
+
+.post {
+  display: grid;
+  padding-inline: 1rem;
+  padding-block: 1rem;
+  grid-template-columns: 40px 1fr;
+  gap: 0.75rem;
+  border-bottom: 1px solid $color-neutral-400;
+}
+
+.post-desc {
+  display: flex;
+  align-items: center;
+  column-gap: 0.5rem;
+  flex-wrap: wrap;
+
+  & > *:last-child {
+    display: flex;
+    gap: 0.25rem;
+  }
+}
+
+.post-content > *:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-setting {
+  color: $color-neutral-600;
+}
+
+.post-main {
+  line-height: 1.25;
+
+  p {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  & > * {
+    margin-bottom: 0.75rem;
+  }
+}
+
+.post-img {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  justify-content: start;
+
+  img {
+    border-radius: 0.5rem;
+    max-height: 20rem;
+    min-width: 70%;
+    object-fit: cover;
+
+    @include mq(medium) {
+      max-height: 30rem;
+    }
+  }
+}
+
+.post-info {
+  display: flex;
+  justify-content: space-between;
+
+  span {
+    height: 1rem;
+    line-height: 1rem;
+  }
+
+  & > * {
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      .post-icon::after {
+        content: "";
+        position: absolute;
+        inset-inline: 0;
+        aspect-ratio: 1;
+        border-radius: 50%;
+        opacity: 0.1;
+        transform: scale(1.5);
+      }
+
+      &.post-comment {
+        color: $color-primary-000;
+        .post-icon::after {
+          background-color: $color-primary-000;
+        }
+      }
+      &.post-retweet {
+        color: teal;
+        .post-icon::after {
+          background-color: teal;
+        }
+      }
+      &.post-like {
+        color: $color-accent-pink;
+        .post-icon::after {
+          background-color: $color-accent-pink;
+        }
+      }
+      &.post-bookmark {
+        color: teal;
+        .post-icon::after {
+          background-color: teal;
+        }
+      }
+    }
+  }
+}
+.post-icon {
+  position: relative;
+  margin-right: 0.25rem;
+
+  svg {
+    font-size: 1rem;
+  }
+
+  .post-comment:hover {
+    color: $color-primary-000;
+  }
+}

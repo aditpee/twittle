@@ -1,0 +1,66 @@
+@use "../../style/abstracts/" as *;
+
+.login {
+  display: grid;
+  background-color: $color-neutral-000;
+  position: relative;
+  z-index: 100;
+
+  & > * {
+    width: 100%;
+  }
+}
+
+.login-modal {
+  display: grid;
+  text-align: center;
+  max-width: 30rem;
+  margin-inline: auto;
+  background-color: $color-neutral-000;
+  position: relative;
+}
+
+.login-close {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+}
+
+.login-logo {
+  width: 2.5rem;
+  height: max-content;
+}
+
+.login-button {
+  width: 100%;
+}
+
+@include mq(medium) {
+  .login {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(black, 0.1);
+    align-content: center;
+    min-height: 100vh;
+    z-index: 999;
+  }
+
+  .login-modal {
+    border-radius: 2rem;
+    width: 35rem;
+    height: 90vh;
+    max-height: 40rem;
+    justify-content: center;
+    overflow-y: auto;
+  }
+
+  .login-inputs > * {
+    width: 20rem;
+    margin-inline: auto;
+  }
+
+  .login-button {
+    width: 20rem;
+    margin-inline: auto;
+  }
+}

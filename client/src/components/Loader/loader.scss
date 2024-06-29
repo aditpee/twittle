@@ -1,0 +1,30 @@
+@use "../../style/abstracts/" as *;
+
+.loader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.loader-center {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+  }
+}
+
+.loader-container {
+  padding: 2rem;
+
+  & > svg {
+    animation: loadingAnimation 0.5s infinite linear;
+  }
+}
+
+@keyframes loadingAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,86 @@
+@use "../../style/abstracts/" as *;
+
+.reply-post {
+  display: grid;
+
+  & > * {
+    width: 100%;
+  }
+}
+
+.reply-post-modal {
+  display: grid;
+  max-width: 30rem;
+  padding-top: 1rem;
+  margin-inline: auto;
+  background-color: $color-neutral-000;
+  position: relative;
+}
+
+.reply-post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 1rem;
+}
+
+.reply-post-logo {
+  width: 2.5rem;
+  height: max-content;
+}
+
+.reply-post-button {
+  width: 100%;
+}
+
+.reply-post .post {
+  border: 0;
+  .post-avatar {
+    position: relative;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 3rem;
+      // ---- center div ----
+      left: 50%;
+      transform: translateX(-50%);
+      // ----            -----
+      display: block;
+      width: 2px;
+      height: calc(100% - 0rem);
+      background-color: $color-neutral-600;
+      opacity: 0.3;
+    }
+  }
+}
+
+.reply-post-to {
+  display: grid;
+  padding-inline: 1rem;
+  grid-template-columns: 40px 1fr;
+  gap: 0.75rem;
+
+  & > * {
+    grid-column: 2;
+  }
+}
+
+@include mq(medium) {
+  .reply-post {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(black, 0.2);
+    align-content: center;
+    z-index: 9999;
+  }
+
+  .reply-post-modal {
+    border-radius: 2rem;
+    max-width: 40rem;
+    height: 90vh;
+    max-height: 40rem;
+    justify-content: center;
+    overflow-y: auto;
+  }
+}

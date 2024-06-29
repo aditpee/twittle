@@ -1,0 +1,103 @@
+@use "../abstracts/" as *;
+
+.twittle-inputs {
+  display: grid;
+  gap: 2rem;
+}
+
+.twittle-inputs > * > *:not(.twittle-input-invalid) {
+  position: relative;
+  border: 1px solid $color-neutral-600;
+  border-radius: 0.25rem;
+  padding: 1.7rem 0.5rem 0.8rem;
+
+  input,
+  textarea {
+    border: none;
+    font-size: 1rem;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+  }
+  textarea {
+    resize: none;
+  }
+  label {
+    position: absolute;
+    font-size: 1rem;
+    max-width: fit-content;
+    width: 100%;
+    left: 0.5rem;
+    top: 2rem;
+    transform: translateY(-50%);
+    transition: all 300ms;
+  }
+
+  :is(input, textarea) {
+    &:focus + label {
+      font-size: $font-size-200;
+      top: 0.3rem;
+      transform: translateY(0);
+    }
+    &:not(:placeholder-shown) + label {
+      font-size: $font-size-200;
+      top: 0.3rem;
+      transform: translateY(0);
+    }
+  }
+
+  &:has(:is(input, textarea):not(:placeholder-shown):valid) {
+    border-color: $color-primary-000;
+    outline: 1px solid $color-primary-000;
+    label {
+      color: $color-primary-000;
+    }
+  }
+  &:has(:is(input, textarea):not(:placeholder-shown):invalid) {
+    border-color: $color-accent-red;
+    outline: 1px solid $color-accent-red;
+    label {
+      color: $color-accent-red;
+    }
+  }
+  &:has(:is(input, textarea):focus:invalid) {
+    border-color: $color-accent-red;
+    outline: 1px solid $color-accent-red;
+    label {
+      color: $color-accent-red;
+    }
+  }
+  &:has(:is(input, textarea):not(:placeholder-shown).invalid) {
+    border-color: $color-accent-red;
+    outline: 1px solid $color-accent-red;
+    label {
+      color: $color-accent-red;
+    }
+  }
+  &:has(:is(input, textarea).invalid:focus) {
+    border-color: $color-accent-red;
+    outline: 1px solid $color-accent-red;
+    label {
+      color: $color-accent-red;
+    }
+  }
+
+  .twittle-inputs-char-limit {
+    position: absolute;
+    right: 1rem;
+    top: 0.5rem;
+    color: $color-neutral-600;
+    display: none;
+  }
+
+  &:has(:is(input:focus, textarea:focus)) .twittle-inputs-char-limit {
+    display: block;
+  }
+
+  .twittle-input-invalid {
+    // position: absolute;
+    // left: 0;
+    // bottom: -0.25rem;
+    // transform: translateY(100%);
+  }
+}

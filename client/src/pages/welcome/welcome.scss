@@ -1,0 +1,90 @@
+@use "../../style/abstracts/" as *;
+@use "sass:map";
+
+.welcome-container {
+  padding-top: 4rem;
+  max-width: 30rem;
+  margin: auto;
+}
+
+.welcome-logo {
+  width: 5.32rem;
+}
+
+.welcome-button {
+  cursor: pointer;
+  width: 100%;
+  padding-block: 0.75rem;
+
+  &:not(.primary) {
+    border: 2px solid $color-neutral-800;
+  }
+}
+
+.welcome-hr {
+  position: relative;
+
+  &::before {
+    content: "";
+    width: 100%;
+    height: 1px;
+    background-color: $color-neutral-800;
+    position: absolute;
+    top: 50%;
+    left: 0;
+  }
+
+  & span {
+    background-color: $color-neutral-000;
+    position: relative;
+    z-index: 10;
+    padding: 0.5rem;
+  }
+}
+
+// fix bug nested react router login and regiter modal in mobile device
+.welcome {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 0;
+
+  @include mq(medium) {
+    position: unset;
+  }
+}
+
+@include mq(large) {
+  .welcome {
+    display: grid;
+    min-height: 100vh;
+  }
+  .welcome-container {
+    padding: 0;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+    grid-template-columns:
+      minmax(2rem, 1fr)
+      minmax(0, calc(65rem / 12 * 7))
+      minmax(0, calc(65rem / 12 * 5))
+      minmax(2rem, 1fr);
+  }
+
+  .welcome-right-col {
+    --flow-spacer: 0;
+  }
+
+  .welcome-wrapper-button {
+    max-width: 20rem;
+  }
+
+  .welcome-container.container {
+    max-width: unset;
+  }
+  .welcome-logo {
+    grid-column: 2;
+    width: 27rem;
+  }
+}

@@ -1,0 +1,120 @@
+@use "../../style/abstracts/" as *;
+
+body {
+  .MuiButtonBase-root {
+    &.button-mui-hover {
+      padding: unset;
+      min-width: unset;
+      color: currentColor;
+
+      &:hover {
+        background-color: transparent;
+        position: relative;
+        overflow: hidden;
+
+        &::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background-color: currentColor;
+          opacity: 0.1;
+        }
+      }
+    }
+
+    &.button-round {
+      border-radius: 50%;
+    }
+  }
+
+  .MuiPaper-root {
+    box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px,
+      rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
+    width: 20rem;
+    border-radius: 0.75rem;
+    align-items: center;
+  }
+
+  .MuiMenuItem-root {
+    font-weight: $font-weight-bold;
+    font-size: $font-size-300;
+    gap: 0.5rem;
+
+    svg {
+      font-size: 1.25rem;
+    }
+
+    &.error {
+      color: $color-accent-red;
+    }
+  }
+
+  .MuiDialog-container {
+    * {
+      font-family: inherit;
+      line-height: inherit;
+      padding: 0;
+    }
+    & > * {
+      padding: 2rem;
+    }
+
+    h2 {
+      font-size: $font-size-600;
+      font-weight: $font-weight-bold;
+      align-self: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    p {
+      font-size: $font-size-400;
+      line-height: 1.3;
+      color: $color-neutral-600;
+      margin-bottom: 1rem;
+    }
+
+    .MuiDialogActions-root {
+      flex-direction: column;
+      width: 100%;
+      gap: 1rem;
+
+      & > * {
+        padding-block: 0.5rem;
+        width: 100%;
+        margin: 0;
+        border-radius: 5rem;
+        font-weight: $font-weight-bold;
+        text-transform: unset;
+        font-size: $font-size-400;
+
+        &:hover {
+          background-color: transparent;
+          position: relative;
+          overflow: hidden;
+
+          &::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-color: black;
+            opacity: 0.1;
+          }
+        }
+
+        &.primary-dialog-button {
+          color: $color-neutral-000;
+          &.bg-accent-red {
+            background-color: $color-accent-red;
+          }
+          &.bg-neutral-800 {
+            background-color: $color-neutral-800;
+          }
+        }
+        &.cancel-dialog-button {
+          color: $color-neutral-800;
+          background-color: $color-neutral-000;
+          border: 1px solid rgba($color: hsl(209 18% 44%), $alpha: 0.3);
+        }
+      }
+    }
+  }
+}

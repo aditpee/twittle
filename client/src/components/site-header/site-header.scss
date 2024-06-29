@@ -1,0 +1,32 @@
+@use "../../style/abstracts/" as *;
+
+.site-header-container {
+  display: grid;
+  align-items: center;
+  gap: 2rem;
+  padding-block: 1rem;
+  grid-template-columns: 2rem 1fr max-content;
+
+  &:has(.search-bar) {
+    padding-block: 0.5rem;
+  }
+}
+
+.site-header-avatar {
+  width: 2rem;
+  height: 2rem;
+  overflow: hidden;
+}
+
+.site-header-logo {
+  width: 1.5rem;
+  margin-inline: auto;
+}
+
+.site-header-setting-icon {
+  margin-left: auto;
+}
+
+.site-header-search {
+  position: sticky;
+}
