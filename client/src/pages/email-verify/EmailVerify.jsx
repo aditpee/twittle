@@ -34,7 +34,7 @@ const EmailVerify = () => {
         });
         navigate("/login");
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         toast.update(id, {
           render: `${err.response.data.error}`,
           type: "error",
