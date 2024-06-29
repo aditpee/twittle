@@ -14,7 +14,7 @@ mongoose.connection.on("connected", () => console.log("Connected to MongoDB"));
 mongoose.connect(process.env.MONGO_URL);
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT;
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "same-site" } }));
 app.use(express.json());
