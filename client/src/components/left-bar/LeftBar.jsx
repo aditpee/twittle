@@ -1,14 +1,18 @@
-import { MoreHoriz, PaletteOutlined } from "@mui/icons-material";
+import { MoreHoriz } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import { PF } from "../../config";
 import {
   BookmarkOutline,
+  DisplayOutline,
   ExploreOutline,
   HomeOutline,
   MessageOutline,
+  MoreRoundOutline,
   ProfileOutline,
+  Search,
+  SearchOutline,
   Tweet,
 } from "../../utils/icons/icons";
 import "./left-bar.scss";
@@ -63,7 +67,7 @@ const LeftBar = ({ user }) => {
                 }`}
               >
                 <div className="left-bar-icon d-flex">
-                  <ExploreOutline />
+                  <SearchOutline />
                 </div>
                 <h4>Explore</h4>
               </div>
@@ -104,7 +108,7 @@ const LeftBar = ({ user }) => {
               }`}
             >
               <div className="left-bar-icon d-flex">
-                <PaletteOutlined />
+                <MoreRoundOutline />
               </div>
               <h4>Display</h4>
             </div>
@@ -115,7 +119,7 @@ const LeftBar = ({ user }) => {
                 Post
               </div>
             ) : (
-              <div className="left-bar-content margin-block-start-2 bg-primary-000 clr-neutral-000 radius-circle padding-2">
+              <div className="left-bar-content left-bar-post margin-block-start-2 bg-primary-000 clr-neutral-000 radius-circle padding-2">
                 <Tweet />
               </div>
             )}

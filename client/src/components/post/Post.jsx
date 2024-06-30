@@ -1,13 +1,15 @@
-import { MoreHoriz } from "@mui/icons-material";
 import { useRef, useState } from "react";
 import { API_URL, PF } from "../../config";
 import axios from "axios";
 import {
+  Analytic,
   BookmarkOutline,
   Comment,
   Love,
   LoveOutline,
+  MoreHoriz,
   Repost,
+  RepostOutline,
 } from "../../utils/icons/icons";
 import "./post.scss";
 import { useContext } from "react";
@@ -132,7 +134,11 @@ const Post = ({ post }) => {
           </div>
           <div>
             <PostMenu
-              button={<MoreHoriz className="post-setting pointer" />}
+              button={
+                <div className="post-setting pointer">
+                  <MoreHoriz />
+                </div>
+              }
               handleDeletePost={handleDeletePost}
               setOpenDialog={setOpenDialog}
               openDialog={openDialog}
@@ -160,7 +166,7 @@ const Post = ({ post }) => {
           </div>
           <div className="post-retweet pointer clr-neutral-600">
             <div className="post-icon d-flex">
-              <Repost />
+              <RepostOutline />
             </div>
             <span className="fs-100 ">
               {post.retweets.length > 0 && post.retweets.length}
@@ -179,7 +185,7 @@ const Post = ({ post }) => {
           </div>
           <div className="post-bookmark pointer clr-neutral-600">
             <div className="post-icon d-flex">
-              <BookmarkOutline />
+              <Analytic />
             </div>
           </div>
           <div className="post-bookmark pointer clr-neutral-600">

@@ -1,4 +1,4 @@
-import { Close, Public } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import axios from "axios";
 import { useRef } from "react";
 import { useState } from "react";
@@ -11,7 +11,7 @@ import {
   PF,
 } from "../../config";
 import { AuthContext } from "../../context/AuthContext";
-import { Gif, Picture } from "../../utils/icons/icons";
+import { Gif, Globe, Picture } from "../../utils/icons/icons";
 import PropTypes from "prop-types";
 import "./post-form.scss";
 
@@ -102,7 +102,7 @@ const PostForm = ({ setPosts }) => {
       <div>
         <div className="postform-input">
           <textarea
-            className="fs-600 clr-neutral-600"
+            className="fs-600"
             type="text"
             value={valTextArea}
             placeholder="What is happening?!"
@@ -129,7 +129,7 @@ const PostForm = ({ setPosts }) => {
         {!isLoadingPost && (
           <>
             <div className="postform-canreply clr-primary-000 fw-medium fs-300">
-              <Public />
+              <Globe />
               <p>Everyone can reply</p>
             </div>
             <div className="postform-submit">

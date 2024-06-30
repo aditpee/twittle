@@ -40,6 +40,7 @@
 }
 
 .postform-input > * {
+  color: $color-neutral-800;
   border: none;
   outline: none;
   padding-block: 0.5rem;
@@ -47,6 +48,11 @@
   width: 100%;
   overflow: hidden;
   resize: none;
+  // min-height: 5rem;
+
+  &::placeholder {
+    color: $color-neutral-600;
+  }
 }
 
 .postform-img {

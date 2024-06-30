@@ -28,7 +28,12 @@
 }
 
 .post-setting {
+  display: flex;
   color: $color-neutral-600;
+
+  svg {
+    font-size: 1.25rem;
+  }
 }
 
 .post-main {
