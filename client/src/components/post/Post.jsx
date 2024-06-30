@@ -16,11 +16,13 @@ import { useEffect } from "react";
 import PropTypes from "prop-types";
 import PostMenu from "../PostMenu/PostMenu";
 import { toast } from "react-toastify";
+import useTimeAgo from "../../utils/hooks/useFormatTime";
 
 const Post = ({ post }) => {
   const [user, setUser] = useState(null);
   const { token, user: currentUser } = useContext(AuthContext);
   const postRef = useRef();
+  const { timeAgo } = useTimeAgo();
 
   // to open dialog post menu
   const [openDialog, setOpenDialog] = useState(false);
@@ -124,7 +126,7 @@ const Post = ({ post }) => {
               </span>
               <span>·</span>
               <span className="fs-300 clr-neutral-600">
-                {"2d" /*post.createdAt*/}
+                {timeAgo(new Date(post.createdAt))}
               </span>
             </div>
           </div>
