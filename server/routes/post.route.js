@@ -4,6 +4,7 @@ const User = require("../models/User");
 const Post = require("../models/Post");
 
 const verifyJwt = require("../middleware/authMiddleware");
+const mongoose = require("mongoose");
 
 // add post
 router.post("/", verifyJwt, async (req, res) => {
@@ -23,9 +24,30 @@ router.post("/", verifyJwt, async (req, res) => {
 });
 
 // get all post
-router.get("/", async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const post = await Post.aggregate([
+      { $sort: { createdAt: -1 } },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
+    ]);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json(post);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// get all post by id
+router.get("/", async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.query.userId);
+    const post = await Post.aggregate([
+      { $match: { userId } },
       { $sort: { createdAt: -1 } },
       { $skip: Number(req.query.offset * req.query.limit) },
       { $limit: Number(req.query.limit) },

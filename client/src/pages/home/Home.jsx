@@ -33,15 +33,17 @@ const Home = () => {
   const { user } = useContext(AuthContext);
 
   // infinite scroll
-  const [items, setItems] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await axios.get(API_URL + "/api/posts?offset=0&limit=4");
+        const res = await axios.get(
+          API_URL + "/api/posts/all?offset=0&limit=4"
+        );
         setPosts(res.data);
+        res.data.length < 4 ? setHasMore(false) : setHasMore(true);
       } catch (err) {
         console.log(err);
       }
@@ -52,7 +54,7 @@ const Home = () => {
   const fetchMoreData = async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts?offset=${index}&limit=4`
+        API_URL + `/api/posts/all?offset=${index}&limit=4`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
       setIndex((prevIndex) => prevIndex + 1);
@@ -74,6 +76,7 @@ const Home = () => {
         <MobileMenu
           isMenuHidden={isMenuHidden}
           setIsMenuHidden={setIsMenuHidden}
+          user={user}
         />
         <nav
           className={`${

@@ -1,10 +1,24 @@
 @use "../../style/abstracts/" as *;
 
+.profile {
+  min-height: 100vh;
+}
+
 .profile-header {
   display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  background: rgba(white, 0.9);
+  backdrop-filter: blur(6px);
   align-items: center;
   padding-inline: 1rem;
   gap: 1.5rem;
+  transition: transform 300ms;
+
+  &.hidden {
+    transform: translateY(-100%);
+  }
 
   p {
     font-size: 1rem;
@@ -161,5 +175,14 @@
         opacity: 0.3;
       }
     }
+  }
+}
+
+.profile-empty {
+  padding: clamp(2rem, 5vh, 3rem);
+  padding-inline: clamp(2rem, 5vh, 3rem);
+
+  @include mq(medium) {
+    padding-inline: 9rem;
   }
 }

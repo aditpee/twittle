@@ -14,7 +14,11 @@ import { AuthContext } from "../../context/AuthContext";
 import { API_URL, PF } from "../../config";
 import { useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import PropTypes from "prop-types";
+import MobilePost from "../../components/mobile-post/MobilePost";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loader from "../../components/Loader/Loader";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -25,11 +29,17 @@ const Profile = () => {
   const [isFollowed, setIsFollowed] = useState(true);
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
 
   const [isMenuHidden, setIsMenuHidden] = useState(true);
   const { scrollDir } = useDetectScroll({ thr: 100 });
 
   const { user: currentUser, token } = useContext(AuthContext);
+  const [posts, setPosts] = useState([]);
+
+  // infinite scroll
+  const [hasMore, setHasMore] = useState(true);
+  const [index, setIndex] = useState(1);
 
   const handleFollow = async () => {
     setIsLoadingFollow(true);
@@ -60,9 +70,25 @@ const Profile = () => {
     }
   };
 
+  const fetchMoreDataPosts = async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/posts?offset=${index}&limit=4&userId=${user._id}`
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoadingPage(true);
       try {
+        // get user
         const res = await axios.get(
           API_URL + `/api/users?username=${username}`,
           {
@@ -71,6 +97,13 @@ const Profile = () => {
             },
           }
         );
+        // get post
+        const resPosts = await axios.get(
+          API_URL + "/api/posts?offset=0&limit=4&userId=" + res.data._id
+        );
+        setPosts(resPosts.data);
+        resPosts.data.length < 4 ? setHasMore(false) : setHasMore(true);
+
         setUser(res.data);
         setFollowers(res.data.followers);
         setFollowings(res.data.followings);
@@ -80,20 +113,43 @@ const Profile = () => {
         } else {
           setIsFollowed(false);
         }
+        setIsLoadingPage(false);
       } catch (error) {
+        setIsLoadingPage(false);
         console.log(error);
       }
     };
     fetchData();
   }, [token, username, currentUser]);
 
+  const ProfileEmpty = ({ title, subTitle }) => (
+    <div className="profile-empty">
+      <h1
+        className="clr-neutral-800 fw-black margin-block-end-2"
+        style={{ fontSize: "2rem" }}
+      >
+        {title}
+      </h1>
+      <p className="fs-300 clr-neutral-600">{subTitle}</p>
+    </div>
+  );
+
+  ProfileEmpty.propTypes = {
+    title: PropTypes.string,
+    subTitle: PropTypes.string,
+  };
+
   return (
     <>
       <main className="profile grid-container">
         {!isPhoneScreen && <LeftBar user={currentUser} />}
         <section className="profile-content border-inline padding-block-end-10">
-          <header className="profile-header">
-            <ArrowBack />
+          <header
+            className={`${scrollDir === "down" ? "hidden" : ""} profile-header`}
+          >
+            <Link to={-1}>
+              <ArrowBack />
+            </Link>
             <div className="profile-header-content padding-block-1">
               <p className="fs-400 fw-bold">{user?.name}</p>
               <span className="fs-200 clr-neutral-600">0 posts</span>
@@ -199,7 +255,26 @@ const Profile = () => {
             </div>
           </nav>
           <div className="profile-posts">
-            <div className="post-reply"></div>
+            {posts.length === 0 && !isLoadingPage ? (
+              <ProfileEmpty
+                title={"You don’t have any likes yet"}
+                subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
+              />
+            ) : (
+              <InfiniteScroll
+                dataLength={posts.length}
+                next={fetchMoreDataPosts}
+                hasMore={hasMore}
+                loader={<Loader />}
+              >
+                <div>
+                  {posts.map((post) => (
+                    <Post key={post._id} post={post} />
+                  ))}
+                </div>
+              </InfiniteScroll>
+            )}
+            {/* <div className="post-reply"></div> */}
 
             {/* <div className="profile-posts-media">
               <div>
@@ -216,6 +291,12 @@ const Profile = () => {
               </div>
             </div> */}
           </div>
+          {isPhoneScreen && (
+            <>
+              <MobileNav scrollDir={scrollDir} />
+              <MobilePost />
+            </>
+          )}
         </section>
         {isDesktopScreen && <RightBar />}
       </main>

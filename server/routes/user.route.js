@@ -34,12 +34,8 @@ router.get("/", verifyJwt, async (req, res) => {
       return res.status(404).json({ error: "User not found!" });
     }
 
-    const isYourId = user._id.toString() === req.userId;
-    const { _id, password, updatedAt, ...others } = user._doc;
-    if (!isYourId) {
-      return res.status(200).json(others);
-    }
-    res.status(200).json({ ...others, _id });
+    const { password, updatedAt, ...others } = user._doc;
+    return res.status(200).json(others);
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }

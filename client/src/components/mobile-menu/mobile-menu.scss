@@ -28,10 +28,10 @@
     padding: 1rem;
   }
 
-  & > *:not(:first-child) > * {
+  & > *:not(:first-child) > * > * {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1.25rem;
 
     svg {
       font-size: 2rem;

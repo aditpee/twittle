@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import PostMenu from "../PostMenu/PostMenu";
 import { toast } from "react-toastify";
 import useTimeAgo from "../../utils/hooks/useFormatTime";
+import { Link } from "react-router-dom";
 
 const Post = ({ post }) => {
   const [user, setUser] = useState(null);
@@ -119,13 +120,17 @@ const Post = ({ post }) => {
       <div className="post-content">
         <div>
           <div className="post-desc">
-            <h4 className="fs-300 fw-bold clr-neutral-800">
-              {user?.name || ""}
-            </h4>
+            <Link to={`/${user?.username}`}>
+              <h4 className="fs-300 fw-bold clr-neutral-800">
+                {user?.name || ""}
+              </h4>
+            </Link>
             <div>
-              <span className="fs-300 clr-neutral-600">
-                {`@${user?.username}` || ""}
-              </span>
+              <Link to={`/${user?.username}`}>
+                <span className="fs-300 clr-neutral-600">
+                  {`@${user?.username}` || ""}
+                </span>
+              </Link>
               <span>·</span>
               <span className="fs-300 clr-neutral-600">
                 {timeAgo(new Date(post.createdAt))}
