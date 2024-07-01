@@ -1,20 +1,28 @@
 const useFormatTime = () => {
+  const monthNames = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const getMonth = (date) => {
+    return monthNames[new Date(date).getMonth()];
+  };
+  const getYear = (date) => {
+    return new Date(date).getFullYear();
+  };
+
   function timeAgo(date) {
     const seconds = Math.floor((new Date() - date) / 1000);
-    const monthNames = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
 
     let interval = seconds / 31536000;
     const month = monthNames[new Date(date).getMonth()];
@@ -46,7 +54,7 @@ const useFormatTime = () => {
     return "Now";
   }
 
-  return { timeAgo };
+  return { timeAgo, getMonth, getYear };
 };
 
 export default useFormatTime;

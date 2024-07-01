@@ -19,6 +19,7 @@ import PropTypes from "prop-types";
 import MobilePost from "../../components/mobile-post/MobilePost";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../components/Loader/Loader";
+import useFormatTime from "../../utils/hooks/useFormatTime";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -33,6 +34,7 @@ const Profile = () => {
 
   const [isMenuHidden, setIsMenuHidden] = useState(true);
   const { scrollDir } = useDetectScroll({ thr: 100 });
+  const { getMonth, getYear } = useFormatTime();
 
   const { user: currentUser, token } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
@@ -213,7 +215,11 @@ const Profile = () => {
                 )}
                 <div className="profile-date clr-neutral-600">
                   <DateIcon />
-                  <p>{user?.createdAt}</p>
+                  {user?.createdAt && (
+                    <p>{`Joined ${getMonth(user.createdAt)} ${getYear(
+                      user.createdAt
+                    )}`}</p>
+                  )}
                 </div>
               </div>
               <div className="profile-info-follow">
