@@ -1,7 +1,8 @@
 @use "../../style/abstracts/" as *;
 
 .profile {
-  min-height: 100vh;
+  // min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .profile-header {
@@ -105,19 +106,31 @@
   display: flex;
   align-items: center;
   overflow: auto;
-  justify-content: space-evenly;
   border-bottom: 1px solid $color-neutral-400;
-  // &::-webkit-scrollbar {
-  //   display: none;
-  // }
 
   & > * {
-    font-family: inherit;
-    padding-inline: 1rem;
-    padding-block: 1rem;
-    position: relative;
+    flex: 1;
+  }
 
-    &.active {
+  .profile-nav-button {
+    width: 100%;
+    font-family: inherit;
+    padding-block: 0;
+    text-transform: unset;
+    color: $color-neutral-800;
+    border-radius: 0;
+
+    &:hover {
+      background-color: var(--nav-hover, rgba(black, 0.1));
+    }
+
+    & > *:first-child {
+      padding-block: 0.75rem;
+      padding-inline: 0.5rem;
+      position: relative;
+    }
+
+    & > *.active {
       &::after {
         content: "";
         position: absolute;
@@ -130,6 +143,7 @@
 
       span {
         color: $color-neutral-800;
+        text-transform: capitalize;
       }
     }
   }
@@ -140,12 +154,19 @@
   grid-template-columns: repeat(3, 1fr);
   margin-top: 0.25rem;
   margin-inline: 0.25rem;
+  padding-bottom: 3rem;
   gap: 0.25rem;
 
   & > * {
     width: 100%;
     aspect-ratio: 1;
     overflow: hidden;
+  }
+
+  img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
   }
 }
 

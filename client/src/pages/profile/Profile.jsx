@@ -1,5 +1,5 @@
 import { ArrowBack, Link as LinkIcon } from "@mui/icons-material";
-import { useMediaQuery } from "@mui/material";
+import { Button, useMediaQuery } from "@mui/material";
 import { useState, useContext } from "react";
 import useDetectScroll from "@smakss/react-scroll-direction";
 import MobileMenu from "../../components/mobile-menu/MobileMenu";
@@ -14,25 +14,27 @@ import { AuthContext } from "../../context/AuthContext";
 import { API_URL, PF } from "../../config";
 import { useEffect } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import MobilePost from "../../components/mobile-post/MobilePost";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../components/Loader/Loader";
 import useFormatTime from "../../utils/hooks/useFormatTime";
+import { useCallback } from "react";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
   const isDesktopScreen = useMediaQuery("(min-width: 65rem)");
   const [user, setUser] = useState(null);
-  const { username } = useParams();
+  const { username, page } = useParams();
+  const navigate = useNavigate();
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [isFollowed, setIsFollowed] = useState(true);
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
+  const [profilePage, setProfilePage] = useState();
 
-  const [isMenuHidden, setIsMenuHidden] = useState(true);
   const { scrollDir } = useDetectScroll({ thr: 100 });
   const { getMonth, getYear } = useFormatTime();
 
@@ -72,7 +74,7 @@ const Profile = () => {
     }
   };
 
-  const fetchMoreDataPosts = async () => {
+  const fetchMoreDataPosts = useCallback(async () => {
     try {
       const res = await axios.get(
         API_URL + `/api/posts?offset=${index}&limit=4&userId=${user._id}`
@@ -84,7 +86,54 @@ const Profile = () => {
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [index, user?._id]);
+
+  const fetchMoreDataPostsMedia = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/posts/media?offset=${index}&limit=6&userId=${user._id}`
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index, user?._id]);
+
+  // console.log(profilePage);
+
+  const fetchPrefill = useCallback(
+    (callbackFetchMoreData) => {
+      if (document.body.clientHeight <= window.innerHeight && hasMore) {
+        callbackFetchMoreData();
+      }
+    },
+    [hasMore]
+  );
+
+  useEffect(() => {
+    if (!page) fetchPrefill(fetchMoreDataPosts);
+    if (page === "media") fetchPrefill(fetchMoreDataPostsMedia);
+  }, [page, fetchPrefill, fetchMoreDataPosts, fetchMoreDataPostsMedia]);
+
+  useEffect(() => {
+    // if (page === "replies" && ) setProfilePage("replies");
+    // else if (page === "media") setProfilePage("media");
+    // else if (page === "likes") setProfilePage("likes");
+    // else {
+    //   setProfilePage(undefined);
+    //   navigate(`/${username}`);
+    // }
+    if (page !== "replies" && page !== "media" && page !== "likes") {
+      setProfilePage(undefined);
+      navigate(`/${username}`);
+    }
+    setIndex(1);
+    setPosts([]);
+    setHasMore(true);
+  }, [page, navigate, username]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -100,11 +149,22 @@ const Profile = () => {
           }
         );
         // get post
-        const resPosts = await axios.get(
-          API_URL + "/api/posts?offset=0&limit=4&userId=" + res.data._id
-        );
-        setPosts(resPosts.data);
-        resPosts.data.length < 4 ? setHasMore(false) : setHasMore(true);
+        let resPosts;
+        if (page === "media") {
+          resPosts = await axios.get(
+            API_URL + "/api/posts/media?offset=0&limit=6&userId=" + res.data._id
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 6 ? setHasMore(false) : setHasMore(true);
+        } else {
+          resPosts = await axios.get(
+            API_URL + "/api/posts?offset=0&limit=4&userId=" + res.data._id
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 4 ? setHasMore(false) : setHasMore(true);
+        }
+        // setPosts(resPosts?.data);
+        // resPosts?.data?.length < 4 ? setHasMore(false) : setHasMore(true);
 
         setUser(res.data);
         setFollowers(res.data.followers);
@@ -122,7 +182,7 @@ const Profile = () => {
       }
     };
     fetchData();
-  }, [token, username, currentUser]);
+  }, [token, username, currentUser, page]);
 
   const ProfileEmpty = ({ title, subTitle }) => (
     <div className="profile-empty">
@@ -243,43 +303,99 @@ const Profile = () => {
             </div>
           </div>
           <nav className="profile-nav">
-            <div className="active">
-              <span className={`fs-400 fw-medium clr-neutral-600 active`}>
-                Posts
-              </span>
-            </div>
-            <div>
-              <span className={`fs-400 fw-medium clr-neutral-600`}>
-                Replies
-              </span>
-            </div>
-            <div>
-              <span className={`fs-400 fw-medium clr-neutral-600`}>Media</span>
-            </div>
-            <div>
-              <span className={`fs-400 fw-medium clr-neutral-600`}>Likes</span>
-            </div>
-          </nav>
-          <div className="profile-posts">
-            {posts.length === 0 && !isLoadingPage ? (
-              <ProfileEmpty
-                title={"You don’t have any likes yet"}
-                subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
-              />
-            ) : (
-              <InfiniteScroll
-                dataLength={posts.length}
-                next={fetchMoreDataPosts}
-                hasMore={hasMore}
-                loader={<Loader />}
+            <Link to={`/${user?.username}`}>
+              <Button
+                // onClick={() => setIndex(1)}
+                className="profile-nav-button"
+              >
+                <div className="active">
+                  <span className={`fs-400 fw-medium clr-neutral-600 active`}>
+                    Posts
+                  </span>
+                </div>
+              </Button>
+            </Link>
+            <Link to={`/${user?.username}/replies`}>
+              <Button
+                // onClick={() => setIndex(1)}
+                className="profile-nav-button"
               >
                 <div>
-                  {posts.map((post) => (
-                    <Post key={post._id} post={post} />
-                  ))}
+                  <span className={`fs-400 fw-medium clr-neutral-600`}>
+                    Replies
+                  </span>
                 </div>
-              </InfiniteScroll>
-            )}
+              </Button>
+            </Link>
+            <Link to={`/${user?.username}/media`}>
+              <Button
+                // onClick={() => setIndex(1)}
+                className="profile-nav-button"
+              >
+                <div>
+                  <span className={`fs-400 fw-medium clr-neutral-600`}>
+                    Media
+                  </span>
+                </div>
+              </Button>
+            </Link>
+            <Link to={`/${user?.username}/likes`}>
+              <Button
+                // onClick={() => setIndex(1)}
+                className="profile-nav-button"
+              >
+                <div>
+                  <span className={`fs-400 fw-medium clr-neutral-600`}>
+                    Likes
+                  </span>
+                </div>
+              </Button>
+            </Link>
+          </nav>
+          <div className="profile-posts">
+            {!page &&
+              (posts.length === 0 && !isLoadingPage ? (
+                <ProfileEmpty
+                  title={"You don’t have any likes yet"}
+                  subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
+                />
+              ) : (
+                <InfiniteScroll
+                  dataLength={posts.length}
+                  next={fetchMoreDataPosts}
+                  hasMore={hasMore}
+                  loader={<Loader />}
+                >
+                  <div>
+                    {posts.map((post) => (
+                      <Post key={post._id} post={post} />
+                    ))}
+                  </div>
+                </InfiniteScroll>
+              ))}
+            {page === "media" &&
+              (posts.length === 0 && !isLoadingPage ? (
+                <ProfileEmpty
+                  title={"Lights, camera … attachments!"}
+                  subTitle={`When you post photos or videos, they will show up here.`}
+                />
+              ) : (
+                <InfiniteScroll
+                  dataLength={posts.length}
+                  next={fetchMoreDataPostsMedia}
+                  hasMore={hasMore}
+                  loader={<Loader />}
+                  scrollThreshold={0.5}
+                >
+                  <div className="profile-posts-media">
+                    {posts.map((post) => (
+                      <div key={post._id}>
+                        <img src={post.image} alt="" />
+                      </div>
+                    ))}
+                  </div>
+                </InfiniteScroll>
+              ))}
             {/* <div className="post-reply"></div> */}
 
             {/* <div className="profile-posts-media">
