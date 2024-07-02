@@ -46,7 +46,7 @@ const LeftBar = ({ user }) => {
             </Link>
           </div>
           <div>
-            <Link to={`/${user.username}`} reloadDocument>
+            <Link to={`/${user.username}`}>
               <div
                 className={`left-bar-content fs-500 ${
                   isLargeDesktopScreen ? "" : "hidden"
