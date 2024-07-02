@@ -63,6 +63,48 @@ router.get("/", async (req, res) => {
   }
 });
 
+// get post by id include media
+router.get("/media", async (req, res) => {
+  try {
+    const userId = new mongoose.Types.ObjectId(req.query.userId);
+    const post = await Post.aggregate([
+      { $match: { userId, image: { $ne: "" } } },
+      { $sort: { createdAt: -1 } },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
+    ]);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json(post);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// get post by id is liked
+router.get("/like", async (req, res) => {
+  try {
+    // const userId = new mongoose.Types.ObjectId(req.query.userId);
+    const post = await Post.aggregate([
+      { $match: { likes: { $in: [req.query.userId] } } },
+      { $sort: { createdAt: -1 } },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
+    ]);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json(post);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // get post
 router.get("/:postId", async (req, res) => {
   try {
