@@ -73,7 +73,14 @@ function App() {
         </Route>
         <Route path="/home" element={navigateToWelcomePage(<Home />)} />
         <Route path="/explore" element={navigateToWelcomePage(<Explore />)} />
-        <Route path="/:username" element={navigateToWelcomePage(<Profile />)} />
+        <Route
+          path="/:username/"
+          element={navigateToWelcomePage(<Profile />)}
+        />
+        <Route
+          path="/:username/:page"
+          element={navigateToWelcomePage(<Profile />)}
+        />
         <Route path="/:username/edit" element={<EditProfile />} />
         <Route
           path="/:username/:postId/reply"
