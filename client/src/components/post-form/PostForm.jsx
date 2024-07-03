@@ -57,7 +57,6 @@ const PostForm = ({ setPosts }) => {
         formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
 
         const resImg = await axios.post(CLOUDINARY_API.upload, formData);
-        console.log(resImg.data);
         imageUrl = resImg.data["secure_url"];
       }
 
