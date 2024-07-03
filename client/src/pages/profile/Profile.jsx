@@ -102,6 +102,20 @@ const Profile = () => {
     }
   }, [index, user?._id]);
 
+  const fetchMoreDataPostsLike = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/posts/like?offset=${index}&limit=4&userId=${user._id}`
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index, user?._id]);
+
   // console.log(profilePage);
 
   const fetchPrefill = useCallback(
@@ -116,7 +130,14 @@ const Profile = () => {
   useEffect(() => {
     if (!page) fetchPrefill(fetchMoreDataPosts);
     if (page === "media") fetchPrefill(fetchMoreDataPostsMedia);
-  }, [page, fetchPrefill, fetchMoreDataPosts, fetchMoreDataPostsMedia]);
+    if (page === "likes") fetchPrefill(fetchMoreDataPostsLike);
+  }, [
+    page,
+    fetchPrefill,
+    fetchMoreDataPosts,
+    fetchMoreDataPostsMedia,
+    fetchMoreDataPostsLike,
+  ]);
 
   useEffect(() => {
     // if (page === "replies" && ) setProfilePage("replies");
@@ -156,6 +177,12 @@ const Profile = () => {
           );
           setPosts(resPosts.data);
           resPosts.data.length < 6 ? setHasMore(false) : setHasMore(true);
+        } else if (page === "likes") {
+          resPosts = await axios.get(
+            API_URL + "/api/posts/like?offset=0&limit=4&userId=" + res.data._id
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 4 ? setHasMore(false) : setHasMore(true);
         } else {
           resPosts = await axios.get(
             API_URL + "/api/posts?offset=0&limit=4&userId=" + res.data._id
@@ -355,10 +382,17 @@ const Profile = () => {
           <div className="profile-posts">
             {!page &&
               (posts.length === 0 && !isLoadingPage ? (
-                <ProfileEmpty
-                  title={"You don’t have any likes yet"}
-                  subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
-                />
+                username === currentUser.username ? (
+                  <ProfileEmpty
+                    title={"You don’t have any posts yet"}
+                    subTitle={`When you do, your posts will show up here.`}
+                  />
+                ) : (
+                  <ProfileEmpty
+                    title={"This account don’t have any posts yet"}
+                    subTitle={`When they do, their posts will show up here.`}
+                  />
+                )
               ) : (
                 <InfiniteScroll
                   dataLength={posts.length}
@@ -375,10 +409,17 @@ const Profile = () => {
               ))}
             {page === "media" &&
               (posts.length === 0 && !isLoadingPage ? (
-                <ProfileEmpty
-                  title={"Lights, camera … attachments!"}
-                  subTitle={`When you post photos or videos, they will show up here.`}
-                />
+                username === currentUser.username ? (
+                  <ProfileEmpty
+                    title={"Lights, camera … attachments!"}
+                    subTitle={`When you post photos or videos, they will show up here.`}
+                  />
+                ) : (
+                  <ProfileEmpty
+                    title={"This account don’t have any media yet"}
+                    subTitle={`When they do, their media will show up here.`}
+                  />
+                )
               ) : (
                 <InfiniteScroll
                   dataLength={posts.length}
@@ -392,6 +433,33 @@ const Profile = () => {
                       <div key={post._id}>
                         <img src={post.image} alt="" />
                       </div>
+                    ))}
+                  </div>
+                </InfiniteScroll>
+              ))}
+            {page === "likes" &&
+              (posts.length === 0 && !isLoadingPage ? (
+                username === currentUser.username ? (
+                  <ProfileEmpty
+                    title={"You don’t have any likes yet"}
+                    subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
+                  />
+                ) : (
+                  <ProfileEmpty
+                    title={"This account don’t have any likes yet"}
+                    subTitle={`When they do, it will show up here.`}
+                  />
+                )
+              ) : (
+                <InfiniteScroll
+                  dataLength={posts.length}
+                  next={fetchMoreDataPostsLike}
+                  hasMore={hasMore}
+                  loader={<Loader />}
+                >
+                  <div>
+                    {posts.map((post) => (
+                      <Post key={post._id} post={post} />
                     ))}
                   </div>
                 </InfiniteScroll>
