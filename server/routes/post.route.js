@@ -42,12 +42,47 @@ router.get("/all", async (req, res) => {
   }
 });
 
-// get all post by id
+// get all post by user id
 router.get("/", async (req, res) => {
   try {
     const userId = new mongoose.Types.ObjectId(req.query.userId);
     const post = await Post.aggregate([
-      { $match: { userId } },
+      { $match: { retweets: { $elemMatch: { userId: req.query.userId } } } },
+      { $addFields: { isRetweet: true } },
+      {
+        $set: {
+          createdAt: {
+            $arrayElemAt: [
+              {
+                $map: {
+                  input: "$retweets",
+                  as: "retweet",
+                  in: {
+                    $cond: {
+                      if: { $eq: ["$$retweet.userId", req.query.userId] },
+                      then: "$$retweet.tweetedAt",
+                      else: "$createdAt",
+                    },
+                  },
+                },
+              },
+              0,
+            ],
+          },
+        },
+      },
+      { $addFields: { createdAt: { $toDate: "$createdAt" } } },
+      {
+        $unionWith: {
+          coll: "posts",
+          pipeline: [
+            {
+              $match: { userId },
+            },
+            { $sort: { createdAt: -1 } },
+          ],
+        },
+      },
       { $sort: { createdAt: -1 } },
       { $skip: Number(req.query.offset * req.query.limit) },
       { $limit: Number(req.query.limit) },
@@ -57,6 +92,9 @@ router.get("/", async (req, res) => {
     }
 
     res.status(200).json(post);
+    // res
+    //   .status(200)
+    //   .json(post.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)));
   } catch (err) {
     console.log(err);
     res.status(500).json({ error: "Internal server error" });
@@ -193,13 +231,19 @@ router.put("/:postId/retweet", verifyJwt, async (req, res) => {
       return res.status(404).json({ error: "Post not found" });
     }
 
-    if (post.retweets.includes(req.userId)) {
+    if (post.retweets.some((obj) => obj.userId === req.userId)) {
       // unretweet
-      await post.updateOne({ $pull: { retweets: req.userId } });
+      await post.updateOne({
+        $pull: { retweets: { userId: req.userId } },
+      });
       res.status(200).json({ message: "post has been unretweeted" });
     } else {
       // retweet
-      await post.updateOne({ $push: { retweets: req.userId } });
+      await post.updateOne({
+        $push: {
+          retweets: { userId: req.userId, tweetedAt: new Date().toISOString() },
+        },
+      });
       res.status(200).json({ message: "post has been retweeted" });
     }
   } catch (err) {
