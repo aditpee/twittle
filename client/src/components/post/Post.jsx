@@ -20,11 +20,13 @@ import PostMenu from "../PostMenu/PostMenu";
 import { toast } from "react-toastify";
 import useTimeAgo from "../../utils/hooks/useFormatTime";
 import { Link } from "react-router-dom";
+import Loader from "../Loader/Loader";
 
 const Post = ({ post }) => {
   const [user, setUser] = useState(null);
   const { token, user: currentUser } = useContext(AuthContext);
   const postRef = useRef();
+  const [isLoadingPost, setIsLoadingPost] = useState(false);
   const { timeAgo } = useTimeAgo();
 
   // to open dialog post menu
@@ -32,9 +34,12 @@ const Post = ({ post }) => {
 
   const [likes, setLikes] = useState(post.likes);
   const [isLiked, setIsLiked] = useState(false);
+  const [retweets, setRetweets] = useState(post.retweets);
+  const [isRetweeted, setIsRetweeted] = useState(false);
 
   const handleLike = async () => {
     if (likes?.includes(currentUser?._id)) {
+      console.log(postRef);
       // remove id from likes
       setIsLiked(false);
       setLikes((prev) => prev.filter((id) => id !== currentUser._id));
@@ -57,6 +62,41 @@ const Post = ({ post }) => {
       // remove id from likes
       setIsLiked(false);
       setLikes((prev) => prev.filter((id) => id !== currentUser._id));
+      console.log(err);
+    }
+  };
+
+  const handleRetweet = async () => {
+    if (retweets?.some((obj) => obj.userId === currentUser?._id)) {
+      // remove id from likes
+      setIsRetweeted(false);
+      setRetweets((prev) =>
+        prev.filter((obj) => obj.userId !== currentUser._id)
+      );
+    } else {
+      // add id from likes
+      setIsRetweeted(true);
+      setRetweets((prev) => [
+        ...prev,
+        { userId: currentUser._id, tweetedAt: new Date().toISOString() },
+      ]);
+    }
+    try {
+      await axios.put(
+        API_URL + `/api/posts/${post._id}/retweet`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+    } catch (err) {
+      // remove id from likes
+      setIsRetweeted(false);
+      setRetweets((prev) =>
+        prev.filter((obj) => obj.userId !== currentUser._id)
+      );
       console.log(err);
     }
   };
@@ -85,6 +125,7 @@ const Post = ({ post }) => {
   };
 
   useEffect(() => {
+    setIsLoadingPost(true);
     const fetchData = async () => {
       try {
         const res = await axios.get(
@@ -96,19 +137,25 @@ const Post = ({ post }) => {
           }
         );
         setUser(res.data);
-        if (post.likes.includes(currentUser._id)) {
-          setIsLiked(true);
-        } else {
-          setIsLiked(false);
-        }
+        post.likes.includes(currentUser._id)
+          ? setIsLiked(true)
+          : setIsLiked(false);
+        post.retweets.some((obj) => obj.userId === currentUser._id)
+          ? setIsRetweeted(true)
+          : setIsRetweeted(false);
+
+        setIsLoadingPost(false);
       } catch (err) {
+        setIsLoadingPost(false);
         console.log(err);
       }
     };
     fetchData();
-  }, [post.userId, token, currentUser._id, post.likes]);
+  }, [post.userId, token, currentUser._id, post.likes, post.retweets]);
 
-  return (
+  return isLoadingPost ? (
+    <Loader />
+  ) : (
     <div ref={postRef} className="post">
       <div className="post-avatar">
         <img
@@ -169,12 +216,17 @@ const Post = ({ post }) => {
               {post.comments.length > 0 && post.comments.length}
             </span>
           </div>
-          <div className="post-retweet pointer clr-neutral-600">
+          <div
+            onClick={handleRetweet}
+            className={`post-retweet pointer ${
+              isRetweeted ? "clr-accent-teal" : "clr-neutral-600"
+            }`}
+          >
             <div className="post-icon d-flex">
-              <RepostOutline />
+              {isRetweeted ? <Repost /> : <RepostOutline />}
             </div>
             <span className="fs-100 ">
-              {post.retweets.length > 0 && post.retweets.length}
+              {retweets.length > 0 && retweets.length}
             </span>
           </div>
           <div

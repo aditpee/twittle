@@ -99,9 +99,9 @@
         }
       }
       &.post-retweet {
-        color: teal;
+        color: $color-accent-teal;
         .post-icon::after {
-          background-color: teal;
+          background-color: $color-accent-teal;
         }
       }
       &.post-like {
@@ -111,9 +111,9 @@
         }
       }
       &.post-bookmark {
-        color: teal;
+        color: $color-accent-teal;
         .post-icon::after {
-          background-color: teal;
+          background-color: $color-accent-teal;
         }
       }
     }
