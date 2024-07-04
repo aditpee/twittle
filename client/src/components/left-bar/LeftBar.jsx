@@ -17,7 +17,7 @@ import {
 } from "../../utils/icons/icons";
 import "./left-bar.scss";
 
-const LeftBar = ({ user }) => {
+const LeftBar = ({ user, setShowModal }) => {
   const isLargeDesktopScreen = useMediaQuery("(min-width: 1280px)");
 
   return (
@@ -115,11 +115,17 @@ const LeftBar = ({ user }) => {
           </div>
           <div>
             {isLargeDesktopScreen ? (
-              <div className="left-bar-content post-button margin-block-start-2 fs-500 fw-bold bg-primary-000 clr-neutral-000 radius-2">
+              <div
+                onClick={() => setShowModal(true)}
+                className="left-bar-content post-button margin-block-start-2 fs-500 fw-bold bg-primary-000 clr-neutral-000 radius-2"
+              >
                 Post
               </div>
             ) : (
-              <div className="left-bar-content left-bar-post margin-block-start-2 bg-primary-000 clr-neutral-000 radius-circle padding-2">
+              <div
+                onClick={() => setShowModal(true)}
+                className="left-bar-content left-bar-post margin-block-start-2 bg-primary-000 clr-neutral-000 radius-circle padding-2"
+              >
                 <Tweet />
               </div>
             )}
@@ -158,6 +164,7 @@ const LeftBar = ({ user }) => {
 
 LeftBar.propTypes = {
   user: PropTypes.object,
+  setShowModal: PropTypes.func,
 };
 
 export default LeftBar;

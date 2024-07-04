@@ -1,9 +1,12 @@
 import { ArrowBack } from "@mui/icons-material";
+import { useContext } from "react";
 import PostForm from "../../components/post-form/PostForm";
 import Post from "../../components/post/Post";
+import { AuthContext } from "../../context/AuthContext";
 import "./reply-post.scss";
 
 const ReplyPost = () => {
+  const { user } = useContext(AuthContext);
   return (
     <main className="reply-post">
       <div className="reply-post-modal">
@@ -20,7 +23,7 @@ const ReplyPost = () => {
         </div>
         <div className="reply-post-modal-wrapper flow">
           <div className="reply-post-content">
-            <Post />
+            {/* <Post /> */}
             <div className="reply-post-to">
               <p className="clr-neutral-600">
                 Replying to{" "}

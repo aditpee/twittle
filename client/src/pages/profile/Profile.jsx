@@ -21,6 +21,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../components/Loader/Loader";
 import useFormatTime from "../../utils/hooks/useFormatTime";
 import { useCallback } from "react";
+import PostModal from "../../components/post-modal/PostModal";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -33,7 +34,7 @@ const Profile = () => {
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
-  const [profilePage, setProfilePage] = useState();
+  const [showModalPost, setShowModalPost] = useState(false);
 
   const { scrollDir } = useDetectScroll({ thr: 100 });
   const { getMonth, getYear } = useFormatTime();
@@ -140,15 +141,7 @@ const Profile = () => {
   ]);
 
   useEffect(() => {
-    // if (page === "replies" && ) setProfilePage("replies");
-    // else if (page === "media") setProfilePage("media");
-    // else if (page === "likes") setProfilePage("likes");
-    // else {
-    //   setProfilePage(undefined);
-    //   navigate(`/${username}`);
-    // }
     if (page !== "replies" && page !== "media" && page !== "likes") {
-      setProfilePage(undefined);
       navigate(`/${username}`);
     }
     setIndex(1);
@@ -231,7 +224,14 @@ const Profile = () => {
   return (
     <>
       <main className="profile grid-container">
-        {!isPhoneScreen && <LeftBar user={currentUser} />}
+        <PostModal
+          showModal={showModalPost}
+          setShowModal={setShowModalPost}
+          setPosts={setPosts}
+        />
+        {!isPhoneScreen && (
+          <LeftBar user={currentUser} setShowModal={setShowModalPost} />
+        )}
         <section className="profile-content border-inline padding-block-end-10">
           <header
             className={`${scrollDir === "down" ? "hidden" : ""} profile-header`}
@@ -484,7 +484,7 @@ const Profile = () => {
           {isPhoneScreen && (
             <>
               <MobileNav scrollDir={scrollDir} />
-              <MobilePost />
+              <MobilePost setShowModal={setShowModalPost} />
             </>
           )}
         </section>

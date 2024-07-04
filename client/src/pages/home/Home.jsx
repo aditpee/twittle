@@ -1,4 +1,3 @@
-import { Create } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useContext } from "react";
@@ -21,12 +20,15 @@ import RightBar from "../../components/right-bar/RightBar";
 import PostForm from "../../components/post-form/PostForm";
 import MobilePost from "../../components/mobile-post/MobilePost";
 import { Suspense } from "react";
+import PostModal from "../../components/post-modal/PostModal";
+import { useCallback } from "react";
 
 const Home = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
   const isDesktopScreen = useMediaQuery("(min-width: 65rem)");
   const [isMenuHidden, setIsMenuHidden] = useState(true);
   const { scrollDir } = useDetectScroll({ thr: 100 });
+  const [showModalPost, setShowModalPost] = useState(false);
 
   const [posts, setPosts] = useState([]);
 
@@ -35,6 +37,27 @@ const Home = () => {
   // infinite scroll
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(1);
+
+  const fetchMoreData = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/posts/all?offset=${index}&limit=4`
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index]);
+
+  // prefill when post not react at bottom of page
+  useEffect(() => {
+    if (document.body.clientHeight <= window.innerHeight && hasMore) {
+      fetchMoreData();
+    }
+  }, [fetchMoreData, hasMore]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -51,25 +74,16 @@ const Home = () => {
     fetchData();
   }, []);
 
-  const fetchMoreData = async () => {
-    try {
-      const res = await axios.get(
-        API_URL + `/api/posts/all?offset=${index}&limit=4`
-      );
-      setPosts((prevPosts) => [...prevPosts, ...res.data]);
-      setIndex((prevIndex) => prevIndex + 1);
-
-      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   return (
     <main className="home grid-container">
+      <PostModal
+        showModal={showModalPost}
+        setShowModal={setShowModalPost}
+        setPosts={setPosts}
+      />
       {!isPhoneScreen && (
         <Suspense fallback={<Loader isCenterPage={true} />}>
-          <LeftBar user={user} />
+          <LeftBar user={user} setShowModal={setShowModalPost} />
         </Suspense>
       )}
       <section className="home-content border-inline padding-block-end-10">
@@ -111,7 +125,7 @@ const Home = () => {
         {isPhoneScreen && (
           <>
             <MobileNav scrollDir={scrollDir} />
-            <MobilePost />
+            <MobilePost setShowModal={setShowModalPost} />
           </>
         )}
       </section>

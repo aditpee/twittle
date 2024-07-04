@@ -15,7 +15,7 @@ import { Gif, Globe, Picture } from "../../utils/icons/icons";
 import PropTypes from "prop-types";
 import "./post-form.scss";
 
-const PostForm = ({ setPosts }) => {
+const PostForm = ({ setPosts, setShowModal }) => {
   const textAreaRef = useRef();
   const [valTextArea, setValTextArea] = useState("");
   const [image, setImage] = useState(null);
@@ -72,8 +72,10 @@ const PostForm = ({ setPosts }) => {
       setPosts((prev) => [{ ...res.data, image: data.image }, ...prev]);
 
       resetPostForm();
+      setShowModal && setShowModal(false);
     } catch (err) {
       resetPostForm();
+      setShowModal && setShowModal(false);
       console.log(err);
     }
   };
@@ -197,6 +199,7 @@ const PostForm = ({ setPosts }) => {
 
 PostForm.propTypes = {
   setPosts: PropTypes.func,
+  setShowModal: PropTypes.func,
 };
 
 export default PostForm;
