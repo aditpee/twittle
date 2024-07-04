@@ -2,7 +2,9 @@ import { Suspense } from "react";
 import { useContext, lazy } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Loader from "./components/Loader/Loader";
+import PostModal from "./components/post-modal/PostModal";
 import { AuthContext } from "./context/AuthContext";
+import PostDetails from "./pages/post-details/PostDetails";
 // import EditProfile from "./pages/edit-profile/EditProfile";
 // import EmailVerify from "./pages/email-verify/EmailVerify";
 // import Explore from "./pages/explore/Explore";
@@ -81,10 +83,14 @@ function App() {
           path="/:username/:page"
           element={navigateToWelcomePage(<Profile />)}
         />
+        <Route
+          path="/:username/status/:postId"
+          element={navigateToWelcomePage(<PostDetails />)}
+        />
         <Route path="/:username/edit" element={<EditProfile />} />
         <Route
           path="/:username/:postId/reply"
-          element={navigateToWelcomePage(<ReplyPost />)}
+          element={navigateToWelcomePage(<PostModal />)}
         />
       </Routes>
     </BrowserRouter>
