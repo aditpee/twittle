@@ -5,6 +5,7 @@ const Post = require("../models/Post");
 
 const verifyJwt = require("../middleware/authMiddleware");
 const mongoose = require("mongoose");
+const { ObjectId } = require("mongodb");
 
 // add post
 router.post("/", verifyJwt, async (req, res) => {
@@ -48,7 +49,12 @@ router.get("/", async (req, res) => {
     const userId = new mongoose.Types.ObjectId(req.query.userId);
     const post = await Post.aggregate([
       { $match: { retweets: { $elemMatch: { userId: req.query.userId } } } },
-      { $addFields: { isRetweet: true } },
+      {
+        $addFields: {
+          isRetweet: true,
+          oldCreatedAt: "$createdAt",
+        },
+      },
       {
         $set: {
           createdAt: {
@@ -90,6 +96,10 @@ router.get("/", async (req, res) => {
     if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
+    console.log(new Date("2024-07-04T00:35:56.565Z"));
+    const myDate = new Date("2024-07-04T00:35:56.565Z");
+    const timestamp = Math.floor(myDate / 1000);
+    console.log(new ObjectId(Math.floor("2024-07-04T00:35:56.565Z" / 1000)));
 
     res.status(200).json(post);
     // res
