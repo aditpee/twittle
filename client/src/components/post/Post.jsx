@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import useTimeAgo from "../../utils/hooks/useFormatTime";
 import { Link } from "react-router-dom";
 import Loader from "../Loader/Loader";
+import { Skeleton } from "@mui/material";
 
 const Post = ({ post }) => {
   const [user, setUser] = useState(null);
@@ -153,103 +154,147 @@ const Post = ({ post }) => {
     fetchData();
   }, [post.userId, token, currentUser._id, post.likes, post.retweets]);
 
-  return isLoadingPost ? (
-    <Loader />
-  ) : (
+  return (
     <div ref={postRef} className="post">
-      <div className="post-avatar">
-        <img
-          className="radius-circle hidden"
-          src={PF + "/images/no-avatar.svg"}
-          alt=""
-        />
-      </div>
-      <div className="post-content">
-        <div>
-          <div className="post-desc">
-            <Link to={`/${user?.username}`}>
-              <h4 className="fs-300 fw-bold clr-neutral-800">
-                {user?.name || ""}
-              </h4>
-            </Link>
+      {!isLoadingPost && post.isRetweet && (
+        <div className="post-mark">
+          <Repost />
+          <p>You reposted</p>
+        </div>
+      )}
+      <div className="post-container">
+        <div className="post-avatar">
+          {!isLoadingPost ? (
+            <img
+              className="radius-circle hidden"
+              src={PF + "/images/no-avatar.svg"}
+              alt=""
+            />
+          ) : (
+            <Skeleton variant="circular" width={40} height={40} />
+          )}
+        </div>
+        <div className="post-content">
+          {!isLoadingPost ? (
             <div>
-              <Link to={`/${user?.username}`}>
-                <span className="fs-300 clr-neutral-600">
-                  {`@${user?.username}` || ""}
-                </span>
-              </Link>
-              <span>·</span>
-              <span className="fs-300 clr-neutral-600">
-                {timeAgo(new Date(post.createdAt))}
-              </span>
-            </div>
-          </div>
-          <div>
-            <PostMenu
-              button={
-                <div className="post-setting pointer">
-                  <MoreHoriz />
+              <div className="post-desc">
+                <Link to={`/${user?.username}`}>
+                  <h4 className="fs-300 fw-bold clr-neutral-800">
+                    {user?.name || ""}
+                  </h4>
+                </Link>
+                <div>
+                  <Link to={`/${user?.username}`}>
+                    <span className="fs-300 clr-neutral-600">
+                      {`@${user?.username}` || ""}
+                    </span>
+                  </Link>
+                  <span>·</span>
+                  <span className="fs-300 clr-neutral-600">
+                    {post.isRetweet
+                      ? timeAgo(new Date(post.oldCreatedAt))
+                      : timeAgo(new Date(post.createdAt))}
+                  </span>
                 </div>
-              }
-              handleDeletePost={handleDeletePost}
-              setOpenDialog={setOpenDialog}
-              openDialog={openDialog}
-            ></PostMenu>
-          </div>
-        </div>
-        <div className="post-main">
-          {post.text && (
-            <p className="fs-300 clr-neutral-800">{post.text || ""}</p>
+              </div>
+              <div>
+                <PostMenu
+                  button={
+                    <div className="post-setting pointer">
+                      <MoreHoriz />
+                    </div>
+                  }
+                  handleDeletePost={handleDeletePost}
+                  setOpenDialog={setOpenDialog}
+                  openDialog={openDialog}
+                ></PostMenu>
+              </div>
+            </div>
+          ) : (
+            <Skeleton width={"40%"} />
           )}
-          {post.image && (
-            <div className="post-img margin-block-start-3">
-              <img src={post.image} alt="" />
+          <div className="post-main">
+            {isLoadingPost && post.text && (
+              <>
+                <Skeleton
+                  style={{ marginBottom: ".3rem" }}
+                  variant="text"
+                  width={"75%"}
+                />
+                <Skeleton
+                  style={{ marginBottom: ".3rem" }}
+                  variant="text"
+                  width={"80%"}
+                />
+              </>
+            )}
+            {isLoadingPost && post.image && (
+              <>
+                <Skeleton
+                  style={{ maxWidth: "200" }}
+                  variant="rounded"
+                  width={"min(100%, 400px)"}
+                  height={150}
+                />
+              </>
+            )}
+            {!isLoadingPost && post.text && (
+              <p className="fs-300 clr-neutral-800">{post.text || ""}</p>
+            )}
+            {!isLoadingPost && post.image && (
+              <div className="post-img margin-block-start-3">
+                <img src={post.image} alt="" />
+              </div>
+            )}
+          </div>
+          {!isLoadingPost && (
+            <div className="post-info">
+              <div className="post-comment pointer clr-neutral-600">
+                <div className="post-icon d-flex">
+                  <Comment />
+                </div>
+                <span className="fs-100 ">
+                  {post.comments.length > 0 && post.comments.length}
+                </span>
+              </div>
+              <div
+                onClick={handleRetweet}
+                className={`post-retweet pointer ${
+                  isRetweeted ? "clr-accent-teal" : "clr-neutral-600"
+                }`}
+              >
+                <div className="post-icon d-flex">
+                  {isRetweeted ? <Repost /> : <RepostOutline />}
+                </div>
+                <span className="fs-100 ">
+                  {retweets.length > 0 && retweets.length}
+                </span>
+              </div>
+              <div
+                onClick={handleLike}
+                className={`post-like pointer ${
+                  isLiked ? "clr-accent-pink" : "clr-neutral-600"
+                }`}
+              >
+                <div className="post-icon d-flex">
+                  {isLiked ? <Love /> : <LoveOutline />}
+                </div>
+                <span className="fs-100 ">
+                  {likes.length > 0 && likes.length}
+                </span>
+              </div>
+              <div className="post-bookmark pointer clr-neutral-600">
+                <div className="post-icon d-flex">
+                  <Analytic />
+                </div>
+              </div>
+              <div className="post-bookmark pointer clr-neutral-600">
+                <div className="post-icon d-flex">
+                  <BookmarkOutline />
+                </div>
+              </div>
             </div>
           )}
-        </div>
-        <div className="post-info">
-          <div className="post-comment pointer clr-neutral-600">
-            <div className="post-icon d-flex">
-              <Comment />
-            </div>
-            <span className="fs-100 ">
-              {post.comments.length > 0 && post.comments.length}
-            </span>
-          </div>
-          <div
-            onClick={handleRetweet}
-            className={`post-retweet pointer ${
-              isRetweeted ? "clr-accent-teal" : "clr-neutral-600"
-            }`}
-          >
-            <div className="post-icon d-flex">
-              {isRetweeted ? <Repost /> : <RepostOutline />}
-            </div>
-            <span className="fs-100 ">
-              {retweets.length > 0 && retweets.length}
-            </span>
-          </div>
-          <div
-            onClick={handleLike}
-            className={`post-like pointer ${
-              isLiked ? "clr-accent-pink" : "clr-neutral-600"
-            }`}
-          >
-            <div className="post-icon d-flex">
-              {isLiked ? <Love /> : <LoveOutline />}
-            </div>
-            <span className="fs-100 ">{likes.length > 0 && likes.length}</span>
-          </div>
-          <div className="post-bookmark pointer clr-neutral-600">
-            <div className="post-icon d-flex">
-              <Analytic />
-            </div>
-          </div>
-          <div className="post-bookmark pointer clr-neutral-600">
-            <div className="post-icon d-flex">
-              <BookmarkOutline />
-            </div>
-          </div>
         </div>
       </div>
     </div>
