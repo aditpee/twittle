@@ -20,6 +20,26 @@ const useFormatTime = () => {
   const getYear = (date) => {
     return new Date(date).getFullYear();
   };
+  const getDate = (date) => {
+    return new Date(date).getDate();
+  };
+
+  const getTime = (date) => {
+    let hour = new Date(date).getHours();
+    const minute = new Date(date).getMinutes();
+
+    if (hour === 0) hour = 12;
+
+    return hour < 12 ? `${hour}:${minute} AM` : `${hour - 12}:${minute} PM`;
+  };
+
+  const getFullDate = (date) => {
+    const day = getDate(date);
+    const month = getMonth(date);
+    const year = getYear(date);
+
+    return `${month} ${day}, ${year}`;
+  };
 
   function timeAgo(date) {
     const seconds = Math.floor((new Date() - date) / 1000);
@@ -54,7 +74,7 @@ const useFormatTime = () => {
     return "Now";
   }
 
-  return { timeAgo, getMonth, getYear };
+  return { timeAgo, getMonth, getYear, getTime, getFullDate };
 };
 
 export default useFormatTime;
