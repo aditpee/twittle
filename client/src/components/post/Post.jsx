@@ -20,7 +20,6 @@ import PostMenu from "../PostMenu/PostMenu";
 import { toast } from "react-toastify";
 import useTimeAgo from "../../utils/hooks/useFormatTime";
 import { Link } from "react-router-dom";
-import Loader from "../Loader/Loader";
 import { Skeleton } from "@mui/material";
 
 const Post = ({ post }) => {
@@ -138,6 +137,8 @@ const Post = ({ post }) => {
           }
         );
         setUser(res.data);
+
+        // check if we already like or retweet
         post.likes.includes(currentUser._id)
           ? setIsLiked(true)
           : setIsLiked(false);
@@ -190,11 +191,13 @@ const Post = ({ post }) => {
                     </span>
                   </Link>
                   <span>·</span>
-                  <span className="fs-300 clr-neutral-600">
-                    {post.isRetweet
-                      ? timeAgo(new Date(post.oldCreatedAt))
-                      : timeAgo(new Date(post.createdAt))}
-                  </span>
+                  <Link to={`/${user?.username}/status/${post._id}`}>
+                    <span className="fs-300 clr-neutral-600">
+                      {post.isRetweet
+                        ? timeAgo(new Date(post.oldCreatedAt))
+                        : timeAgo(new Date(post.createdAt))}
+                    </span>
+                  </Link>
                 </div>
               </div>
               <div>

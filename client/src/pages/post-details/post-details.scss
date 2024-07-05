@@ -1,6 +1,6 @@
 @use "../../style/abstracts/" as *;
 
-.profile-header {
+.postdetails-header {
   display: flex;
   position: sticky;
   top: 0;
@@ -19,19 +19,15 @@
   p {
     font-size: 1rem;
   }
-
-  span {
-    display: block;
-  }
 }
 
-.post {
+.postdetails {
   padding-inline: 1rem;
   padding-block: 0.75rem;
   border-bottom: 1px solid $color-neutral-400;
 }
 
-.post-mark {
+.postdetails-mark {
   display: grid;
   align-items: center;
   justify-content: end;
@@ -51,16 +47,17 @@
   }
 }
 
-.post-container {
+.postdetails-container {
   display: grid;
   align-items: center;
   grid-template-columns: 40px 1fr;
   gap: 0.75rem;
 }
 
-.post-desc {
+.postdetails-desc {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: start;
   column-gap: 0.5rem;
   flex-wrap: wrap;
 
@@ -70,13 +67,13 @@
   }
 }
 
-.post-content > *:first-child {
+.postdetails-body-header > *:first-child {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.post-setting {
+.postdetails-setting {
   display: flex;
   color: $color-neutral-600;
 
@@ -85,10 +82,9 @@
   }
 }
 
-.post-main {
-  line-height: 1.25;
-
+.postdetails-body-main {
   p {
+    line-height: 1.5;
     white-space: pre-wrap;
     overflow-wrap: break-word;
   }
@@ -98,7 +94,7 @@
   }
 }
 
-.post-img {
+.postdetails-img {
   border-radius: 0.5rem;
   overflow: hidden;
   height: 100%;
@@ -117,7 +113,9 @@
   }
 }
 
-.post-info {
+.postdetails-body-icon {
+  padding-block: 0.75rem;
+  border-block: 1px solid $color-neutral-400;
   display: flex;
   justify-content: space-between;
 
@@ -131,7 +129,7 @@
     align-items: center;
 
     &:hover {
-      .post-icon::after {
+      .postdetails-icon::after {
         content: "";
         position: absolute;
         inset-inline: 0;
@@ -141,42 +139,42 @@
         transform: scale(1.5);
       }
 
-      &.post-comment {
+      &.postdetails-comment {
         color: $color-primary-000;
-        .post-icon::after {
+        .postdetails-icon::after {
           background-color: $color-primary-000;
         }
       }
-      &.post-retweet {
+      &.postdetails-retweet {
         color: $color-accent-teal;
-        .post-icon::after {
+        .postdetails-icon::after {
           background-color: $color-accent-teal;
         }
       }
-      &.post-like {
+      &.postdetails-like {
         color: $color-accent-pink;
-        .post-icon::after {
+        .postdetails-icon::after {
           background-color: $color-accent-pink;
         }
       }
-      &.post-bookmark {
+      &.postdetails-bookmark {
         color: $color-accent-teal;
-        .post-icon::after {
+        .postdetails-icon::after {
           background-color: $color-accent-teal;
         }
       }
     }
   }
 }
-.post-icon {
+.postdetails-icon {
   position: relative;
   margin-right: 0.25rem;
 
   svg {
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
 
-  .post-comment:hover {
+  .postdetails-comment:hover {
     color: $color-primary-000;
   }
 }

@@ -22,6 +22,7 @@ import Loader from "../../components/Loader/Loader";
 import useFormatTime from "../../utils/hooks/useFormatTime";
 import { useCallback } from "react";
 import PostModal from "../../components/post-modal/PostModal";
+import EditProfile from "../../components/edit-profile/EditProfile";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -35,6 +36,7 @@ const Profile = () => {
   const [followers, setFollowers] = useState([]);
   const [isLoadingPage, setIsLoadingPage] = useState(false);
   const [showModalPost, setShowModalPost] = useState(false);
+  const [showModalEdit, setShowModalEdit] = useState(false);
 
   const { scrollDir } = useDetectScroll({ thr: 100 });
   const { getMonth, getYear } = useFormatTime();
@@ -224,6 +226,11 @@ const Profile = () => {
   return (
     <>
       <main className="profile grid-container">
+        <EditProfile
+          showModal={showModalEdit}
+          setShowModal={setShowModalEdit}
+          user={currentUser}
+        />
         <PostModal
           showModal={showModalPost}
           setShowModal={setShowModalPost}
@@ -261,7 +268,12 @@ const Profile = () => {
             <div className="profile-info-content">
               <div className="profile-edit-button">
                 {currentUser.username === user?.username ? (
-                  <button className="fs-400 fw-bold">Edit profile</button>
+                  <button
+                    onClick={() => setShowModalEdit(true)}
+                    className="fs-400 fw-bold"
+                  >
+                    Edit profile
+                  </button>
                 ) : isFollowed ? (
                   <button
                     disabled={isLoadingFollow}
