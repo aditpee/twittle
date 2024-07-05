@@ -14,7 +14,7 @@ import PostDetails from "./pages/post-details/PostDetails";
 // import Register from "./pages/register/Register";
 // import ReplyPost from "./pages/reply-post/ReplyPost";
 // import Welcome from "./pages/welcome/Welcome";
-const EditProfile = lazy(() => import("./pages/edit-profile/EditProfile"));
+const EditProfile = lazy(() => import("./components/edit-profile/EditProfile"));
 const EmailVerify = lazy(() => import("./pages/email-verify/EmailVerify"));
 const Explore = lazy(() => import("./pages/explore/Explore"));
 const Home = lazy(() => import("./pages/home/Home"));
@@ -26,6 +26,7 @@ const Welcome = lazy(() => import("./pages/welcome/Welcome"));
 
 function App() {
   const { user, isLoading } = useContext(AuthContext);
+  // console.log(user);
 
   const navigateToWelcomePage = (elementWhenUserExist) =>
     isLoading && !user ? (
@@ -41,6 +42,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/:username/edit" element={<EditProfile />} />
         <Route
           path="/"
           element={
@@ -87,7 +89,6 @@ function App() {
           path="/:username/status/:postId"
           element={navigateToWelcomePage(<PostDetails />)}
         />
-        <Route path="/:username/edit" element={<EditProfile />} />
         <Route
           path="/:username/:postId/reply"
           element={navigateToWelcomePage(<PostModal />)}
