@@ -28,6 +28,20 @@ const AuthReducer = (state, action) => {
         error: false,
         token: null,
       };
+    case "EDIT_PROFILE":
+      return {
+        isLoading: false,
+        user: {
+          ...state.user,
+          name: action.payload.name,
+          username: action.payload.username,
+          bio: action.payload.bio,
+          location: action.payload.location,
+          website: action.payload.website,
+        },
+        error: false,
+        token: state.token,
+      };
     default:
       return state;
   }
