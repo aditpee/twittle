@@ -69,8 +69,16 @@ router.put("/:username", verifyJwt, async (req, res) => {
     const isYourId = String(user._id) === req.userId;
     if (!isYourId)
       return res.status(403).json({ error: "Cannot edit with different id" });
-    const { name, username, bio, location, website } = req.body;
-    const editedUser = { name, username, bio, location, website };
+    const { name, username, bio, location, website, avatar, cover } = req.body;
+    const editedUser = {
+      name,
+      username,
+      bio,
+      location,
+      website,
+      avatar,
+      cover,
+    };
     await User.findByIdAndUpdate(user._id, editedUser);
     res.status(200).json({ message: "Edited user successfully" });
   } catch (err) {
