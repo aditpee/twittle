@@ -38,6 +38,8 @@ const AuthReducer = (state, action) => {
           bio: action.payload.bio,
           location: action.payload.location,
           website: action.payload.website,
+          avatar: action.payload.avatar,
+          cover: action.payload.cover,
         },
         error: false,
         token: state.token,

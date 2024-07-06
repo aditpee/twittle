@@ -27,6 +27,11 @@
 
 .profile-cover-img {
   aspect-ratio: 5 / 2;
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
 }
 
 .profile-cover {

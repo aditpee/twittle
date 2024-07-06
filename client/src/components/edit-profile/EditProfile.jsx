@@ -3,7 +3,12 @@ import { useState } from "react";
 import { validate } from "react-email-validator";
 import PostForm from "../post-form/PostForm";
 import Post from "../post/Post";
-import { API_URL, PF } from "../../config";
+import {
+  API_URL,
+  CLOUDINARY_API,
+  CLOUDINARY_UPLOAD_PRESET,
+  PF,
+} from "../../config";
 import "./edit-profile.scss";
 import PropTypes from "prop-types";
 import { AuthContext } from "../../context/AuthContext";
@@ -11,6 +16,7 @@ import axios from "axios";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
+import { Cancel } from "../../utils/icons/icons";
 
 const EditProfile = ({ showModal, setShowModal, user }) => {
   const [validateUsername, setValidateUsername] = useState("");
@@ -20,12 +26,17 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
   const [validateWebsite, setValidateWebsite] = useState("");
 
   const [inputEdit, setInputEdit] = useState({});
+  const modalRef = useRef();
 
   const usernameRef = useRef();
   const nameRef = useRef();
   const bioRef = useRef();
   const locationRef = useRef();
   const websiteRef = useRef();
+
+  const [avatarFile, setAvatarFile] = useState(null);
+  const [coverFile, setCoverFile] = useState(null);
+  const [coverUrl, setCoverUrl] = useState(user.cover);
 
   const [totalCharName, setTotalCharName] = useState(null);
 
@@ -96,6 +107,15 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
     setTotalCharName(e.target.value.length);
   };
 
+  const handleAvatarInput = (e) => {
+    setAvatarFile(e.target.files[0]);
+    e.target.value = "";
+  };
+  const handleCoverInput = (e) => {
+    setCoverFile(e.target.files[0]);
+    e.target.value = "";
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -106,7 +126,28 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
         bio: bioRef.current.value,
         location: locationRef.current.value,
         website: websiteRef.current.value,
+        avatar: user.avatar,
+        cover: coverUrl,
       };
+
+      if (avatarFile) {
+        const formDataAvatar = new FormData();
+        formDataAvatar.append("file", avatarFile);
+        formDataAvatar.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+        const res = await axios.post(CLOUDINARY_API.upload, formDataAvatar);
+
+        data.avatar = res.data["secure_url"];
+      }
+      if (coverFile) {
+        const formDataAvatar = new FormData();
+        formDataAvatar.append("file", coverFile);
+        formDataAvatar.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+        const res = await axios.post(CLOUDINARY_API.upload, formDataAvatar);
+
+        data.cover = res.data["secure_url"];
+      }
 
       const res = await axios.put(
         API_URL + "/api/users/" + user.username,
@@ -118,8 +159,10 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
         }
       );
 
+      console.log(data);
       console.log(res);
       setShowModal(false);
+      setAvatarFile(null);
       dispatch({
         type: "EDIT_PROFILE",
         payload: data,
@@ -141,7 +184,13 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
 
   return (
     showModal && (
-      <main className="edit-profile">
+      <main
+        ref={modalRef}
+        onClick={(e) => {
+          if (e.target === modalRef.current) setShowModal(false);
+        }}
+        className="edit-profile"
+      >
         <form onSubmit={handleSubmit} className="edit-profile-modal">
           <div className="edit-profile-header">
             <div
@@ -160,15 +209,62 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
             <div className="edit-profile-form">
               <div className="edit-profile-cover">
                 <div className="edit-profile-cover-img">
-                  <div className="no-edit-profile-cover"></div>
-                  <div className="addImgIcon">
-                    <AddAPhotoOutlined />
+                  {coverFile ? (
+                    <img src={URL.createObjectURL(coverFile)} alt="" />
+                  ) : user.cover && !coverFile && coverUrl ? (
+                    <img src={user.cover} alt="mana" />
+                  ) : (
+                    <div className="no-edit-profile-cover"></div>
+                  )}
+                  <input
+                    type="file"
+                    hidden
+                    id="cover-file"
+                    accept=".png, .jpg, .jpeg"
+                    onChange={handleCoverInput}
+                  />
+                  <div className="coverImgIcon">
+                    <label htmlFor="cover-file">
+                      <AddAPhotoOutlined />
+                    </label>
+                    {(coverFile || coverUrl) && (
+                      <div
+                        onClick={() => {
+                          setCoverFile(null);
+                          setCoverUrl("");
+                        }}
+                      >
+                        <Cancel />
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="edit-profile-avatar">
-                  <img src={PF + "/images/no-avatar.svg"} alt="" />
-                  <div className="addImgIcon">
-                    <AddAPhotoOutlined />
+                <div className="edit-profile-avatar bg-neutral-400">
+                  <img
+                    src={
+                      avatarFile
+                        ? URL.createObjectURL(avatarFile)
+                        : user.avatar && !avatarFile
+                        ? user.avatar
+                        : PF + "/images/no-avatar.svg"
+                      // post
+                      // avatarFile
+                      //   ? URL.createObjectURL(avatarFile)
+                      //   : PF + "/images/no-avatar.svg"
+                    }
+                    alt=""
+                  />
+                  <input
+                    type="file"
+                    hidden
+                    id="avatar-file"
+                    accept=".png, .jpg, .jpeg"
+                    onChange={handleAvatarInput}
+                  />
+                  <div className="coverImgIcon">
+                    <label htmlFor="avatar-file" className="addImgIcon pointer">
+                      <AddAPhotoOutlined />
+                    </label>
                   </div>
                 </div>
               </div>

@@ -80,7 +80,7 @@ const Profile = () => {
   const fetchMoreDataPosts = useCallback(async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts?offset=${index}&limit=4&userId=${user._id}`
+        API_URL + `/api/posts?offset=${index}&limit=4&userId=${user?._id}`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
       setIndex((prevIndex) => prevIndex + 1);
@@ -94,7 +94,7 @@ const Profile = () => {
   const fetchMoreDataPostsMedia = useCallback(async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts/media?offset=${index}&limit=6&userId=${user._id}`
+        API_URL + `/api/posts/media?offset=${index}&limit=6&userId=${user?._id}`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
       setIndex((prevIndex) => prevIndex + 1);
@@ -108,7 +108,7 @@ const Profile = () => {
   const fetchMoreDataPostsLike = useCallback(async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts/like?offset=${index}&limit=4&userId=${user._id}`
+        API_URL + `/api/posts/like?offset=${index}&limit=4&userId=${user?._id}`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
       setIndex((prevIndex) => prevIndex + 1);
@@ -254,12 +254,18 @@ const Profile = () => {
           <div className="profile-info">
             <div className="profile-cover">
               <div className="profile-cover-img">
-                <div className="no-profile-cover"></div>
+                {currentUser.cover ? (
+                  <img src={currentUser.cover} alt="" />
+                ) : (
+                  <div className="no-profile-cover"></div>
+                )}
               </div>
               <div className="profile-avatar">
                 <img
                   src={
-                    user?.avater ? user.avatear : `${PF}/images/no-avatar.svg`
+                    currentUser.avatar
+                      ? currentUser.avatar
+                      : `${PF}/images/no-avatar.svg`
                   }
                   alt=""
                 />
