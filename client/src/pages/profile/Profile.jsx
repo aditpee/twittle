@@ -254,8 +254,8 @@ const Profile = () => {
           <div className="profile-info">
             <div className="profile-cover">
               <div className="profile-cover-img">
-                {currentUser.cover ? (
-                  <img src={currentUser.cover} alt="" />
+                {user?.cover ? (
+                  <img src={user.cover} alt="" />
                 ) : (
                   <div className="no-profile-cover"></div>
                 )}
@@ -263,9 +263,7 @@ const Profile = () => {
               <div className="profile-avatar">
                 <img
                   src={
-                    currentUser.avatar
-                      ? currentUser.avatar
-                      : `${PF}/images/no-avatar.svg`
+                    user?.avatar ? user.avatar : `${PF}/images/no-avatar.svg`
                   }
                   alt=""
                 />
