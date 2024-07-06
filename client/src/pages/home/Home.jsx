@@ -51,10 +51,12 @@ const Home = () => {
       console.log(err);
     }
   }, [index]);
+  // console.log(hasMore);
 
   // prefill when post not react at bottom of page
   useEffect(() => {
-    if (document.body.clientHeight <= window.innerHeight && hasMore) {
+    console.log(document.body.clientHeight <= window.innerHeight);
+    if (document.body.clientHeight <= window.innerHeight + 10 && hasMore) {
       fetchMoreData();
     }
   }, [fetchMoreData, hasMore]);
