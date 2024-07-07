@@ -8,7 +8,7 @@ import { AuthProvider } from "./context/AuthContext";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ToastContainer />
+    <ToastContainer style={{ zIndex: "999999" }} />
     <AuthProvider>
       <App />
     </AuthProvider>
