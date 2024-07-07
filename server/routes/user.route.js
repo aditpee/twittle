@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const Token = require("../models/Token");
+const { validationResult } = require("express-validator");
 
 const verifyJwt = require("../middleware/authMiddleware");
+const { editProfileValidator } = require("../middleware/validators");
 
 // router.get("/", verifyJwt, async (req, res) => {
 //   res.json(req.username);
@@ -61,30 +63,40 @@ router.get("/", verifyJwt, async (req, res) => {
 // });
 
 // edit user by username
-router.put("/:username", verifyJwt, async (req, res) => {
-  try {
-    const user = await User.findOne({ username: req.params.username });
-    if (!user) return res.status(404).json({ error: "User not found" });
+router.put(
+  "/:username",
+  verifyJwt,
+  [editProfileValidator],
+  async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(403).json({ errors: errors.array() });
+      }
+      const user = await User.findOne({ username: req.params.username });
+      if (!user) return res.status(404).json({ error: "User not found" });
 
-    const isYourId = String(user._id) === req.userId;
-    if (!isYourId)
-      return res.status(403).json({ error: "Cannot edit with different id" });
-    const { name, username, bio, location, website, avatar, cover } = req.body;
-    const editedUser = {
-      name,
-      username,
-      bio,
-      location,
-      website,
-      avatar,
-      cover,
-    };
-    await User.findByIdAndUpdate(user._id, editedUser);
-    res.status(200).json({ message: "Edited user successfully" });
-  } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+      const isYourId = String(user._id) === req.userId;
+      if (!isYourId)
+        return res.status(403).json({ error: "Cannot edit with different id" });
+      const { name, username, bio, location, website, avatar, cover } =
+        req.body;
+      const editedUser = {
+        name,
+        username,
+        bio,
+        location,
+        website,
+        avatar,
+        cover,
+      };
+      await User.findByIdAndUpdate(user._id, editedUser);
+      res.status(200).json({ message: "Edited user successfully" });
+    } catch (err) {
+      res.status(500).json({ error: "Internal server error" });
+    }
   }
-});
+);
 
 // delete user by username
 router.delete("/:username", verifyJwt, async (req, res) => {
