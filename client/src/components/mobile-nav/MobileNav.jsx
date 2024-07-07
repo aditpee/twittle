@@ -6,7 +6,7 @@ import {
   SearchOutline,
 } from "../../utils/icons/icons";
 import PropTypes from "prop-types";
-import { Link } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const MobileNav = ({ scrollDir }) => {
   return (
