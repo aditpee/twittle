@@ -194,7 +194,7 @@ const PostDetails = () => {
             <div className="postdetails-avatar">
               <img
                 className="radius-circle hidden"
-                src={PF + "/images/no-avatar.svg"}
+                src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
                 alt=""
               />
             </div>

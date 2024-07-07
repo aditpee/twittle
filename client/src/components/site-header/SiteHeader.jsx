@@ -8,6 +8,9 @@ import { SearchOutline } from "../../utils/icons/icons";
 import { useRef } from "react";
 import SearchBar from "../search-bar/SearchBar";
 import { useMediaQuery } from "@mui/material";
+import { PF } from "../../config";
+import { useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
 
 const SiteHeader = ({ setIsMenuHidden, type }) => {
   const [content, setContent] = useState("");
@@ -16,6 +19,8 @@ const SiteHeader = ({ setIsMenuHidden, type }) => {
   const [searchValue, setSearchValue] = useState("");
   const searchRef = useRef(null);
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
+
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const subPathname = pathname.substring(1);
@@ -52,7 +57,12 @@ const SiteHeader = ({ setIsMenuHidden, type }) => {
                 className="site-header-avatar radius-circle"
                 onClick={() => setIsMenuHidden(false)}
               >
-                <img src="./images/no-avatar.svg" alt="" />
+                <img
+                  src={
+                    user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"
+                  }
+                  alt=""
+                />
               </div>
             )
           ))}
@@ -61,13 +71,16 @@ const SiteHeader = ({ setIsMenuHidden, type }) => {
             className="site-header-avatar radius-circle"
             onClick={() => setIsMenuHidden(false)}
           >
-            <img src="./images/no-avatar.svg" alt="" />
+            <img
+              src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
+              alt=""
+            />
           </div>
         )}
         <div className="site-header-search">
           {type === "logo" && (
             <div className="site-header-logo">
-              <img src="./images/logo.svg" alt="" />
+              <img src={PF + "/images/logo.svg"} alt="" />
             </div>
           )}
           {type === "search" && (

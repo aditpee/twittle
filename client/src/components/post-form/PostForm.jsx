@@ -22,7 +22,7 @@ const PostForm = ({ setPosts, setShowModal }) => {
   const [imageURL, setImageURL] = useState(null);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
 
-  const { token } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
 
   const resetPostForm = () => {
     setImage(null);
@@ -96,7 +96,7 @@ const PostForm = ({ setPosts, setShowModal }) => {
       <div className="">
         <img
           className="radius-circle"
-          src={PF + "/images/no-avatar.svg"}
+          src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
           alt=""
         />
       </div>

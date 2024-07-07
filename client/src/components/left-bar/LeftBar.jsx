@@ -137,7 +137,14 @@ const LeftBar = ({ user, setShowModal }) => {
               <>
                 <div className="left-bar-profile">
                   <div className="left-bar-avatar">
-                    <img src={PF + "/images/no-avatar.svg"} alt="" />
+                    <img
+                      src={
+                        user?.avatar
+                          ? user?.avatar
+                          : PF + "/images/no-avatar.svg"
+                      }
+                      alt=""
+                    />
                   </div>
                   <div>
                     <p className="fs-400 fw-bold">{user.name}</p>
@@ -151,7 +158,12 @@ const LeftBar = ({ user, setShowModal }) => {
             ) : (
               <div className="left-bar-profile">
                 <div className="left-bar-avatar">
-                  <img src={PF + "/images/no-avatar.svg"} alt="" />
+                  <img
+                    src={
+                      user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"
+                    }
+                    alt=""
+                  />
                 </div>
               </div>
             )}

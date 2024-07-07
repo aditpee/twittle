@@ -18,7 +18,10 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
       <div className="mobile-menu-container">
         <div>
           <div className="mobile-menu-avatar">
-            <img src={PF + "/images/no-avatar.svg"} alt="" />
+            <img
+              src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
+              alt=""
+            />
           </div>
           <div className="mobile-menu-name">
             <p className="fs-400 clr-neutral-800 fw-bold">{user.name}</p>

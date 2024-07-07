@@ -22,6 +22,7 @@ import MobilePost from "../../components/mobile-post/MobilePost";
 import { Suspense } from "react";
 import PostModal from "../../components/post-modal/PostModal";
 import { useCallback } from "react";
+import { useRef } from "react";
 
 const Home = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -31,6 +32,8 @@ const Home = () => {
   const [showModalPost, setShowModalPost] = useState(false);
 
   const [posts, setPosts] = useState([]);
+  const homeRef = useRef();
+  const initialEffect = useRef();
 
   const { user } = useContext(AuthContext);
 
@@ -41,10 +44,10 @@ const Home = () => {
   const fetchMoreData = useCallback(async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts/all?offset=${index}&limit=4`
+        API_URL + `/api/posts/all?offset=${index}&limit=10`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
-      setIndex((prevIndex) => prevIndex + 1);
+      setIndex(index + 1);
 
       res.data.length > 0 ? setHasMore(true) : setHasMore(false);
     } catch (err) {
@@ -54,21 +57,21 @@ const Home = () => {
   // console.log(hasMore);
 
   // prefill when post not react at bottom of page
-  useEffect(() => {
-    console.log(document.body.clientHeight <= window.innerHeight);
-    if (document.body.clientHeight <= window.innerHeight + 10 && hasMore) {
-      fetchMoreData();
-    }
-  }, [fetchMoreData, hasMore]);
+
+  // useEffect(() => {
+  //   if (document.body.clientHeight <= window.innerHeight && hasMore) {
+  //     fetchMoreData();
+  //   }
+  // }, [fetchMoreData, hasMore]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await axios.get(
-          API_URL + "/api/posts/all?offset=0&limit=4"
+          API_URL + "/api/posts/all?offset=0&limit=10"
         );
         setPosts(res.data);
-        res.data.length < 4 ? setHasMore(false) : setHasMore(true);
+        res.data.length < 10 ? setHasMore(false) : setHasMore(true);
       } catch (err) {
         console.log(err);
       }
@@ -77,7 +80,7 @@ const Home = () => {
   }, []);
 
   return (
-    <main className="home grid-container">
+    <main ref={homeRef} className="home grid-container">
       <PostModal
         showModal={showModalPost}
         setShowModal={setShowModalPost}
@@ -88,7 +91,10 @@ const Home = () => {
           <LeftBar user={user} setShowModal={setShowModalPost} />
         </Suspense>
       )}
-      <section className="home-content border-inline padding-block-end-10">
+      <section
+        id="home-scrollable"
+        className="home-content border-inline padding-block-end-10"
+      >
         <MobileMenu
           isMenuHidden={isMenuHidden}
           setIsMenuHidden={setIsMenuHidden}
@@ -112,13 +118,15 @@ const Home = () => {
           </div>
         </nav>
         <InfiniteScroll
+          // scrollableTarget={"home-scrollable"}
           dataLength={posts.length}
           next={fetchMoreData}
           hasMore={hasMore}
           loader={<Loader />}
+          scrollThreshold={0.5}
         >
           <section className="timelines">
-            <PostForm setPosts={setPosts} />
+            {!isPhoneScreen && <PostForm setPosts={setPosts} />}
             {posts.map((post) => (
               <Post key={post._id} post={post} />
             ))}

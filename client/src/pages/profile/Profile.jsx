@@ -80,7 +80,7 @@ const Profile = () => {
   const fetchMoreDataPosts = useCallback(async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts?offset=${index}&limit=4&userId=${user?._id}`
+        API_URL + `/api/posts?offset=${index}&limit=10&userId=${user?._id}`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
       setIndex((prevIndex) => prevIndex + 1);
@@ -94,7 +94,7 @@ const Profile = () => {
   const fetchMoreDataPostsMedia = useCallback(async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts/media?offset=${index}&limit=6&userId=${user?._id}`
+        API_URL + `/api/posts/media?offset=${index}&limit=9&userId=${user?._id}`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
       setIndex((prevIndex) => prevIndex + 1);
@@ -108,7 +108,7 @@ const Profile = () => {
   const fetchMoreDataPostsLike = useCallback(async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts/like?offset=${index}&limit=4&userId=${user?._id}`
+        API_URL + `/api/posts/like?offset=${index}&limit=10&userId=${user?._id}`
       );
       setPosts((prevPosts) => [...prevPosts, ...res.data]);
       setIndex((prevIndex) => prevIndex + 1);
@@ -119,28 +119,28 @@ const Profile = () => {
     }
   }, [index, user?._id]);
 
-  // console.log(profilePage);
+  // ==== PREFILL =======
 
-  const fetchPrefill = useCallback(
-    (callbackFetchMoreData) => {
-      if (document.body.clientHeight <= window.innerHeight && hasMore) {
-        callbackFetchMoreData();
-      }
-    },
-    [hasMore]
-  );
+  // const fetchPrefill = useCallback(
+  //   (callbackFetchMoreData) => {
+  //     if (document.body.clientHeight <= window.innerHeight && hasMore) {
+  //       callbackFetchMoreData();
+  //     }
+  //   },
+  //   [hasMore]
+  // );
 
-  useEffect(() => {
-    if (!page) fetchPrefill(fetchMoreDataPosts);
-    if (page === "media") fetchPrefill(fetchMoreDataPostsMedia);
-    if (page === "likes") fetchPrefill(fetchMoreDataPostsLike);
-  }, [
-    page,
-    fetchPrefill,
-    fetchMoreDataPosts,
-    fetchMoreDataPostsMedia,
-    fetchMoreDataPostsLike,
-  ]);
+  // useEffect(() => {
+  //   if (!page) fetchPrefill(fetchMoreDataPosts);
+  //   if (page === "media") fetchPrefill(fetchMoreDataPostsMedia);
+  //   if (page === "likes") fetchPrefill(fetchMoreDataPostsLike);
+  // }, [
+  //   page,
+  //   fetchPrefill,
+  //   fetchMoreDataPosts,
+  //   fetchMoreDataPostsMedia,
+  //   fetchMoreDataPostsLike,
+  // ]);
 
   useEffect(() => {
     if (page !== "replies" && page !== "media" && page !== "likes") {
@@ -168,25 +168,25 @@ const Profile = () => {
         let resPosts;
         if (page === "media") {
           resPosts = await axios.get(
-            API_URL + "/api/posts/media?offset=0&limit=6&userId=" + res.data._id
+            API_URL +
+              "/api/posts/media?offset=0&limit=10&userId=" +
+              res.data._id
           );
           setPosts(resPosts.data);
-          resPosts.data.length < 6 ? setHasMore(false) : setHasMore(true);
+          resPosts.data.length < 10 ? setHasMore(false) : setHasMore(true);
         } else if (page === "likes") {
           resPosts = await axios.get(
-            API_URL + "/api/posts/like?offset=0&limit=4&userId=" + res.data._id
+            API_URL + "/api/posts/like?offset=0&limit=9&userId=" + res.data._id
           );
           setPosts(resPosts.data);
-          resPosts.data.length < 4 ? setHasMore(false) : setHasMore(true);
+          resPosts.data.length < 9 ? setHasMore(false) : setHasMore(true);
         } else {
           resPosts = await axios.get(
-            API_URL + "/api/posts?offset=0&limit=4&userId=" + res.data._id
+            API_URL + "/api/posts?offset=0&limit=10&userId=" + res.data._id
           );
           setPosts(resPosts.data);
-          resPosts.data.length < 4 ? setHasMore(false) : setHasMore(true);
+          resPosts.data.length < 10 ? setHasMore(false) : setHasMore(true);
         }
-        // setPosts(resPosts?.data);
-        // resPosts?.data?.length < 4 ? setHasMore(false) : setHasMore(true);
 
         setUser(res.data);
         setFollowers(res.data.followers);
@@ -415,6 +415,7 @@ const Profile = () => {
                   next={fetchMoreDataPosts}
                   hasMore={hasMore}
                   loader={<Loader />}
+                  scrollThreshold={0.5}
                 >
                   <div>
                     {posts.map((post) => (
@@ -472,6 +473,7 @@ const Profile = () => {
                   next={fetchMoreDataPostsLike}
                   hasMore={hasMore}
                   loader={<Loader />}
+                  scrollThreshold={0.5}
                 >
                   <div>
                     {posts.map((post) => (
