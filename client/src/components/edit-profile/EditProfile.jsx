@@ -17,6 +17,8 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { Cancel } from "../../utils/icons/icons";
+import AlertDialog from "../alert-dialog/AlertDialog";
+import { toast } from "react-toastify";
 
 const EditProfile = ({ showModal, setShowModal, user }) => {
   const [validateUsername, setValidateUsername] = useState("");
@@ -24,6 +26,7 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
   const [validateBio, setValidateBio] = useState("");
   const [validateLocation, setValidateLocation] = useState("");
   const [validateWebsite, setValidateWebsite] = useState("");
+  const [isLoadingEdit, setIsLoadingEdit] = useState(false);
 
   const [inputEdit, setInputEdit] = useState({});
   const modalRef = useRef();
@@ -36,11 +39,38 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
 
   const [avatarFile, setAvatarFile] = useState(null);
   const [coverFile, setCoverFile] = useState(null);
+  const [avatarUrl, setAvatarUrl] = useState(user.avatar);
   const [coverUrl, setCoverUrl] = useState(user.cover);
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const dialogParams = {
+    title: "Discard changes?",
+    content: "This can’t be undone and you’ll lose your changes.",
+    colorButton: "bg-accent-red",
+    textButton: "Discard",
+  };
 
   const [totalCharName, setTotalCharName] = useState(null);
 
   const { token, dispatch } = useContext(AuthContext);
+
+  const restoreInput = () => {
+    setInputEdit({
+      name: user.name,
+      username: user.username,
+      bio: user.bio,
+      location: user.location,
+      website: user.website,
+    });
+    setCoverUrl(user.cover);
+    setAvatarUrl(user.avatar);
+    if (!user.avatar) {
+      setAvatarFile(null);
+    }
+    if (!user.cover) {
+      setCoverFile(null);
+    }
+  };
 
   const validateNoSpaceValue = (stringVal) => {
     return /\s/g.test(stringVal);
@@ -110,22 +140,58 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
   const handleAvatarInput = (e) => {
     setAvatarFile(e.target.files[0]);
     e.target.value = "";
+    setAvatarUrl(null);
   };
   const handleCoverInput = (e) => {
     setCoverFile(e.target.files[0]);
     e.target.value = "";
+    setCoverUrl(null);
+  };
+
+  const handleClose = () => {
+    const oldInput = {
+      name: user.name.trim(),
+      username: user.username.trim(),
+      bio: user.bio.trim(),
+      location: user.location.trim(),
+      website: user.website.trim(),
+      avatar: user.avatar.trim(),
+      cover: user.cover.trim(),
+    };
+    const newInput = {
+      name: nameRef.current.value.trim(),
+      username: usernameRef.current.value.trim(),
+      bio: bioRef.current.value.trim(),
+      location: locationRef.current.value.trim(),
+      website: websiteRef.current.value.trim(),
+      avatar: avatarUrl,
+      cover: coverUrl,
+    };
+
+    const isInputChange = JSON.stringify(oldInput) !== JSON.stringify(newInput);
+
+    if (!isInputChange) {
+      restoreInput();
+      setShowModal(false);
+      return;
+    }
+
+    setOpenDialog(true);
+
+    // console.log(oldInput, newInput);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoadingEdit(true);
 
     try {
       const data = {
-        name: nameRef.current.value,
-        username: usernameRef.current.value,
-        bio: bioRef.current.value,
-        location: locationRef.current.value,
-        website: websiteRef.current.value,
+        name: nameRef.current.value.trim(),
+        username: usernameRef.current.value.trim(),
+        bio: bioRef.current.value.trim(),
+        location: locationRef.current.value.trim(),
+        website: websiteRef.current.value.trim(),
         avatar: user.avatar,
         cover: coverUrl,
       };
@@ -159,8 +225,7 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
         }
       );
 
-      console.log(data);
-      console.log(res);
+      setIsLoadingEdit(false);
       setShowModal(false);
       setAvatarFile(null);
       dispatch({
@@ -168,7 +233,33 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
         payload: data,
       });
     } catch (err) {
-      console.log(err);
+      setIsLoadingEdit(false);
+      const { errors } = err.response.data;
+      if (errors) {
+        const error = errors[0];
+        console.log(error);
+        toast.success(error.msg, {
+          position: "bottom-center",
+          theme: "colored",
+          closeOnClick: false,
+          pauseOnHover: false,
+          hideProgressBar: true,
+          autoClose: 5000,
+          icon: false,
+          closeButton: false,
+        });
+      } else {
+        toast.success("Internal server error", {
+          position: "bottom-center",
+          theme: "colored",
+          closeOnClick: false,
+          pauseOnHover: false,
+          hideProgressBar: true,
+          autoClose: 5000,
+          icon: false,
+          closeButton: false,
+        });
+      }
     }
   };
 
@@ -191,17 +282,26 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
         }}
         className="edit-profile"
       >
+        <AlertDialog
+          openDialog={openDialog}
+          setOpenDialog={setOpenDialog}
+          dialogAction={() => {
+            setShowModal(false);
+            restoreInput();
+          }}
+          dialogParams={dialogParams}
+        />
         <form onSubmit={handleSubmit} className="edit-profile-modal">
           <div className="edit-profile-header">
-            <div
-              onClick={() => setShowModal(false)}
-              className="edit-profile-close"
-            >
+            <div onClick={handleClose} className="edit-profile-close">
               <ArrowBack />
             </div>
             <div>
-              <button className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-start-3">
-                Save
+              <button
+                disabled={isLoadingEdit}
+                className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-start-3"
+              >
+                {isLoadingEdit ? "..." : "Save"}
               </button>
             </div>
           </div>
@@ -231,7 +331,7 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
                       <div
                         onClick={() => {
                           setCoverFile(null);
-                          setCoverUrl("");
+                          setCoverUrl(null);
                         }}
                       >
                         <Cancel />
