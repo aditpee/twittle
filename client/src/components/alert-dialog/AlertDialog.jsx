@@ -21,6 +21,7 @@ const AlertDialog = ({
   return (
     <Fragment>
       <Dialog
+        style={{ zIndex: "999999" }}
         open={openDialog}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
