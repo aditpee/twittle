@@ -32,8 +32,11 @@ const PostDetails = () => {
   const isDesktopScreen = useMediaQuery("(min-width: 65rem)");
   const [isLiked, setIsLiked] = useState(false);
   const [isRetweeted, setIsRetweeted] = useState(false);
+  const [isFollowed, setIsFollowed] = useState(false);
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [likes, setLikes] = useState([]);
   const [retweets, setRetweets] = useState([]);
+  const [followers, setFollowers] = useState([]);
   const navigate = useNavigate();
   const [isLoadingPage, setIsLoadingPage] = useState(false);
 
@@ -72,6 +75,35 @@ const PostDetails = () => {
       // remove id from likes
       setIsLiked(false);
       setLikes((prev) => prev.filter((id) => id !== currentUser._id));
+      console.log(err);
+    }
+  };
+
+  const handleFollow = async () => {
+    setIsLoadingFollow(true);
+    try {
+      await axios.put(
+        API_URL + `/api/users/${user.username}/follow`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      setIsLoadingFollow(false);
+      setIsFollowed((prev) => !prev);
+
+      // // check is follow or unfollow
+      // if (followers.includes(currentUser._id)) {
+      //   // unfollow
+      //   setFollowers((prev) => prev.filter((id) => id !== currentUser._id));
+      // } else {
+      //   // follow
+      //   setFollowers((prev) => [...prev, currentUser._id]);
+      // }
+    } catch (err) {
+      setIsLoadingFollow(false);
       console.log(err);
     }
   };
@@ -153,6 +185,8 @@ const PostDetails = () => {
         setLikes(resPost.data.likes);
         setRetweets(resPost.data.retweets);
 
+        setIsFollowed(resUser.data.followers.includes(currentUser._id));
+
         // check if we already like or retweet
         resPost.data.likes.includes(currentUser._id)
           ? setIsLiked(true)
@@ -213,13 +247,13 @@ const PostDetails = () => {
               {!isLoadingPage ? (
                 <div>
                   <div className="postdetails-desc">
-                    <Link to={``}>
+                    <Link to={`/${user?.username}`}>
                       <h4 className="fs-300 fw-bold clr-neutral-800">
                         {user?.name || ""}
                       </h4>
                     </Link>
                     <div>
-                      <Link to={``}>
+                      <Link to={`/${user?.username}`}>
                         <span className="fs-300 clr-neutral-600">
                           {`@${user?.username}` || ""}
                         </span>
@@ -227,9 +261,24 @@ const PostDetails = () => {
                     </div>
                   </div>
                   <div className="d-flex align-center">
-                    <button className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-end-3">
-                      Follow
-                    </button>
+                    {isFollowed ? (
+                      <button
+                        onClick={handleFollow}
+                        disabled={isLoadingFollow}
+                        className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-end-3"
+                      >
+                        Following
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleFollow}
+                        disabled={isLoadingFollow}
+                        className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-end-3"
+                      >
+                        Follow
+                      </button>
+                    )}
+
                     <PostMenu
                       button={
                         <div className="postdetails-setting pointer">
