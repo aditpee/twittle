@@ -28,9 +28,11 @@ const useFormatTime = () => {
     let hour = new Date(date).getHours();
     const minute = new Date(date).getMinutes();
 
+    const pmAm = hour < 12 ? "AM" : "PM";
+
     if (hour === 0) hour = 12;
 
-    return hour < 12 ? `${hour}:${minute} AM` : `${hour - 12}:${minute} PM`;
+    return `${hour}:${minute} ${pmAm}`;
   };
 
   const getFullDate = (date) => {
