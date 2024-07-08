@@ -9,6 +9,7 @@ require("dotenv").config();
 const authRouter = require("./routes/auth.route");
 const userRouter = require("./routes/user.route");
 const postRouter = require("./routes/post.route");
+const commentRouter = require("./routes/comment.route");
 
 mongoose.connection.on("connected", () => console.log("Connected to MongoDB"));
 mongoose.connect(process.env.MONGO_URL);
@@ -25,6 +26,7 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 app.use("/api/auth", authRouter);
 app.use("/api/users", userRouter);
 app.use("/api/posts", postRouter);
+app.use("/api/comments", commentRouter);
 
 app.listen(PORT, () => {
   console.log("your api is running at http://localhost:" + 8080);
