@@ -185,7 +185,7 @@ const PostDetails = () => {
           <Link to={-1} className="d-flex">
             <ArrowBack />
           </Link>
-          <div className="postdetails-header-content padding-block-1">
+          <div className="postdetails-header-content">
             <p className="fs-400 fw-bold">Post</p>
           </div>
         </header>

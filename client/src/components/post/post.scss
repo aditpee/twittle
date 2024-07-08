@@ -6,6 +6,16 @@
   border-bottom: 1px solid $color-neutral-400;
 }
 
+.post-avatar {
+  aspect-ratio: 1;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
 .post-mark {
   display: grid;
   align-items: center;

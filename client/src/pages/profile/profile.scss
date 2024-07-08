@@ -55,6 +55,7 @@
   img {
     width: clamp(4.5rem, 18vw, 8rem);
     aspect-ratio: 1;
+    object-fit: cover;
   }
 }
 

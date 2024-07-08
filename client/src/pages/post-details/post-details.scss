@@ -21,6 +21,16 @@
   }
 }
 
+.postdetails-avatar {
+  aspect-ratio: 1;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
 .postdetails {
   padding-inline: 1rem;
   padding-block: 0.75rem;

@@ -93,7 +93,7 @@ const PostForm = ({ setPosts, setShowModal }) => {
       action=""
       onSubmit={handleSubmit}
     >
-      <div className="">
+      <div className="postform-avatar">
         <img
           className="radius-circle"
           src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
