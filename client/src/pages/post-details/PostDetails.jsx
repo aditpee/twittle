@@ -9,7 +9,7 @@ import {
   Repost,
   RepostOutline,
 } from "../../utils/icons/icons";
-import { useMediaQuery } from "@mui/material";
+import { Skeleton, useMediaQuery } from "@mui/material";
 import useDetectScroll from "@smakss/react-scroll-direction";
 import { useContext, useEffect } from "react";
 import { useState } from "react";
@@ -35,6 +35,7 @@ const PostDetails = () => {
   const [likes, setLikes] = useState([]);
   const [retweets, setRetweets] = useState([]);
   const navigate = useNavigate();
+  const [isLoadingPage, setIsLoadingPage] = useState(false);
 
   const [showModalPost, setShowModalPost] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -134,6 +135,8 @@ const PostDetails = () => {
   };
 
   useEffect(() => {
+    setIsLoadingPage(true);
+
     const fetchData = async () => {
       try {
         const resPost = await axios.get(API_URL + "/api/posts/" + postId);
@@ -159,7 +162,9 @@ const PostDetails = () => {
           : setIsRetweeted(false);
 
         setUser(resUser.data);
+        setIsLoadingPage(false);
       } catch (err) {
+        setIsLoadingPage(false);
         console.log(err);
       }
     };
@@ -192,105 +197,149 @@ const PostDetails = () => {
         <div className="postdetails-body padding-4">
           <div className="postdetails-container postdetails-body-header">
             <div className="postdetails-avatar">
-              <img
-                className="radius-circle hidden"
-                src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
-                alt=""
-              />
+              {!isLoadingPage ? (
+                <img
+                  className="radius-circle hidden"
+                  src={
+                    user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"
+                  }
+                  alt=""
+                />
+              ) : (
+                <Skeleton variant="circular" width={"100%"} height={"100%"} />
+              )}
             </div>
             <div className="postdetails-body-header">
-              <div>
-                <div className="postdetails-desc">
-                  <Link to={``}>
-                    <h4 className="fs-300 fw-bold clr-neutral-800">
-                      {user?.name || ""}
-                    </h4>
-                  </Link>
-                  <div>
+              {!isLoadingPage ? (
+                <div>
+                  <div className="postdetails-desc">
                     <Link to={``}>
-                      <span className="fs-300 clr-neutral-600">
-                        {`@${user?.username}` || ""}
-                      </span>
+                      <h4 className="fs-300 fw-bold clr-neutral-800">
+                        {user?.name || ""}
+                      </h4>
                     </Link>
+                    <div>
+                      <Link to={``}>
+                        <span className="fs-300 clr-neutral-600">
+                          {`@${user?.username}` || ""}
+                        </span>
+                      </Link>
+                    </div>
+                  </div>
+                  <div className="d-flex align-center">
+                    <button className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-end-3">
+                      Follow
+                    </button>
+                    <PostMenu
+                      button={
+                        <div className="postdetails-setting pointer">
+                          <MoreHoriz />
+                        </div>
+                      }
+                      handleDeletePost={handleDeletePost}
+                      setOpenDialog={setOpenDialog}
+                      openDialog={openDialog}
+                    ></PostMenu>
                   </div>
                 </div>
-                <div className="d-flex align-center">
-                  <button className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-end-3">
-                    Follow
-                  </button>
-                  <PostMenu
-                    button={
-                      <div className="postdetails-setting pointer">
-                        <MoreHoriz />
-                      </div>
-                    }
-                    handleDeletePost={handleDeletePost}
-                    setOpenDialog={setOpenDialog}
-                    openDialog={openDialog}
-                  ></PostMenu>
-                </div>
-              </div>
+              ) : (
+                <Skeleton width={"70%"} />
+              )}
             </div>
           </div>
           <div className="postdetails-body-main margin-block-start-4">
-            {post?.text && <p style={{ fontSize: "17px" }}>{post.text}</p>}
-            {post?.image && (
+            {isLoadingPage && post?.text && (
+              <>
+                <Skeleton
+                  style={{ marginBottom: ".3rem" }}
+                  variant="text"
+                  width={"75%"}
+                />
+                <Skeleton
+                  style={{ marginBottom: ".3rem" }}
+                  variant="text"
+                  width={"80%"}
+                />
+              </>
+            )}
+            {isLoadingPage && post?.image && (
+              <>
+                <Skeleton
+                  style={{ maxWidth: "250" }}
+                  variant="rounded"
+                  width={"min(100%, 400px)"}
+                  height={150}
+                />
+              </>
+            )}
+            {!isLoadingPage && post?.text && (
+              <p style={{ fontSize: "17px" }}>{post.text}</p>
+            )}
+            {!isLoadingPage && post?.image && (
               <div className="postdetails-img margin-block-start-3">
                 <img src={post.image} alt="" />
               </div>
             )}
             <div className="postdetails-time clr-neutral-600 fs-300 margin-block-2">
-              <time>{`${getTime(post?.createdAt)} · ${getFullDate(
-                post?.createdAt
-              )}`}</time>
+              {!isLoadingPage ? (
+                <time>{`${getTime(post?.createdAt)} · ${getFullDate(
+                  post?.createdAt
+                )}`}</time>
+              ) : (
+                <Skeleton width={"40%"} />
+              )}
             </div>
           </div>
           <div className="postdetails-body-icon">
-            <div className="postdetails-comment pointer clr-neutral-600">
-              <div className="postdetails-icon d-flex">
-                <Comment />
-              </div>
-              <span className="fs-100 ">
-                {/* {postdetails.comments.length > 0 && postdetails.comments.length} */}
-                1
-              </span>
-            </div>
-            <div
-              onClick={handleRetweet}
-              className={`postdetails-retweet pointer ${
-                isRetweeted ? "clr-accent-teal" : "clr-neutral-600"
-              }`}
-            >
-              <div className="postdetails-icon d-flex">
-                {isRetweeted ? <Repost /> : <RepostOutline />}
-              </div>
-              <span className="fs-100 ">
-                {retweets.length > 0 && retweets.length}
-              </span>
-            </div>
-            <div
-              onClick={handleLike}
-              className={`postdetails-like pointer ${
-                isLiked ? "clr-accent-pink" : "clr-neutral-600"
-              }`}
-            >
-              <div className="postdetails-icon d-flex">
-                {isLiked ? <Love /> : <LoveOutline />}
-              </div>
-              <span className="fs-100 ">
-                {likes.length > 0 && likes.length}
-              </span>
-            </div>
-            <div className="postdetails-bookmark pointer clr-neutral-600">
-              <div className="postdetails-icon d-flex">
-                <Analytic />
-              </div>
-            </div>
-            <div className="postdetails-bookmark pointer clr-neutral-600">
-              <div className="postdetails-icon d-flex">
-                <BookmarkOutline />
-              </div>
-            </div>
+            {!isLoadingPage && (
+              <>
+                <div className="postdetails-comment pointer clr-neutral-600">
+                  <div className="postdetails-icon d-flex">
+                    <Comment />
+                  </div>
+                  <span className="fs-100 ">
+                    {/* {postdetails.comments.length > 0 && postdetails.comments.length} */}
+                    1
+                  </span>
+                </div>
+                <div
+                  onClick={handleRetweet}
+                  className={`postdetails-retweet pointer ${
+                    isRetweeted ? "clr-accent-teal" : "clr-neutral-600"
+                  }`}
+                >
+                  <div className="postdetails-icon d-flex">
+                    {isRetweeted ? <Repost /> : <RepostOutline />}
+                  </div>
+                  <span className="fs-100 ">
+                    {retweets.length > 0 && retweets.length}
+                  </span>
+                </div>
+                <div
+                  onClick={handleLike}
+                  className={`postdetails-like pointer ${
+                    isLiked ? "clr-accent-pink" : "clr-neutral-600"
+                  }`}
+                >
+                  <div className="postdetails-icon d-flex">
+                    {isLiked ? <Love /> : <LoveOutline />}
+                  </div>
+                  <span className="fs-100 ">
+                    {likes.length > 0 && likes.length}
+                  </span>
+                </div>
+                <div className="postdetails-bookmark pointer clr-neutral-600">
+                  <div className="postdetails-icon d-flex">
+                    <Analytic />
+                  </div>
+                </div>
+                <div className="postdetails-bookmark pointer clr-neutral-600">
+                  <div className="postdetails-icon d-flex">
+                    <BookmarkOutline />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </div>
         {isPhoneScreen && (
