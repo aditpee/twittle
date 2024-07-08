@@ -26,6 +26,8 @@ import { AuthContext } from "../../context/AuthContext";
 import "./post-details.scss";
 import { toast } from "react-toastify";
 import useFormatTime from "../../utils/hooks/useFormatTime";
+import Post from "../../components/post/Post";
+import PostForm from "../../components/post-form/PostForm";
 
 const PostDetails = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -44,6 +46,7 @@ const PostDetails = () => {
   const [openDialog, setOpenDialog] = useState(false);
   const [post, setPost] = useState(null);
   const [user, setUser] = useState(null);
+  const [comments, setComments] = useState([]);
 
   const { scrollDir } = useDetectScroll({ thr: 100 });
 
@@ -205,8 +208,28 @@ const PostDetails = () => {
     fetchData();
   }, [postId, token, currentUser._id]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const resComments = await axios.get(
+          API_URL + "/api/comments?postId=" + postId,
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+        console.log(resComments.data);
+        setComments(resComments.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    fetchData();
+  }, [postId, token]);
+
   return (
-    <main className="profile grid-container padding-block-end-10">
+    <main className="postdetails grid-container padding-block-end-10">
       <PostModal
         showModal={showModalPost}
         setShowModal={setShowModalPost}
@@ -228,7 +251,7 @@ const PostDetails = () => {
             <p className="fs-400 fw-bold">Post</p>
           </div>
         </header>
-        <div className="postdetails-body padding-4">
+        <div className="postdetails-body">
           <div className="postdetails-container postdetails-body-header">
             <div className="postdetails-avatar">
               {!isLoadingPage ? (
@@ -297,7 +320,7 @@ const PostDetails = () => {
             </div>
           </div>
           <div className="postdetails-body-main margin-block-start-4">
-            {isLoadingPage && post?.text && (
+            {isLoadingPage && (
               <>
                 <Skeleton
                   style={{ marginBottom: ".3rem" }}
@@ -309,10 +332,6 @@ const PostDetails = () => {
                   variant="text"
                   width={"80%"}
                 />
-              </>
-            )}
-            {isLoadingPage && post?.image && (
-              <>
                 <Skeleton
                   style={{ maxWidth: "250" }}
                   variant="rounded"
@@ -390,6 +409,12 @@ const PostDetails = () => {
               </>
             )}
           </div>
+        </div>
+        {!isPhoneScreen && !isLoadingPage && <PostForm />}
+        <div className="postdetails-comments">
+          {comments.map((comment) => (
+            <Post type="comments" key={comment._id} post={comment} />
+          ))}
         </div>
         {isPhoneScreen && (
           <>

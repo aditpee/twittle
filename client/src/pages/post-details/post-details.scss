@@ -31,12 +31,6 @@
   }
 }
 
-.postdetails {
-  padding-inline: 1rem;
-  padding-block: 0.75rem;
-  border-bottom: 1px solid $color-neutral-400;
-}
-
 .postdetails-mark {
   display: grid;
   align-items: center;
@@ -74,6 +68,15 @@
   & > *:last-child {
     display: flex;
     gap: 0.25rem;
+  }
+}
+
+.postdetails-body {
+  padding: 1rem 1rem 0;
+  border-bottom: 1px solid $color-neutral-400;
+
+  @include mq(small) {
+    border-bottom: 0;
   }
 }
 
@@ -125,9 +128,13 @@
 
 .postdetails-body-icon {
   padding-block: 0.75rem;
-  border-block: 1px solid $color-neutral-400;
+  border-block-start: 1px solid $color-neutral-400;
   display: flex;
   justify-content: space-between;
+
+  @include mq(small) {
+    border-block: 1px solid $color-neutral-400;
+  }
 
   span {
     height: 1rem;

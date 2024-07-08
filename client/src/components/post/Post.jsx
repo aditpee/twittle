@@ -22,7 +22,7 @@ import useTimeAgo from "../../utils/hooks/useFormatTime";
 import { Link } from "react-router-dom";
 import { Skeleton } from "@mui/material";
 
-const Post = ({ post }) => {
+const Post = ({ post, type }) => {
   const [user, setUser] = useState(null);
   const { token, user: currentUser } = useContext(AuthContext);
   const postRef = useRef();
@@ -50,7 +50,7 @@ const Post = ({ post }) => {
     }
     try {
       await axios.put(
-        API_URL + `/api/posts/${post._id}/like`,
+        API_URL + `/api/${type || "posts"}/${post._id}/like`,
         {},
         {
           headers: {
@@ -83,7 +83,7 @@ const Post = ({ post }) => {
     }
     try {
       await axios.put(
-        API_URL + `/api/posts/${post._id}/retweet`,
+        API_URL + `/api/${type || "posts"}/${post._id}/retweet`,
         {},
         {
           headers: {
@@ -103,11 +103,14 @@ const Post = ({ post }) => {
 
   const handleDeletePost = async () => {
     try {
-      const res = await axios.delete(API_URL + "/api/posts/" + post._id, {
-        headers: {
-          Authorization: token,
-        },
-      });
+      const res = await axios.delete(
+        API_URL + `/api/${type || "posts"}/` + post._id,
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
       postRef.current.style.display = "none";
       toast.success(res.data.message, {
         position: "bottom-center",
@@ -257,7 +260,7 @@ const Post = ({ post }) => {
                   <Comment />
                 </div>
                 <span className="fs-100 ">
-                  {post.comments.length > 0 && post.comments.length}
+                  {/* {post.comments.length > 0 && post.comments.length} */}1
                 </span>
               </div>
               <div
@@ -306,6 +309,7 @@ const Post = ({ post }) => {
 
 Post.propTypes = {
   post: PropTypes.object,
+  type: PropTypes.string,
 };
 
 export default Post;
