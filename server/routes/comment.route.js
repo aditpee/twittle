@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 const Comment = require("../models/Comment");
 const Post = require("../models/Post");
@@ -21,7 +22,7 @@ router.post("/", verifyJwt, async (req, res) => {
     const comment = await newComment.save();
     res.status(200).json(comment);
   } catch (err) {
-    res.status(500).json("Internal server error!");
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -29,8 +30,22 @@ router.post("/", verifyJwt, async (req, res) => {
 router.get("/", verifyJwt, async (req, res) => {
   try {
     let comments = null;
+    const userId = new mongoose.Types.ObjectId(req.query.userId);
+    const postId = new mongoose.Types.ObjectId(req.query.postId);
     if (req.query.postId)
-      comments = await Comment.find({ postId: req.query.postId });
+      comments = await Comment.aggregate([
+        { $match: { postId } },
+        { $sort: { createdAt: -1 } },
+        { $skip: Number(req.query.offset * req.query.limit) },
+        { $limit: Number(req.query.limit) },
+      ]);
+    if (req.query.userId)
+      comments = await Comment.aggregate([
+        { $match: { userId } },
+        { $sort: { createdAt: -1 } },
+        { $skip: Number(req.query.offset * req.query.limit) },
+        { $limit: Number(req.query.limit) },
+      ]);
     if (req.query.commentId)
       comments = await Comment.findById(req.query.commentId);
 
@@ -40,7 +55,7 @@ router.get("/", verifyJwt, async (req, res) => {
 
     res.status(200).json(comments);
   } catch (err) {
-    res.status(500).json("Internal server error");
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -49,13 +64,15 @@ router.delete("/:commentId", verifyJwt, async (req, res) => {
   try {
     const comment = await Comment.findById(req.params.commentId);
 
-    const isYourComment = comment.userId === req.userId;
+    const isYourComment = String(comment.userId) === req.userId;
+
     if (!isYourComment)
       return res.status(403).json("Only can delete your reply post");
 
-    res.status(200).json("Your post was deleted");
+    await comment.deleteOne();
+    res.status(200).json({ message: "Your post was deleted" });
   } catch (err) {
-    res.status(500).json("Internal server error");
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
@@ -90,7 +107,7 @@ router.put("/:postId/like", verifyJwt, async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: { error: "Internal server error" } });
   }
 });
 
@@ -112,7 +129,7 @@ router.put("/:postId/bookmark", verifyJwt, async (req, res) => {
       res.status(200).json({ message: "bookmark post successfully" });
     }
   } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: { error: "Internal server error" } });
   }
 });
 
@@ -140,7 +157,7 @@ router.put("/:postId/retweet", verifyJwt, async (req, res) => {
       res.status(200).json({ message: "post has been retweeted" });
     }
   } catch (err) {
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: { error: "Internal server error" } });
   }
 });
 
