@@ -4,14 +4,16 @@
   padding-inline: 1rem;
   padding-block: 0.75rem;
   border-bottom: 1px solid $color-neutral-400;
+
+  &.remove {
+    display: none;
+  }
 }
 
 .post-avatar {
-  aspect-ratio: 1;
-
   img {
+    aspect-ratio: 1;
     width: 100%;
-    height: 100%;
     object-fit: cover;
   }
 }
@@ -162,5 +164,38 @@
 
   .post-comment:hover {
     color: $color-primary-000;
+  }
+}
+
+.post-reply {
+  border-bottom: 1px solid $color-neutral-400;
+
+  & > * {
+    border: none;
+  }
+
+  &:has(.post.remove) {
+    display: none;
+  }
+
+  & > *:first-child {
+    .post-avatar {
+      position: relative;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 3rem;
+        // ---- center div ----
+        left: 50%;
+        transform: translateX(-50%);
+        // ----            -----
+        display: block;
+        width: 2px;
+        height: calc(100% - 1.75rem);
+        background-color: $color-neutral-600;
+        opacity: 0.3;
+      }
+    }
   }
 }
