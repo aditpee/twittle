@@ -19,7 +19,7 @@ import PropTypes from "prop-types";
 import PostMenu from "../PostMenu/PostMenu";
 import { toast } from "react-toastify";
 import useTimeAgo from "../../utils/hooks/useFormatTime";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Skeleton } from "@mui/material";
 
 const Post = ({ post, type }) => {
@@ -28,6 +28,7 @@ const Post = ({ post, type }) => {
   const postRef = useRef();
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const { timeAgo } = useTimeAgo();
+  const { username } = useParams();
 
   // to open dialog post menu
   const [openDialog, setOpenDialog] = useState(false);
@@ -111,7 +112,7 @@ const Post = ({ post, type }) => {
           },
         }
       );
-      postRef.current.style.display = "none";
+      postRef.current.classList.add("remove");
       toast.success(res.data.message, {
         position: "bottom-center",
         theme: "colored",
@@ -163,7 +164,11 @@ const Post = ({ post, type }) => {
       {!isLoadingPost && post.isRetweet && (
         <div className="post-mark">
           <Repost />
-          <p>You reposted</p>
+          <p>
+            {currentUser.username === username
+              ? "You reposted"
+              : `${username} reposted`}
+          </p>
         </div>
       )}
       <div className="post-container">
