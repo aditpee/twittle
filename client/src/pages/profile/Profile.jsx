@@ -23,6 +23,7 @@ import useFormatTime from "../../utils/hooks/useFormatTime";
 import { useCallback } from "react";
 import PostModal from "../../components/post-modal/PostModal";
 import EditProfile from "../../components/edit-profile/EditProfile";
+import PostReply from "../../components/post/PostReply";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -43,6 +44,7 @@ const Profile = () => {
 
   const { user: currentUser, token } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
+  const [replyPosts, setReplyPosts] = useState([]);
 
   // infinite scroll
   const [hasMore, setHasMore] = useState(true);
@@ -118,6 +120,20 @@ const Profile = () => {
       console.log(err);
     }
   }, [index, user?._id]);
+  const fetchMoreDataPostsReplies = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/comments?offset=${index}&limit=10&userId=${user?._id}`,
+        { headers: { Authorization: token } }
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index, user?._id, token]);
 
   // ==== PREFILL =======
 
@@ -168,18 +184,27 @@ const Profile = () => {
         let resPosts;
         if (page === "media") {
           resPosts = await axios.get(
-            API_URL +
-              "/api/posts/media?offset=0&limit=10&userId=" +
-              res.data._id
-          );
-          setPosts(resPosts.data);
-          resPosts.data.length < 10 ? setHasMore(false) : setHasMore(true);
-        } else if (page === "likes") {
-          resPosts = await axios.get(
-            API_URL + "/api/posts/like?offset=0&limit=9&userId=" + res.data._id
+            API_URL + "/api/posts/media?offset=0&limit=9&userId=" + res.data._id
           );
           setPosts(resPosts.data);
           resPosts.data.length < 9 ? setHasMore(false) : setHasMore(true);
+        } else if (page === "likes") {
+          resPosts = await axios.get(
+            API_URL + "/api/posts/like?offset=0&limit=10&userId=" + res.data._id
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 10 ? setHasMore(false) : setHasMore(true);
+        } else if (page === "replies") {
+          resPosts = await axios.get(
+            API_URL + "/api/comments?offset=0&limit=10&userId=" + res.data._id,
+            {
+              headers: {
+                Authorization: token,
+              },
+            }
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 10 ? setHasMore(false) : setHasMore(true);
         } else {
           resPosts = await axios.get(
             API_URL + "/api/posts?offset=0&limit=10&userId=" + res.data._id
@@ -478,6 +503,34 @@ const Profile = () => {
                   <div>
                     {posts.map((post) => (
                       <Post key={post._id} post={post} />
+                    ))}
+                  </div>
+                </InfiniteScroll>
+              ))}
+            {page === "replies" &&
+              (posts.length === 0 && !isLoadingPage ? (
+                username === currentUser.username ? (
+                  <ProfileEmpty
+                    title={"You don’t have any replies yet"}
+                    subTitle={`When you do, your replies will show up here.`}
+                  />
+                ) : (
+                  <ProfileEmpty
+                    title={"This account don’t have any replies yet"}
+                    subTitle={`When they do, their replies will show up here.`}
+                  />
+                )
+              ) : (
+                <InfiniteScroll
+                  dataLength={posts.length}
+                  next={fetchMoreDataPostsReplies}
+                  hasMore={hasMore}
+                  loader={<Loader />}
+                  scrollThreshold={0.5}
+                >
+                  <div>
+                    {posts.map((post) => (
+                      <PostReply key={post._id} replyPost={post} />
                     ))}
                   </div>
                 </InfiniteScroll>

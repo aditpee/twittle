@@ -28,6 +28,8 @@ import { toast } from "react-toastify";
 import useFormatTime from "../../utils/hooks/useFormatTime";
 import Post from "../../components/post/Post";
 import PostForm from "../../components/post-form/PostForm";
+import InfiniteScroll from "react-infinite-scroll-component";
+import Loader from "../../components/Loader/Loader";
 
 const PostDetails = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -47,6 +49,8 @@ const PostDetails = () => {
   const [post, setPost] = useState(null);
   const [user, setUser] = useState(null);
   const [comments, setComments] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
+  const [index, setIndex] = useState(1);
 
   const { scrollDir } = useDetectScroll({ thr: 100 });
 
@@ -208,18 +212,33 @@ const PostDetails = () => {
     fetchData();
   }, [postId, token, currentUser._id]);
 
+  const fetchMoreDataPostsReplies = async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/comments?offset=${index}&limit=10&postId=${postId}`,
+        { headers: { Authorization: token } }
+      );
+      setComments((prevComments) => [...prevComments, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const resComments = await axios.get(
-          API_URL + "/api/comments?postId=" + postId,
+          API_URL + "/api/comments?offset=0&limit=10&postId=" + postId,
           {
             headers: {
               Authorization: token,
             },
           }
         );
-        console.log(resComments.data);
+        resComments.data.length < 10 ? setHasMore(false) : setHasMore(true);
         setComments(resComments.data);
       } catch (err) {
         console.log(err);
@@ -410,12 +429,22 @@ const PostDetails = () => {
             )}
           </div>
         </div>
-        {!isPhoneScreen && !isLoadingPage && <PostForm />}
-        <div className="postdetails-comments">
-          {comments.map((comment) => (
-            <Post type="comments" key={comment._id} post={comment} />
-          ))}
-        </div>
+        {!isPhoneScreen && !isLoadingPage && (
+          <PostForm setPosts={setComments} type="comments" textButton="Reply" />
+        )}
+        <InfiniteScroll
+          dataLength={comments.length}
+          next={fetchMoreDataPostsReplies}
+          hasMore={hasMore}
+          loader={<Loader />}
+          scrollThreshold={0.5}
+        >
+          <div className="postdetails-comments">
+            {comments.map((comment) => (
+              <Post type="comments" key={comment._id} post={comment} />
+            ))}
+          </div>
+        </InfiniteScroll>
         {isPhoneScreen && (
           <>
             <MobileNav scrollDir={scrollDir} />
