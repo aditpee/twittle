@@ -14,13 +14,16 @@ import { AuthContext } from "../../context/AuthContext";
 import { Gif, Globe, Picture } from "../../utils/icons/icons";
 import PropTypes from "prop-types";
 import "./post-form.scss";
+import { useParams } from "react-router-dom";
 
-const PostForm = ({ setPosts, setShowModal }) => {
+const PostForm = ({ setPosts, setShowModal, type, textButton }) => {
   const textAreaRef = useRef();
   const [valTextArea, setValTextArea] = useState("");
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
+  const [isHide, setIsHide] = useState(true);
+  const { postId } = useParams();
 
   const { user, token } = useContext(AuthContext);
 
@@ -63,8 +66,9 @@ const PostForm = ({ setPosts, setShowModal }) => {
       const data = {
         text: valTextArea ? valTextArea : "",
         image: imageUrl ? imageUrl : "",
+        postId: postId || "",
       };
-      const res = await axios.post(API_URL + "/api/posts", data, {
+      const res = await axios.post(API_URL + `/api/${type || "posts"}`, data, {
         headers: {
           Authorization: token,
         },
@@ -87,11 +91,18 @@ const PostForm = ({ setPosts, setShowModal }) => {
     setImageURL(URL.createObjectURL(newImage));
   };
 
+  const replyPostStyle = {
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "start",
+  };
+
   return (
     <form
       className={`postform ${isLoadingPost && "loading-post"}`}
       action=""
       onSubmit={handleSubmit}
+      onClick={() => textAreaRef.current.focus()}
     >
       <div className="postform-avatar">
         <img
@@ -100,9 +111,10 @@ const PostForm = ({ setPosts, setShowModal }) => {
           alt=""
         />
       </div>
-      <div>
+      <div style={isHide && type === "comments" ? replyPostStyle : {}}>
         <div className="postform-input">
           <textarea
+            onFocus={() => setIsHide(false)}
             className="fs-600"
             type="text"
             value={valTextArea}
@@ -129,27 +141,40 @@ const PostForm = ({ setPosts, setShowModal }) => {
 
         {!isLoadingPost && (
           <>
-            <div className="postform-canreply clr-primary-000 fw-medium fs-300">
-              <Globe />
-              <p>Everyone can reply</p>
-            </div>
-            <div className="postform-submit">
-              <div className="postform-submit-icons">
-                <input
-                  id="twittle-upload-img"
-                  onChange={handleChangeImage}
-                  type="file"
-                  hidden
-                  accept=".jpg, .png, .jpeg"
-                />
-                <label
-                  htmlFor="twittle-upload-img"
-                  className="d-flex align-center"
-                >
-                  <Picture />
-                </label>
-                <Gif />
+            {!isHide && type !== "comments" && (
+              <div className="postform-canreply clr-primary-000 fw-medium fs-300">
+                <Globe />
+                <p>Everyone can reply</p>
               </div>
+            )}
+            <div
+              className="postform-submit"
+              style={
+                isHide && type === "comments"
+                  ? { paddingBlock: ".25rem 2rem" }
+                  : {}
+              }
+            >
+              {isHide && type === "comments" ? (
+                ""
+              ) : (
+                <div className="postform-submit-icons">
+                  <input
+                    id="twittle-upload-img"
+                    onChange={handleChangeImage}
+                    type="file"
+                    hidden
+                    accept=".jpg, .png, .jpeg"
+                  />
+                  <label
+                    htmlFor="twittle-upload-img"
+                    className="d-flex align-center"
+                  >
+                    <Picture />
+                  </label>
+                  <Gif />
+                </div>
+              )}
               <div className="">
                 {valTextArea.length > 0 && (
                   <svg
@@ -186,7 +211,7 @@ const PostForm = ({ setPosts, setShowModal }) => {
                   className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-primary-000"
                   disabled={valTextArea || image ? false : true}
                 >
-                  Post
+                  {textButton || "Post"}
                 </button>
               </div>
             </div>
@@ -200,6 +225,8 @@ const PostForm = ({ setPosts, setShowModal }) => {
 PostForm.propTypes = {
   setPosts: PropTypes.func,
   setShowModal: PropTypes.func,
+  type: PropTypes.string,
+  textButton: PropTypes.string,
 };
 
 export default PostForm;
