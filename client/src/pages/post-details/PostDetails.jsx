@@ -47,6 +47,7 @@ const PostDetails = () => {
   const [showModalPost, setShowModalPost] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
   const [post, setPost] = useState(null);
+  const [originPost, setOriginPost] = useState(null);
   const [user, setUser] = useState(null);
   const [comments, setComments] = useState([]);
   const [hasMore, setHasMore] = useState(true);
@@ -173,12 +174,37 @@ const PostDetails = () => {
     }
   };
 
+  const fetchMoreDataPostsReplies = async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/comments?offset=${index}&limit=10&postId=${postId}`,
+        { headers: { Authorization: token } }
+      );
+      setComments((prevComments) => [...prevComments, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     setIsLoadingPage(true);
 
     const fetchData = async () => {
       try {
-        const resPost = await axios.get(API_URL + "/api/posts/" + postId);
+        // await axios.get(API_URL + "/api/posts/" + postId);
+        // const result = await Promise.allSettled([
+        //   axios.get(API_URL + "/api/posts/" + postId),
+        //   axios.get(API_URL + "/api/comments/" + postId),
+        // ]);
+
+        const resPost = await Promise.any([
+          axios.get(API_URL + "/api/posts/" + postId),
+          axios.get(API_URL + "/api/comments/" + postId),
+        ]);
+
         const resUser = await axios.get(
           API_URL + "/api/users?userId=" + resPost.data.userId,
           {
@@ -187,6 +213,16 @@ const PostDetails = () => {
             },
           }
         );
+
+        if (resPost.data.postId) {
+          const res = await axios.get(
+            API_URL + "/api/posts/" + resPost.data.postId
+          );
+
+          setOriginPost(res.data);
+        } else {
+          setOriginPost(null);
+        }
 
         setPost(resPost.data);
         setLikes(resPost.data.likes);
@@ -212,21 +248,6 @@ const PostDetails = () => {
     fetchData();
   }, [postId, token, currentUser._id]);
 
-  const fetchMoreDataPostsReplies = async () => {
-    try {
-      const res = await axios.get(
-        API_URL + `/api/comments?offset=${index}&limit=10&postId=${postId}`,
-        { headers: { Authorization: token } }
-      );
-      setComments((prevComments) => [...prevComments, ...res.data]);
-      setIndex((prevIndex) => prevIndex + 1);
-
-      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -248,11 +269,15 @@ const PostDetails = () => {
   }, [postId, token]);
 
   return (
-    <main className="postdetails grid-container padding-block-end-10">
+    <main className="postdetails grid-container">
       <PostModal
         showModal={showModalPost}
         setShowModal={setShowModalPost}
-        // setPosts={setPosts}
+        setPosts={setComments}
+        type="comments"
+        originPost={post}
+        textButton="Reply"
+        isModal={true}
       />
       {!isPhoneScreen && (
         <LeftBar user={currentUser} setShowModal={setShowModalPost} />
@@ -270,6 +295,7 @@ const PostDetails = () => {
             <p className="fs-400 fw-bold">Post</p>
           </div>
         </header>
+        {originPost && <Post post={originPost} />}
         <div className="postdetails-body">
           <div className="postdetails-container postdetails-body-header">
             <div className="postdetails-avatar">
@@ -429,8 +455,13 @@ const PostDetails = () => {
             )}
           </div>
         </div>
-        {!isPhoneScreen && !isLoadingPage && (
-          <PostForm setPosts={setComments} type="comments" textButton="Reply" />
+        {!isPhoneScreen && !isLoadingPage && !post?.postId && (
+          <PostForm
+            setPosts={setComments}
+            type="comments"
+            textButton="Reply"
+            postId={postId}
+          />
         )}
         <InfiniteScroll
           dataLength={comments.length}
@@ -448,7 +479,9 @@ const PostDetails = () => {
         {isPhoneScreen && (
           <>
             <MobileNav scrollDir={scrollDir} />
-            <MobilePost setShowModal={setShowModalPost} />
+            {!post?.postId && (
+              <MobilePost type="comments" setShowModal={setShowModalPost} />
+            )}
           </>
         )}
       </section>

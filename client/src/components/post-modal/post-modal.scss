@@ -61,10 +61,14 @@
         // ----            -----
         display: block;
         width: 2px;
-        height: calc(100% - 0rem);
+        height: calc(100% - 0.25rem);
         background-color: $color-neutral-600;
         opacity: 0.3;
       }
+    }
+
+    .post-info {
+      display: none;
     }
   }
 

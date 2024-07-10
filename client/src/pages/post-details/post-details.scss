@@ -195,3 +195,35 @@
     color: $color-primary-000;
   }
 }
+
+.postdetails-content {
+  padding-bottom: 100rem;
+  & > * {
+    &.post {
+      border: 0;
+
+      .post-avatar {
+        position: relative;
+
+        &::after {
+          content: "";
+          position: absolute;
+          top: 3rem;
+          // ---- center div ----
+          left: 50%;
+          transform: translateX(-50%);
+          // ----            -----
+          display: block;
+          width: 2px;
+          height: calc(100% - 1.75rem);
+          background-color: $color-neutral-600;
+          opacity: 0.3;
+        }
+      }
+    }
+  }
+}
+
+.postdetails-comments {
+  padding-bottom: 15rem;
+}

@@ -14,16 +14,21 @@ import { AuthContext } from "../../context/AuthContext";
 import { Gif, Globe, Picture } from "../../utils/icons/icons";
 import PropTypes from "prop-types";
 import "./post-form.scss";
-import { useParams } from "react-router-dom";
 
-const PostForm = ({ setPosts, setShowModal, type, textButton }) => {
+const PostForm = ({
+  setPosts,
+  setShowModal,
+  type,
+  textButton,
+  postId,
+  isModal,
+}) => {
   const textAreaRef = useRef();
   const [valTextArea, setValTextArea] = useState("");
   const [image, setImage] = useState(null);
   const [imageURL, setImageURL] = useState(null);
   const [isLoadingPost, setIsLoadingPost] = useState(false);
   const [isHide, setIsHide] = useState(true);
-  const { postId } = useParams();
 
   const { user, token } = useContext(AuthContext);
 
@@ -111,7 +116,9 @@ const PostForm = ({ setPosts, setShowModal, type, textButton }) => {
           alt=""
         />
       </div>
-      <div style={isHide && type === "comments" ? replyPostStyle : {}}>
+      <div
+        style={isHide && !isModal && type === "comments" ? replyPostStyle : {}}
+      >
         <div className="postform-input">
           <textarea
             onFocus={() => setIsHide(false)}
@@ -155,7 +162,7 @@ const PostForm = ({ setPosts, setShowModal, type, textButton }) => {
                   : {}
               }
             >
-              {isHide && type === "comments" ? (
+              {isHide && type === "comments" && !isModal ? (
                 ""
               ) : (
                 <div className="postform-submit-icons">
@@ -227,6 +234,8 @@ PostForm.propTypes = {
   setShowModal: PropTypes.func,
   type: PropTypes.string,
   textButton: PropTypes.string,
+  postId: PropTypes.string,
+  isModal: PropTypes.bool,
 };
 
 export default PostForm;
