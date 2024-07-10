@@ -59,6 +59,19 @@ router.get("/", verifyJwt, async (req, res) => {
   }
 });
 
+router.get("/:commentId", async (req, res) => {
+  try {
+    const comment = await Comment.findById(req.params.commentId);
+    if (!comment) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json(comment);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // delete comment
 router.delete("/:commentId", verifyJwt, async (req, res) => {
   try {
