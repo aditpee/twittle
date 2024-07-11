@@ -18,7 +18,7 @@ import { useEffect } from "react";
 import PropTypes from "prop-types";
 import PostMenu from "../PostMenu/PostMenu";
 import { toast } from "react-toastify";
-import useTimeAgo from "../../utils/hooks/useFormatTime";
+import useFormatTime from "../../utils/hooks/useFormatTime";
 import { Link, useParams } from "react-router-dom";
 import { Skeleton } from "@mui/material";
 import PostModal from "../post-modal/PostModal";
@@ -28,9 +28,11 @@ const Post = ({ post, type }) => {
   const { token, user: currentUser } = useContext(AuthContext);
   const postRef = useRef();
   const [isLoadingPost, setIsLoadingPost] = useState(false);
-  const { timeAgo } = useTimeAgo();
   const { username } = useParams();
 
+  const { timeAgo } = useFormatTime(
+    post.isRetweet ? post.oldCreatedAt : post.createdAt
+  );
   // to open dialog post menu
   const [openDialog, setOpenDialog] = useState(false);
 
@@ -234,11 +236,7 @@ const Post = ({ post, type }) => {
                     </Link>
                     <span>·</span>
                     <Link to={`/${user?.username}/status/${post._id}`}>
-                      <span className="fs-300 clr-neutral-600">
-                        {post.isRetweet
-                          ? timeAgo(new Date(post.oldCreatedAt))
-                          : timeAgo(new Date(post.createdAt))}
-                      </span>
+                      <span className="fs-300 clr-neutral-600">{timeAgo}</span>
                     </Link>
                   </div>
                 </div>

@@ -57,7 +57,7 @@ const PostDetails = () => {
 
   const { user: currentUser, token } = useContext(AuthContext);
   const { postId } = useParams();
-  const { getTime, getFullDate } = useFormatTime();
+  const { getTime, getFullDate } = useFormatTime(post?.createdAt);
 
   const handleLike = async () => {
     if (likes?.includes(currentUser?._id)) {
@@ -395,9 +395,7 @@ const PostDetails = () => {
             )}
             <div className="postdetails-time clr-neutral-600 fs-300 margin-block-2">
               {!isLoadingPage ? (
-                <time>{`${getTime(post?.createdAt)} · ${getFullDate(
-                  post?.createdAt
-                )}`}</time>
+                <time>{`${getTime} · ${getFullDate}`}</time>
               ) : (
                 <Skeleton width={"40%"} />
               )}

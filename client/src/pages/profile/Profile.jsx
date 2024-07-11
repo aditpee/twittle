@@ -40,11 +40,12 @@ const Profile = () => {
   const [showModalEdit, setShowModalEdit] = useState(false);
 
   const { scrollDir } = useDetectScroll({ thr: 100 });
-  const { getMonth, getYear } = useFormatTime();
 
   const { user: currentUser, token } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [replyPosts, setReplyPosts] = useState([]);
+
+  const { getMonth, getYear } = useFormatTime(user?.createdAt);
 
   // infinite scroll
   const [hasMore, setHasMore] = useState(true);
@@ -338,16 +339,14 @@ const Profile = () => {
                 {user?.website && (
                   <div className="profile-link clr-neutral-600">
                     <LinkIcon />
-                    <a href={user.website}>{user.website}</a>
+                    <a href={`//${user.website}`} target="_blank">
+                      {user.website}
+                    </a>
                   </div>
                 )}
                 <div className="profile-date clr-neutral-600">
                   <DateIcon />
-                  {user?.createdAt && (
-                    <p>{`Joined ${getMonth(user.createdAt)} ${getYear(
-                      user.createdAt
-                    )}`}</p>
-                  )}
+                  {user?.createdAt && <p>{`Joined ${getMonth} ${getYear}`}</p>}
                 </div>
               </div>
               <div className="profile-info-follow">
