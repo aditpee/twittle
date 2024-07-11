@@ -1,0 +1,19 @@
+@use "../../style/abstracts/" as *;
+
+.postmenu-cancel {
+  display: flex;
+  justify-content: center;
+  padding-block: 1rem 0.5rem;
+
+  button {
+    text-transform: capitalize;
+    font-size: $font-size-400;
+    font-weight: $font-weight-bold;
+    color: $color-neutral-800;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    width: calc(100% - 4rem);
+    border-radius: 5rem;
+    border: 1px solid rgba($color: hsl(209 18% 44%), $alpha: 0.3);
+  }
+}

@@ -35,10 +35,28 @@ body {
     align-items: center;
   }
 
+  .MuiPopover-root.mobile-device {
+    @media (max-width: 500px) {
+      background-color: rgba(black, 0.3);
+
+      .MuiPaper-root {
+        bottom: 0;
+        top: unset !important;
+        right: 0 !important;
+        left: 0 !important;
+        width: 100%;
+        max-width: unset !important;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+  }
+
   .MuiMenuItem-root {
     font-weight: $font-weight-bold;
     font-size: $font-size-300;
     gap: 0.5rem;
+    padding-block: 0.5rem;
 
     svg {
       font-size: 1.25rem;

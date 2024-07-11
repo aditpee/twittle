@@ -242,6 +242,8 @@ const Post = ({ post, type }) => {
                 </div>
                 <div>
                   <PostMenu
+                    postUser={user}
+                    currentUser={currentUser}
                     button={
                       <div className="post-setting pointer">
                         <MoreHoriz />
@@ -250,6 +252,7 @@ const Post = ({ post, type }) => {
                     handleDeletePost={handleDeletePost}
                     setOpenDialog={setOpenDialog}
                     openDialog={openDialog}
+                    isHaveMobileStyle={true}
                   ></PostMenu>
                 </div>
               </div>
