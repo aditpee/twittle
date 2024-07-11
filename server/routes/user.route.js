@@ -21,10 +21,47 @@ router.get("/all", verifyJwt, async (req, res) => {
   }
 });
 
+router.get("/limit", verifyJwt, async (req, res) => {
+  try {
+    const user = await User.aggregate([
+      { $match: { username: "aditpee" } },
+      {
+        $unionWith: {
+          coll: "users",
+          pipeline: [{ $sample: { $size: 2 } }],
+        },
+      },
+    ]);
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // get one user by username or id
 router.get("/", verifyJwt, async (req, res) => {
   try {
     let user;
+    if (req.query.limit) {
+      user = await User.aggregate([
+        { $match: { username: "aditpee" } },
+        {
+          $unionWith: {
+            coll: "users",
+            pipeline: [
+              {
+                $match: {
+                  verifiedEmail: true,
+                  username: { $ne: "aditpee" },
+                },
+              },
+              { $sample: { size: Number(req.query.limit) } },
+            ],
+          },
+        },
+      ]);
+      return res.status(200).json(user);
+    }
     if (req.query.userId) {
       user = await User.findById(req.query.userId);
     }
@@ -39,6 +76,7 @@ router.get("/", verifyJwt, async (req, res) => {
     const { password, updatedAt, ...others } = user._doc;
     return res.status(200).json(others);
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Internal server error" });
   }
 });
