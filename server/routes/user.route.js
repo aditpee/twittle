@@ -3,6 +3,7 @@ const router = express.Router();
 const User = require("../models/User");
 const Token = require("../models/Token");
 const { validationResult } = require("express-validator");
+const mongoose = require("mongoose");
 
 const verifyJwt = require("../middleware/authMiddleware");
 const { editProfileValidator } = require("../middleware/validators");
@@ -41,6 +42,7 @@ router.get("/limit", verifyJwt, async (req, res) => {
 // get one user by username or id
 router.get("/", verifyJwt, async (req, res) => {
   try {
+    const userId = new mongoose.Types.ObjectId(req.userId);
     let user;
     if (req.query.limit) {
       user = await User.aggregate([
@@ -52,6 +54,7 @@ router.get("/", verifyJwt, async (req, res) => {
               {
                 $match: {
                   verifiedEmail: true,
+                  _id: { $ne: userId },
                   username: { $ne: "aditpee" },
                 },
               },
@@ -166,12 +169,12 @@ router.put("/:username/follow", verifyJwt, async (req, res) => {
 
     const followUser = async () => {
       await user.updateOne({ $push: { followers: currentUser._id } });
-      await currentUser.updateOne({ $push: { followings: currentUser._id } });
+      await currentUser.updateOne({ $push: { followings: user._id } });
       return res.status(200).json({ message: "Follow user" });
     };
     const unfollowUser = async () => {
       await user.updateOne({ $pull: { followers: currentUser._id } });
-      await currentUser.updateOne({ $pull: { followings: currentUser._id } });
+      await currentUser.updateOne({ $pull: { followings: user._id } });
       return res.status(200).json({ message: "Unfollow user" });
     };
     if (user.followers.includes(currentUser._id)) {
