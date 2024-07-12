@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRef } from "react";
 import { useContext } from "react";
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { API_URL, PF } from "../../config";
 import { AuthContext } from "../../context/AuthContext";
 import { SearchOutline } from "../../utils/icons/icons";
@@ -16,8 +16,37 @@ const RightBar = () => {
   const searchRef = useRef(null);
   const { pathname } = useLocation();
   const [users, setUsers] = useState([]);
+  const { token, user: currentUser, dispatch } = useContext(AuthContext);
 
-  const { token } = useContext(AuthContext);
+  const [isLoadingFollow, setIsLoadingFollow] = useState(false);
+
+  const handleFollow = async (user) => {
+    setIsLoadingFollow(true);
+    try {
+      await axios.put(
+        API_URL + `/api/users/${user?.username}/follow`,
+        {},
+        {
+          headers: {
+            Authorization: token,
+          },
+        }
+      );
+      currentUser.followings.includes(user?._id)
+        ? dispatch({
+            type: "UNFOLLOW",
+            oldFollower: user?._id,
+          })
+        : dispatch({
+            type: "FOLLOW",
+            newFollower: user?._id,
+          });
+      setIsLoadingFollow(false);
+    } catch (err) {
+      setIsLoadingFollow(false);
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,24 +84,36 @@ const RightBar = () => {
                 className="right-bar-follow-card d-flex align-center"
               >
                 <div className="">
-                  <div className="right-bar-avatar margin-inline-end-3">
-                    <img
-                      className="radius-circle"
-                      src={
-                        user?.avatar
-                          ? user?.avatar
-                          : PF + "/images/no-avatar.svg"
-                      }
-                      alt=""
-                    />
-                  </div>
+                  <Link to={`/${user?.username}`}>
+                    <div className="right-bar-avatar margin-inline-end-3">
+                      <img
+                        className="radius-circle"
+                        src={
+                          user?.avatar
+                            ? user?.avatar
+                            : PF + "/images/no-avatar.svg"
+                        }
+                        alt=""
+                      />
+                    </div>
+                  </Link>
                   <div>
-                    <p className="fs-400 fw-bold">{user?.name}</p>
-                    <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
+                    <Link to={`/${user?.username}`}>
+                      <p className="fs-400 fw-bold">{user?.name}</p>
+                    </Link>
+                    <Link to={`/${user?.username}`}>
+                      <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
+                    </Link>
                   </div>
                 </div>
-                <button className="fs-300 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2">
-                  Following
+                <button
+                  disabled={isLoadingFollow}
+                  onClick={() => handleFollow(user)}
+                  className="fs-300 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+                >
+                  {currentUser?.followings.includes(user?._id)
+                    ? "Following"
+                    : "Follow"}
                 </button>
               </div>
             ))}
