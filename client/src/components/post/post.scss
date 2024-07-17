@@ -156,6 +156,7 @@
 }
 .post-icon {
   position: relative;
+  z-index: -1;
   margin-right: 0.25rem;
 
   svg {
