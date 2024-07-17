@@ -17,17 +17,17 @@ const MobileNav = ({ scrollDir }) => {
             <HomeOutline />
           </div>
         </Link>
-        <Link to={""}>
+        <Link to={"/explore"}>
           <div className="explore-icon d-flex clr-neutral-800">
             <SearchOutline />
           </div>
         </Link>
-        <Link to={""}>
+        <Link to={"/notification"}>
           <div className="notif-icon d-flex clr-neutral-800">
             <NotificationOutline />
           </div>
         </Link>
-        <Link to={""}>
+        <Link to={"/messages"}>
           <div className="message-icon d-flex clr-neutral-800">
             <MessageOutline />
           </div>
