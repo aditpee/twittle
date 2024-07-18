@@ -136,32 +136,9 @@ const Profile = () => {
     }
   }, [index, user?._id, token]);
 
-  // ==== PREFILL =======
-
-  // const fetchPrefill = useCallback(
-  //   (callbackFetchMoreData) => {
-  //     if (document.body.clientHeight <= window.innerHeight && hasMore) {
-  //       callbackFetchMoreData();
-  //     }
-  //   },
-  //   [hasMore]
-  // );
-
-  // useEffect(() => {
-  //   if (!page) fetchPrefill(fetchMoreDataPosts);
-  //   if (page === "media") fetchPrefill(fetchMoreDataPostsMedia);
-  //   if (page === "likes") fetchPrefill(fetchMoreDataPostsLike);
-  // }, [
-  //   page,
-  //   fetchPrefill,
-  //   fetchMoreDataPosts,
-  //   fetchMoreDataPostsMedia,
-  //   fetchMoreDataPostsLike,
-  // ]);
-
   useEffect(() => {
     if (page !== "replies" && page !== "media" && page !== "likes") {
-      navigate(`/${username}`);
+      navigate(`/${username}`, { replace: true });
     }
     setIndex(1);
     setPosts([]);
