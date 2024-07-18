@@ -27,7 +27,7 @@ const Post = ({ post, type }) => {
   const [user, setUser] = useState(null);
   const { token, user: currentUser } = useContext(AuthContext);
   const postRef = useRef();
-  const [isLoadingPost, setIsLoadingPost] = useState(false);
+  const [isLoadingPost, setIsLoadingPost] = useState(true);
   const { username } = useParams();
 
   const { timeAgo } = useFormatTime(
