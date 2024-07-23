@@ -24,6 +24,7 @@ import { useCallback } from "react";
 import PostModal from "../../components/post-modal/PostModal";
 import EditProfile from "../../components/edit-profile/EditProfile";
 import PostReply from "../../components/post/PostReply";
+import UserCard from "../../components/user-card/UserCard";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -35,7 +36,7 @@ const Profile = () => {
   const [isFollowed, setIsFollowed] = useState(true);
   const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
-  const [isLoadingPage, setIsLoadingPage] = useState(false);
+  const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [showModalPost, setShowModalPost] = useState(false);
   const [showModalEdit, setShowModalEdit] = useState(false);
 
@@ -136,8 +137,56 @@ const Profile = () => {
     }
   }, [index, user?._id, token]);
 
+  const fetchMoreDataFollowers = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/users/${username}/followers?offset=${index}&limit=30`
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index, username]);
+  const fetchMoreDataVerifFollowers = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL +
+          `/api/users/${username}/verified_followers?offset=${index}&limit=30`
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index, username]);
+  const fetchMoreDataFollowings = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/users/${username}/followings?offset=${index}&limit=30`
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex((prevIndex) => prevIndex + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index, username]);
+
   useEffect(() => {
-    if (page !== "replies" && page !== "media" && page !== "likes") {
+    if (
+      page !== "replies" &&
+      page !== "media" &&
+      page !== "likes" &&
+      page !== "followings" &&
+      page !== "verified_followers" &&
+      page !== "followers"
+    ) {
       navigate(`/${username}`, { replace: true });
     }
     setIndex(1);
@@ -183,6 +232,25 @@ const Profile = () => {
           );
           setPosts(resPosts.data);
           resPosts.data.length < 10 ? setHasMore(false) : setHasMore(true);
+        } else if (page === "followers") {
+          resPosts = await axios.get(
+            API_URL + `/api/users/${username}/followers?offset=0&limit=30`
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 30 ? setHasMore(false) : setHasMore(true);
+        } else if (page === "verified_followers") {
+          resPosts = await axios.get(
+            API_URL +
+              `/api/users/${username}/verified_followers?offset=0&limit=30`
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 30 ? setHasMore(false) : setHasMore(true);
+        } else if (page === "followings") {
+          resPosts = await axios.get(
+            API_URL + `/api/users/${username}/followings?offset=0&limit=30`
+          );
+          setPosts(resPosts.data);
+          resPosts.data.length < 30 ? setHasMore(false) : setHasMore(true);
         } else {
           resPosts = await axios.get(
             API_URL + "/api/posts?offset=0&limit=10&userId=" + res.data._id
@@ -225,6 +293,27 @@ const Profile = () => {
     title: PropTypes.string,
     subTitle: PropTypes.string,
   };
+  const testUser = {
+    avatar:
+      "https://res.cloudinary.com/dlovbdzns/image/upload/v1720259866/pzeteldl2meahirx5ltz.jpg",
+    bio: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab velit expedita debitis nostrum suscipit, iste provident nobis minus itaque maiores earum nisi explicabo quos inventore adipisci mollitia sequi veniam temporibus dolores vero eum quae? Cupiditate ex dolor impedit vero doloribus sint, magni ea libero praesentium, soluta cumque consectetur possimus illum.",
+    cover:
+      "https://res.cloudinary.com/dlovbdzns/image/upload/v1720375217/hgrw3boq0d8fxwgsgvhb.jpg",
+    createdAt: "2024-06-29T07:26:47.561Z",
+    email: "p254881@gmail.com",
+    followers: [],
+    followings: [],
+    location: "",
+    name: "Aditya Pratama",
+    password: "$2b$10$yB6fworxs9HCR2U9mTkv9.pCxf4wGgG4jGnmTqkVhx6qutNqRWG8C",
+    updatedAt: "2024-07-12T11:57:14.805Z",
+    username: "aditpee",
+    verifiedAccount: true,
+    verifiedEmail: true,
+    website: "portofolio.com",
+    __v: 0,
+    _id: "667fb7373d36a59b783d1e02",
+  };
 
   return (
     <>
@@ -254,266 +343,409 @@ const Profile = () => {
               <span className="fs-200 clr-neutral-600">0 posts</span>
             </div>
           </header>
-          <div className="profile-info">
-            <div className="profile-cover">
-              <div className="profile-cover-img">
-                {user?.cover ? (
-                  <img src={user.cover} alt="" />
-                ) : (
-                  <div className="no-profile-cover"></div>
-                )}
-              </div>
-              <div className="profile-avatar">
-                <img
-                  src={
-                    user?.avatar ? user.avatar : `${PF}/images/no-avatar.svg`
-                  }
-                  alt=""
-                />
-              </div>
-            </div>
-            <div className="profile-info-content">
-              <div className="profile-edit-button">
-                {currentUser.username === user?.username ? (
-                  <button
-                    onClick={() => setShowModalEdit(true)}
-                    className="fs-400 fw-bold"
+          {page === "followers" ||
+          page === "verified_followers" ||
+          page === "followings" ? (
+            <>
+              <nav className="profile-nav">
+                <Link to={`/${user?.username}/verified_followers`}>
+                  <Button
+                    // onClick={() => setIndex(1)}
+                    className="profile-nav-button"
                   >
-                    Edit profile
-                  </button>
-                ) : isFollowed ? (
-                  <button
-                    disabled={isLoadingFollow}
-                    onClick={handleFollow}
-                    className="fs-400 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+                    <div className="active">
+                      <span
+                        className={`fs-400 fw-medium clr-neutral-600 active`}
+                      >
+                        Verified Followers
+                      </span>
+                    </div>
+                  </Button>
+                </Link>
+                <Link to={`/${user?.username}/followers`}>
+                  <Button
+                    // onClick={() => setIndex(1)}
+                    className="profile-nav-button"
                   >
-                    Following
-                  </button>
-                ) : (
-                  <button
-                    disabled={isLoadingFollow}
-                    onClick={handleFollow}
-                    className="fs-400 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+                    <div>
+                      <span className={`fs-400 fw-medium clr-neutral-600`}>
+                        Followers
+                      </span>
+                    </div>
+                  </Button>
+                </Link>
+                <Link to={`/${user?.username}/followings`}>
+                  <Button
+                    // onClick={() => setIndex(1)}
+                    className="profile-nav-button"
                   >
-                    Follow
-                  </button>
-                )}
-              </div>
-              <div className="profile-name">
-                <p className="fs-500 fw-bold">{user?.name}</p>
-                <p className="clr-neutral-600">{user?.username}</p>
-              </div>
-              <div className="profile-desc margin-block-3">
-                <p>{user?.bio}</p>
-              </div>
-              <div className="profile-small-info">
-                {user?.location && (
-                  <div className="profile-location clr-neutral-600">
-                    <Location />
-                    <p>{user.location}</p>
-                  </div>
-                )}
-                {user?.website && (
-                  <div className="profile-link clr-neutral-600">
-                    <LinkIcon />
-                    <a href={`//${user.website}`} target="_blank">
-                      {user.website}
-                    </a>
-                  </div>
-                )}
-                <div className="profile-date clr-neutral-600">
-                  <DateIcon />
-                  {user?.createdAt && <p>{`Joined ${getMonth} ${getYear}`}</p>}
-                </div>
-              </div>
-              <div className="profile-info-follow">
-                <div className="">
-                  <p className="clr-neutral-600">
-                    <span className="clr-neutral-800 fw-bold">
-                      {followings.length}
-                    </span>{" "}
-                    Following
-                  </p>
-                </div>
-                <div className="">
-                  <p className="clr-neutral-600">
-                    <span className="clr-neutral-800 fw-bold">
-                      {followers.length}
-                    </span>{" "}
-                    Followers
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <nav className="profile-nav">
-            <Link to={`/${user?.username}`}>
-              <Button
-                // onClick={() => setIndex(1)}
-                className="profile-nav-button"
-              >
-                <div className="active">
-                  <span className={`fs-400 fw-medium clr-neutral-600 active`}>
-                    Posts
-                  </span>
-                </div>
-              </Button>
-            </Link>
-            <Link to={`/${user?.username}/replies`}>
-              <Button
-                // onClick={() => setIndex(1)}
-                className="profile-nav-button"
-              >
-                <div>
-                  <span className={`fs-400 fw-medium clr-neutral-600`}>
-                    Replies
-                  </span>
-                </div>
-              </Button>
-            </Link>
-            <Link to={`/${user?.username}/media`}>
-              <Button
-                // onClick={() => setIndex(1)}
-                className="profile-nav-button"
-              >
-                <div>
-                  <span className={`fs-400 fw-medium clr-neutral-600`}>
-                    Media
-                  </span>
-                </div>
-              </Button>
-            </Link>
-            <Link to={`/${user?.username}/likes`}>
-              <Button
-                // onClick={() => setIndex(1)}
-                className="profile-nav-button"
-              >
-                <div>
-                  <span className={`fs-400 fw-medium clr-neutral-600`}>
-                    Likes
-                  </span>
-                </div>
-              </Button>
-            </Link>
-          </nav>
-          <div className="profile-posts">
-            {!page &&
-              (posts.length === 0 && !isLoadingPage ? (
-                username === currentUser.username ? (
-                  <ProfileEmpty
-                    title={"You don’t have any posts yet"}
-                    subTitle={`When you do, your posts will show up here.`}
-                  />
-                ) : (
-                  <ProfileEmpty
-                    title={"This account don’t have any posts yet"}
-                    subTitle={`When they do, their posts will show up here.`}
-                  />
-                )
-              ) : (
-                <InfiniteScroll
-                  dataLength={posts.length}
-                  next={fetchMoreDataPosts}
-                  hasMore={hasMore}
-                  loader={<Loader />}
-                  scrollThreshold={0.5}
-                >
-                  <div>
-                    {posts.map((post) => (
-                      <Post key={post._id} post={post} />
-                    ))}
-                  </div>
-                </InfiniteScroll>
-              ))}
-            {page === "media" &&
-              (posts.length === 0 && !isLoadingPage ? (
-                username === currentUser.username ? (
-                  <ProfileEmpty
-                    title={"Lights, camera … attachments!"}
-                    subTitle={`When you post photos or videos, they will show up here.`}
-                  />
-                ) : (
-                  <ProfileEmpty
-                    title={"This account don’t have any media yet"}
-                    subTitle={`When they do, their media will show up here.`}
-                  />
-                )
-              ) : (
-                <InfiniteScroll
-                  dataLength={posts.length}
-                  next={fetchMoreDataPostsMedia}
-                  hasMore={hasMore}
-                  loader={<Loader />}
-                  scrollThreshold={0.5}
-                >
-                  <div className="profile-posts-media">
-                    {posts.map((post) => (
-                      <div key={post._id}>
-                        <img src={post.image} alt="" />
+                    <div>
+                      <span className={`fs-400 fw-medium clr-neutral-600`}>
+                        Followings
+                      </span>
+                    </div>
+                  </Button>
+                </Link>
+              </nav>
+              <div>
+                {page === "followers" &&
+                  (posts.length === 0 && !isLoadingPage ? (
+                    username === currentUser.username ? (
+                      <ProfileEmpty
+                        title={"Looking for followers?"}
+                        subTitle={`When someone follows this account, they’ll show up here. Posting and interacting with others helps boost followers.`}
+                      />
+                    ) : (
+                      <ProfileEmpty
+                        title={"Looking for followers?"}
+                        subTitle={`When someone follows this account, they’ll show up here. Posting and interacting with others helps boost followers.`}
+                      />
+                    )
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreDataFollowers}
+                      hasMore={hasMore}
+                      loader={<Loader />}
+                      scrollThreshold={0.5}
+                    >
+                      <div>
+                        {posts.map((user) => (
+                          <UserCard key={user._id} user={user} />
+                        ))}
                       </div>
-                    ))}
+                    </InfiniteScroll>
+                  ))}
+                {page === "verified_followers" &&
+                  (posts.length === 0 && !isLoadingPage ? (
+                    username === currentUser.username ? (
+                      <ProfileEmpty
+                        title={"You don’t have any verified followers yet"}
+                        subTitle={`When a verified account follows you, you’ll see them here.`}
+                      />
+                    ) : (
+                      <ProfileEmpty
+                        title={`@${username} doesn’t have any verified followers.`}
+                        subTitle={`When someone verified follows this account, they’ll show up here.`}
+                      />
+                    )
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreDataVerifFollowers}
+                      hasMore={hasMore}
+                      loader={<Loader />}
+                      scrollThreshold={0.5}
+                    >
+                      <div>
+                        {posts.map((user) => (
+                          <UserCard key={user._id} user={user} />
+                        ))}
+                      </div>
+                    </InfiniteScroll>
+                  ))}
+                {page === "followings" &&
+                  (posts.length === 0 && !isLoadingPage ? (
+                    username === currentUser.username ? (
+                      <ProfileEmpty
+                        title={`Be in the know`}
+                        subTitle={`Following accounts is an easy way to curate your timeline and know what’s happening with the topics and people you’re interested in.`}
+                      />
+                    ) : (
+                      <ProfileEmpty
+                        title={`@${username} isn’t following anyone`}
+                        subTitle={`Once they follow accounts, they’ll show up here.`}
+                      />
+                    )
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreDataFollowings}
+                      hasMore={hasMore}
+                      loader={<Loader />}
+                      scrollThreshold={0.5}
+                    >
+                      <div>
+                        {posts.map((user) => (
+                          <UserCard key={user._id} user={user} />
+                        ))}
+                      </div>
+                    </InfiniteScroll>
+                  ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="profile-info">
+                <div className="profile-cover">
+                  <div className="profile-cover-img">
+                    {user?.cover ? (
+                      <img src={user.cover} alt="" />
+                    ) : (
+                      <div className="no-profile-cover"></div>
+                    )}
                   </div>
-                </InfiniteScroll>
-              ))}
-            {page === "likes" &&
-              (posts.length === 0 && !isLoadingPage ? (
-                username === currentUser.username ? (
-                  <ProfileEmpty
-                    title={"You don’t have any likes yet"}
-                    subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
-                  />
-                ) : (
-                  <ProfileEmpty
-                    title={"This account don’t have any likes yet"}
-                    subTitle={`When they do, it will show up here.`}
-                  />
-                )
-              ) : (
-                <InfiniteScroll
-                  dataLength={posts.length}
-                  next={fetchMoreDataPostsLike}
-                  hasMore={hasMore}
-                  loader={<Loader />}
-                  scrollThreshold={0.5}
-                >
-                  <div>
-                    {posts.map((post) => (
-                      <Post key={post._id} post={post} />
-                    ))}
+                  <div className="profile-avatar">
+                    <img
+                      src={
+                        user?.avatar
+                          ? user.avatar
+                          : `${PF}/images/no-avatar.svg`
+                      }
+                      alt=""
+                    />
                   </div>
-                </InfiniteScroll>
-              ))}
-            {page === "replies" &&
-              (posts.length === 0 && !isLoadingPage ? (
-                username === currentUser.username ? (
-                  <ProfileEmpty
-                    title={"You don’t have any replies yet"}
-                    subTitle={`When you do, your replies will show up here.`}
-                  />
-                ) : (
-                  <ProfileEmpty
-                    title={"This account don’t have any replies yet"}
-                    subTitle={`When they do, their replies will show up here.`}
-                  />
-                )
-              ) : (
-                <InfiniteScroll
-                  dataLength={posts.length}
-                  next={fetchMoreDataPostsReplies}
-                  hasMore={hasMore}
-                  loader={<Loader />}
-                  scrollThreshold={0.5}
-                >
-                  <div>
-                    {posts.map((post) => (
-                      <PostReply key={post._id} replyPost={post} />
-                    ))}
+                </div>
+                <div className="profile-info-content">
+                  <div className="profile-edit-button">
+                    {currentUser.username === user?.username ? (
+                      <button
+                        onClick={() => setShowModalEdit(true)}
+                        className="fs-400 fw-bold"
+                      >
+                        Edit profile
+                      </button>
+                    ) : isFollowed ? (
+                      <button
+                        disabled={isLoadingFollow}
+                        onClick={handleFollow}
+                        className="fs-400 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+                      >
+                        Following
+                      </button>
+                    ) : (
+                      <button
+                        disabled={isLoadingFollow}
+                        onClick={handleFollow}
+                        className="fs-400 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+                      >
+                        Follow
+                      </button>
+                    )}
                   </div>
-                </InfiniteScroll>
-              ))}
-            {/* <div className="post-reply"></div> */}
+                  <div className="profile-name">
+                    <p className="fs-500 fw-bold">{user?.name}</p>
+                    <p className="clr-neutral-600">{user?.username}</p>
+                  </div>
+                  <div className="profile-desc margin-block-3">
+                    <p>{user?.bio}</p>
+                  </div>
+                  <div className="profile-small-info">
+                    {user?.location && (
+                      <div className="profile-location clr-neutral-600">
+                        <Location />
+                        <p>{user.location}</p>
+                      </div>
+                    )}
+                    {user?.website && (
+                      <div className="profile-link clr-neutral-600">
+                        <LinkIcon />
+                        <a href={`//${user.website}`} target="_blank">
+                          {user.website}
+                        </a>
+                      </div>
+                    )}
+                    <div className="profile-date clr-neutral-600">
+                      <DateIcon />
+                      {user?.createdAt && (
+                        <p>{`Joined ${getMonth} ${getYear}`}</p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="profile-info-follow">
+                    <div className="">
+                      <Link to={`/${username}/followings`}>
+                        <p className="clr-neutral-600">
+                          <span className="clr-neutral-800 fw-bold">
+                            {followings.length}
+                          </span>{" "}
+                          Following
+                        </p>
+                      </Link>
+                    </div>
+                    <div className="">
+                      <Link to={`/${username}/followers`}>
+                        <p className="clr-neutral-600">
+                          <span className="clr-neutral-800 fw-bold">
+                            {followers.length}
+                          </span>{" "}
+                          Followers
+                        </p>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <nav className="profile-nav margin-block-start-4">
+                <Link to={`/${user?.username}`}>
+                  <Button
+                    // onClick={() => setIndex(1)}
+                    className="profile-nav-button"
+                  >
+                    <div className="active">
+                      <span
+                        className={`fs-400 fw-medium clr-neutral-600 active`}
+                      >
+                        Posts
+                      </span>
+                    </div>
+                  </Button>
+                </Link>
+                <Link to={`/${user?.username}/replies`}>
+                  <Button
+                    // onClick={() => setIndex(1)}
+                    className="profile-nav-button"
+                  >
+                    <div>
+                      <span className={`fs-400 fw-medium clr-neutral-600`}>
+                        Replies
+                      </span>
+                    </div>
+                  </Button>
+                </Link>
+                <Link to={`/${user?.username}/media`}>
+                  <Button
+                    // onClick={() => setIndex(1)}
+                    className="profile-nav-button"
+                  >
+                    <div>
+                      <span className={`fs-400 fw-medium clr-neutral-600`}>
+                        Media
+                      </span>
+                    </div>
+                  </Button>
+                </Link>
+                <Link to={`/${user?.username}/likes`}>
+                  <Button
+                    // onClick={() => setIndex(1)}
+                    className="profile-nav-button"
+                  >
+                    <div>
+                      <span className={`fs-400 fw-medium clr-neutral-600`}>
+                        Likes
+                      </span>
+                    </div>
+                  </Button>
+                </Link>
+              </nav>
+              <div className="profile-posts">
+                {!page &&
+                  (posts.length === 0 && !isLoadingPage ? (
+                    username === currentUser.username ? (
+                      <ProfileEmpty
+                        title={"You don’t have any posts yet"}
+                        subTitle={`When you do, your posts will show up here.`}
+                      />
+                    ) : (
+                      <ProfileEmpty
+                        title={"This account don’t have any posts yet"}
+                        subTitle={`When they do, their posts will show up here.`}
+                      />
+                    )
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreDataPosts}
+                      hasMore={hasMore}
+                      loader={<Loader />}
+                      scrollThreshold={0.5}
+                    >
+                      <div>
+                        {posts.map((post) => (
+                          <Post key={post._id} post={post} />
+                        ))}
+                      </div>
+                    </InfiniteScroll>
+                  ))}
+                {page === "media" &&
+                  (posts.length === 0 && !isLoadingPage ? (
+                    username === currentUser.username ? (
+                      <ProfileEmpty
+                        title={"Lights, camera … attachments!"}
+                        subTitle={`When you post photos or videos, they will show up here.`}
+                      />
+                    ) : (
+                      <ProfileEmpty
+                        title={"This account don’t have any media yet"}
+                        subTitle={`When they do, their media will show up here.`}
+                      />
+                    )
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreDataPostsMedia}
+                      hasMore={hasMore}
+                      loader={<Loader />}
+                      scrollThreshold={0.5}
+                    >
+                      <div className="profile-posts-media">
+                        {posts.map((post) => (
+                          <div key={post._id}>
+                            <img src={post.image} alt="" />
+                          </div>
+                        ))}
+                      </div>
+                    </InfiniteScroll>
+                  ))}
+                {page === "likes" &&
+                  (posts.length === 0 && !isLoadingPage ? (
+                    username === currentUser.username ? (
+                      <ProfileEmpty
+                        title={"You don’t have any likes yet"}
+                        subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
+                      />
+                    ) : (
+                      <ProfileEmpty
+                        title={"This account don’t have any likes yet"}
+                        subTitle={`When they do, it will show up here.`}
+                      />
+                    )
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreDataPostsLike}
+                      hasMore={hasMore}
+                      loader={<Loader />}
+                      scrollThreshold={0.5}
+                    >
+                      <div>
+                        {posts.map((post) => (
+                          <Post key={post._id} post={post} />
+                        ))}
+                      </div>
+                    </InfiniteScroll>
+                  ))}
+                {page === "replies" &&
+                  (posts.length === 0 && !isLoadingPage ? (
+                    username === currentUser.username ? (
+                      <ProfileEmpty
+                        title={"You don’t have any replies yet"}
+                        subTitle={`When you do, your replies will show up here.`}
+                      />
+                    ) : (
+                      <ProfileEmpty
+                        title={"This account don’t have any replies yet"}
+                        subTitle={`When they do, their replies will show up here.`}
+                      />
+                    )
+                  ) : (
+                    <InfiniteScroll
+                      dataLength={posts.length}
+                      next={fetchMoreDataPostsReplies}
+                      hasMore={hasMore}
+                      loader={<Loader />}
+                      scrollThreshold={0.5}
+                    >
+                      <div>
+                        {posts.map((post) => (
+                          <PostReply key={post._id} replyPost={post} />
+                        ))}
+                      </div>
+                    </InfiniteScroll>
+                  ))}
+                {/* <div className="post-reply"></div> */}
 
-            {/* <div className="profile-posts-media">
+                {/* <div className="profile-posts-media">
               <div>
                 <img src="./images/post-img-2.png" alt="" />
               </div>
@@ -527,11 +759,13 @@ const Profile = () => {
                 <img src="./images/post-img-2.png" alt="" />
               </div>
             </div> */}
-          </div>
-          {isPhoneScreen && (
-            <>
-              <MobileNav scrollDir={scrollDir} />
-              <MobilePost setShowModal={setShowModalPost} />
+              </div>
+              {isPhoneScreen && (
+                <>
+                  <MobileNav scrollDir={scrollDir} />
+                  <MobilePost setShowModal={setShowModalPost} />
+                </>
+              )}
             </>
           )}
         </section>
