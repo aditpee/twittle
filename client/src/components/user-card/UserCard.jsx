@@ -62,15 +62,23 @@ const UserCard = ({ user }) => {
               <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
             </Link>
           </div>
-          <button
-            disabled={isLoadingFollow}
-            onClick={() => handleFollow(user)}
-            className="fs-300 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
-          >
-            {currentUser?.followings.includes(user?._id)
-              ? "Following"
-              : "Follow"}
-          </button>
+          {currentUser?.followings.includes(user?._id) ? (
+            <button
+              disabled={isLoadingFollow}
+              onClick={() => handleFollow(user)}
+              className="fs-300 fw-bold bg-neutral-000 clr-neutral-800 padding-inline-4 padding-block-2 radius-2 border-bg-default"
+            >
+              Following
+            </button>
+          ) : (
+            <button
+              disabled={isLoadingFollow}
+              onClick={() => handleFollow(user)}
+              className="fs-300 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+            >
+              Follow
+            </button>
+          )}
         </div>
         {user.bio && (
           <div className="usercard-bio fs-300">
