@@ -79,7 +79,77 @@ router.get("/", verifyJwt, async (req, res) => {
     const { password, updatedAt, ...others } = user._doc;
     return res.status(200).json(others);
   } catch (err) {
-    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// get followers user
+router.get("/:username/followers", async (req, res) => {
+  try {
+    const currentUser = await User.findOne({
+      username: req.params.username,
+    });
+    const user = await User.aggregate([
+      { $match: { followings: { $in: [currentUser._id] } } },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
+    ]);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found!" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// get verified followers user
+router.get("/:username/verified_followers", async (req, res) => {
+  try {
+    const currentUser = await User.findOne({
+      username: req.params.username,
+    });
+    const user = await User.aggregate([
+      {
+        $match: {
+          followings: { $in: [currentUser._id] },
+          verifiedAccount: true,
+        },
+      },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
+    ]);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found!" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+// get followings user
+router.get("/:username/followings", async (req, res) => {
+  try {
+    const currentUser = await User.findOne({
+      username: req.params.username,
+    });
+    const user = await User.aggregate([
+      { $match: { followers: { $in: [currentUser._id] } } },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
+    ]);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found!" });
+    }
+
+    res.status(200).json(user);
+  } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
 });
