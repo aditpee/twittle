@@ -42,7 +42,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/:username/edit" element={<EditProfile />} />
         <Route
           path="/"
           element={
