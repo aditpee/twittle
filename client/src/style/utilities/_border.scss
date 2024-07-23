@@ -3,3 +3,7 @@
 .border-inline {
   border-inline: 1px solid $color-neutral-400;
 }
+
+.border-bg-default {
+  border: 1px solid rgba($color: hsl(209 18% 44%), $alpha: 0.3);
+}
