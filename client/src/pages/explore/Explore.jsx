@@ -17,6 +17,8 @@ import { API_URL } from "../../config";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../components/Loader/Loader";
+import { Link, useSearchParams } from "react-router-dom";
+import UserCard from "../../components/user-card/UserCard";
 
 const Explore = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -24,12 +26,17 @@ const Explore = () => {
   const [isMenuHidden, setIsMenuHidden] = useState(true);
   const { scrollDir } = useDetectScroll({ thr: 100 });
   const [showModalPost, setShowModalPost] = useState(false);
+  const [searchParams] = useSearchParams();
+  const query = {
+    q: searchParams.get("q") || "",
+    f: searchParams.get("f") || "",
+  };
 
   const [posts, setPosts] = useState([]);
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(1);
 
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
 
   const testPost = {
     bookmarks: [],
@@ -45,13 +52,62 @@ const Explore = () => {
     _id: "667e6c2dcce20bf1a86a6192",
   };
 
-  const fetchMoreData = async () => {
+  const testUser = {
+    avatar:
+      "https://res.cloudinary.com/dlovbdzns/image/upload/v1720259866/pzeteldl2meahirx5ltz.jpg",
+    bio: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab velit expedita debitis nostrum suscipit, iste provident nobis minus itaque maiores earum nisi explicabo quos inventore adipisci mollitia sequi veniam temporibus dolores vero eum quae? Cupiditate ex dolor impedit vero doloribus sint, magni ea libero praesentium, soluta cumque consectetur possimus illum.",
+    cover:
+      "https://res.cloudinary.com/dlovbdzns/image/upload/v1720375217/hgrw3boq0d8fxwgsgvhb.jpg",
+    createdAt: "2024-06-29T07:26:47.561Z",
+    email: "p254881@gmail.com",
+    followers: [],
+    followings: [],
+    location: "",
+    name: "Aditya Pratama",
+    password: "$2b$10$yB6fworxs9HCR2U9mTkv9.pCxf4wGgG4jGnmTqkVhx6qutNqRWG8C",
+    updatedAt: "2024-07-12T11:57:14.805Z",
+    username: "aditpee",
+    verifiedAccount: true,
+    verifiedEmail: true,
+    website: "portofolio.com",
+    __v: 0,
+    _id: "667fb7373d36a59b783d1e02",
+  };
+
+  const fetchMoreDataPosts = async () => {
     try {
       const res = await axios.get(
-        API_URL + `/api/posts/all?offset=${index}&limit=10`
+        API_URL + `/api/search/post?offset=${index}&limit=10&q=` + query.q,
+        { headers: { Authorization: token } }
       );
       setIndex((prevIndex) => prevIndex + 1);
-      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setPosts((prev) => [...prev, ...res.data]);
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const fetchMoreDataPeople = async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/search/people?offset=${index}&limit=10&q=` + query.q,
+        { headers: { Authorization: token } }
+      );
+      setIndex((prevIndex) => prevIndex + 1);
+      setPosts((prev) => [...prev, ...res.data]);
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const fetchMoreDataMedia = async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/search/media?offset=${index}&limit=10&q=` + query.q,
+        { headers: { Authorization: token } }
+      );
+      setIndex((prevIndex) => prevIndex + 1);
+      setPosts((prev) => [...prev, ...res.data]);
       res.data.length > 0 ? setHasMore(true) : setHasMore(false);
     } catch (err) {
       console.log(err);
@@ -59,19 +115,41 @@ const Explore = () => {
   };
 
   useEffect(() => {
+    setHasMore(true);
+    setPosts([]);
     const fetchData = async () => {
       try {
-        const res = await axios.get(
-          API_URL + "/api/posts/all?offset=0&limit=10"
-        );
-        setPosts(res.data);
-        res.data.length < 10 ? setHasMore(false) : setHasMore(true);
+        if (query.f === "people") {
+          const res = await axios.get(
+            API_URL + "/api/search/people?offset=0&limit=10&q=" + query.q,
+            { headers: { Authorization: token } }
+          );
+          setPosts(res.data);
+          console.log(res.data);
+          res.data.length < 10 ? setHasMore(false) : setHasMore(true);
+        } else if (query.f === "media") {
+          const res = await axios.get(
+            API_URL + "/api/search/media?offset=0&limit=9&q=" + query.q,
+            { headers: { Authorization: token } }
+          );
+          setPosts(res.data);
+          console.log(res.data);
+          res.data.length < 9 ? setHasMore(false) : setHasMore(true);
+        } else {
+          const res = await axios.get(
+            API_URL + "/api/search/post?offset=0&limit=10&q=" + query.q,
+            { headers: { Authorization: token } }
+          );
+          setPosts(res.data);
+          console.log(res.data);
+          res.data.length < 10 ? setHasMore(false) : setHasMore(true);
+        }
       } catch (err) {
         console.log(err);
       }
     };
     fetchData();
-  }, []);
+  }, [query.f, query.q, token]);
 
   return (
     <>
@@ -89,33 +167,75 @@ const Explore = () => {
             user={user}
           />
           <nav className={`explore-nav clr-neutral-600`}>
-            <SiteHeader type="search" setIsMenuHidden={setIsMenuHidden} />
+            <SiteHeader
+              type="search"
+              setIsMenuHidden={setIsMenuHidden}
+              query={query}
+            />
             <div className="explore-nav-container">
-              <div className="pointer active">
-                <p>Post</p>
-              </div>
-              <div className="pointer">
-                <p>People</p>
-              </div>
-              <div className="pointer">
-                <p>Media</p>
-              </div>
+              <Link className="pointer active" to={`/explore?q=${query.q}`}>
+                <div>
+                  <p>Post</p>
+                </div>
+              </Link>
+              <Link className="pointer " to={`/explore?q=${query.q}&f=people`}>
+                <div>
+                  <p>People</p>
+                </div>
+              </Link>
+              <Link className="pointer " to={`/explore?q=${query.q}&f=media`}>
+                <div>
+                  <p>Media</p>
+                </div>
+              </Link>
             </div>
           </nav>
-          <div className="profile-posts">
-            <InfiniteScroll
-              // scrollableTarget={"home-scrollable"}
-              dataLength={posts.length}
-              next={fetchMoreData}
-              hasMore={hasMore}
-              loader={<Loader />}
-              scrollThreshold={0.5}
-            >
-              {posts.map((post) => (
-                <Post key={post._id} post={post} />
-              ))}
-            </InfiniteScroll>
-          </div>
+          {query.f === "people" ? (
+            <div className="profile-posts">
+              <InfiniteScroll
+                // scrollableTarget={"home-scrollable"}
+                dataLength={posts.length}
+                next={fetchMoreDataPeople}
+                hasMore={hasMore}
+                loader={<Loader />}
+                scrollThreshold={0.5}
+              >
+                {posts.map((user) => (
+                  <UserCard key={user._id} user={user} />
+                ))}
+              </InfiniteScroll>
+            </div>
+          ) : query.f === "media" ? (
+            <div className="profile-posts">
+              <InfiniteScroll
+                // scrollableTarget={"home-scrollable"}
+                dataLength={posts.length}
+                next={fetchMoreDataMedia}
+                hasMore={hasMore}
+                loader={<Loader />}
+                scrollThreshold={0.5}
+              >
+                {posts.map((post) => (
+                  <Post key={post._id} post={post} />
+                ))}
+              </InfiniteScroll>
+            </div>
+          ) : (
+            <div className="profile-posts">
+              <InfiniteScroll
+                // scrollableTarget={"home-scrollable"}
+                dataLength={posts.length}
+                next={fetchMoreDataPosts}
+                hasMore={hasMore}
+                loader={<Loader />}
+                scrollThreshold={0.5}
+              >
+                {posts.map((post) => (
+                  <Post key={post._id} post={post} />
+                ))}
+              </InfiniteScroll>
+            </div>
+          )}
         </section>
         {isDesktopScreen && <RightBar />}
       </main>

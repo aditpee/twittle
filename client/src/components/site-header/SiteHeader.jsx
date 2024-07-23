@@ -12,7 +12,7 @@ import { PF } from "../../config";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 
-const SiteHeader = ({ setIsMenuHidden, type }) => {
+const SiteHeader = ({ setIsMenuHidden, type, query }) => {
   const [content, setContent] = useState("");
   const [isSearchClicked, setIsSearchClicked] = useState(false);
   let { pathname } = useLocation();
@@ -84,7 +84,7 @@ const SiteHeader = ({ setIsMenuHidden, type }) => {
             </div>
           )}
           {type === "search" && (
-            <SearchBar setIsSearchClicked={setIsSearchClicked} />
+            <SearchBar setIsSearchClicked={setIsSearchClicked} query={query} />
           )}
         </div>
         <Settings className="site-header-setting-icon" />
@@ -96,6 +96,7 @@ const SiteHeader = ({ setIsMenuHidden, type }) => {
 SiteHeader.propTypes = {
   setIsMenuHidden: PropTypes.func,
   type: PropTypes.string,
+  query: PropTypes.object,
 };
 
 export default SiteHeader;

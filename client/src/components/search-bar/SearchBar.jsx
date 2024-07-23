@@ -12,8 +12,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
 
-const SearchBar = ({ setIsSearchClicked }) => {
-  const [searchValue, setSearchValue] = useState("");
+const SearchBar = ({ setIsSearchClicked, query }) => {
+  const [searchValue, setSearchValue] = useState(query?.q ? query.q : "");
   const searchRef = useRef(null);
   const autoCompleteRef = useRef(null);
   const { token } = useContext(AuthContext);
@@ -50,20 +50,26 @@ const SearchBar = ({ setIsSearchClicked }) => {
         }
       );
 
-      console.log(res.data);
       setSearchUsers(res.data);
     } catch (err) {
       console.log(err);
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleClickOutside();
+    searchRef.current.blur();
+    navigate(`/explore?q=${searchValue}&f=${query.f}`);
+  };
+
   return (
     <div className="search-bar" ref={searchBarRef}>
-      <div className="bg-neutral-400 clr-neutral-600">
+      <form onSubmit={handleSubmit} className="bg-neutral-400 clr-neutral-600">
         <div className="d-flex align-center">
-          <div className="search-bar-icon d-flex margin-inline-end-2">
+          <button className="search-bar-icon d-flex margin-inline-end-2">
             <SearchOutline />
-          </div>
+          </button>
           <input
             placeholder="Search"
             className="clr-neutral-600 fs-300"
@@ -90,7 +96,7 @@ const SearchBar = ({ setIsSearchClicked }) => {
             <Cancel hidden onClick={() => setIsSearchClicked(true)} />
           </div>
         </div>
-      </div>
+      </form>
       <div
         className="search-bar-autocomplete bg-neutral-000 hide"
         ref={autoCompleteRef}
@@ -143,6 +149,7 @@ const SearchBar = ({ setIsSearchClicked }) => {
 
 SearchBar.propTypes = {
   setIsSearchClicked: PropTypes.func,
+  query: PropTypes.object,
 };
 
 export default SearchBar;
