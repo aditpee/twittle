@@ -41,6 +41,8 @@ router.get("/post/", verifyJwt, async (req, res) => {
       {
         $sort: { createdAt: -1 },
       },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
     ]);
 
     res.status(200).json(posts);
@@ -62,6 +64,8 @@ router.get("/media/", verifyJwt, async (req, res) => {
       {
         $sort: { createdAt: -1 },
       },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
     ]);
 
     res.status(200).json(posts);
@@ -85,6 +89,8 @@ router.get("/people/", verifyJwt, async (req, res) => {
         },
       },
       { $sort: { verifiedAccount: -1 } },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
     ]);
 
     res.status(200).json(users);
