@@ -1,6 +1,7 @@
 import { MoreHoriz } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PF } from "../../config";
 import {
@@ -15,10 +16,20 @@ import {
   SearchOutline,
   Tweet,
 } from "../../utils/icons/icons";
+import ThemeDialog from "../theme-dialog/ThemeDialog";
 import "./left-bar.scss";
 
 const LeftBar = ({ user, setShowModal }) => {
   const isLargeDesktopScreen = useMediaQuery("(min-width: 1280px)");
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const dialogParams = {
+    title: "Delete Post?",
+    content:
+      "This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from search results.",
+    colorButton: "bg-accent-red",
+    textButton: "Delete",
+  };
 
   return (
     <section className="left-bar">
@@ -101,7 +112,7 @@ const LeftBar = ({ user, setShowModal }) => {
               </div>
             </Link>
           </div>
-          <div>
+          <div onClick={() => setOpenDialog(true)}>
             <div
               className={`left-bar-content fs-500 ${
                 isLargeDesktopScreen ? "" : "hidden"
@@ -170,6 +181,11 @@ const LeftBar = ({ user, setShowModal }) => {
           </div>
         </div>
       </div>
+      <ThemeDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        dialogParams={dialogParams}
+      />
     </section>
   );
 };

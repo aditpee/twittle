@@ -1,4 +1,5 @@
 import PropTypes from "prop-types";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { PF } from "../../config";
 import {
@@ -6,9 +7,20 @@ import {
   BookmarkOutline,
   MoreRoundOutline,
 } from "../../utils/icons/icons";
+import ThemeDialog from "../theme-dialog/ThemeDialog";
 import "./mobile-menu.scss";
 
 const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const dialogParams = {
+    title: "Delete Post?",
+    content:
+      "This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from search results.",
+    colorButton: "bg-accent-red",
+    textButton: "Delete",
+  };
+
   return (
     <div className={isMenuHidden ? "mobile-menu hidden" : "mobile-menu"}>
       <div
@@ -58,7 +70,7 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
             </div>
           </Link>
         </div>
-        <div>
+        <div onClick={() => setOpenDialog(true)}>
           <Link>
             <div className="fs-500">
               <MoreRoundOutline />
@@ -67,6 +79,11 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
           </Link>
         </div>
       </div>
+      <ThemeDialog
+        openDialog={openDialog}
+        setOpenDialog={setOpenDialog}
+        dialogParams={dialogParams}
+      />
     </div>
   );
 };

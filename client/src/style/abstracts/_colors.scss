@@ -1,15 +1,24 @@
 $-clr-white: hsl(0 0% 100%);
+$-clr-light: hsl(180, 14.29%, 97.25%);
+$-clr-black: hsl(0 0% 0%);
+$-clr-dim: hsl(210, 34.38%, 12.55%);
+$-clr-accent-dim: hsl(208.24, 15.6%, 42.75%);
 $-clr-dark: hsl(210 25% 8%);
+
 $-clr-gray: hsl(204 14% 93%);
 $-clr-dark-gray: hsl(209 18% 44%);
-$-clr-blue-one: hsl(203 89% 53%);
+$-clr-blue-one: hsl(204.17, 87.55%, 52.75%);
 $-clr-red: rgb(244, 33, 46);
-$-clr-pink: hsl(343 90% 55%);
+$-clr-pink: hsl(332.27, 94.94%, 53.53%);
+$-clr-yellow: hsl(49.88, 100%, 50%);
+$-clr-purple: hsl(252.07, 100%, 66.86%);
+$-clr-orange: hsl(28.71, 100%, 50%);
 $-clr-teal: hsl(160 100% 36.47%);
 
 $light: (
   neutral: (
     "000": $-clr-white,
+    "200": $-clr-light,
     "400": $-clr-gray,
     "600": $-clr-dark-gray,
     "800": $-clr-dark,
@@ -21,11 +30,19 @@ $light: (
     "red": $-clr-red,
     "pink": $-clr-pink,
     "teal": $-clr-teal,
+    "yellow": $-clr-yellow,
+    "purple": $-clr-purple,
+    "orange": $-clr-orange,
+    "blue": $-clr-blue-one,
+    "dim": $-clr-dim,
+    "black": $-clr-black,
+    "white": $-clr-white,
   ),
 );
 
 // contextual color token
 $color-neutral-000: var(--neutral-000);
+$color-neutral-200: var(--neutral-200);
 $color-neutral-400: var(--neutral-400);
 $color-neutral-600: var(--neutral-600);
 $color-neutral-800: var(--neutral-800);
@@ -35,3 +52,10 @@ $color-primary-000: var(--primary-000);
 $color-accent-red: var(--accent-red);
 $color-accent-pink: var(--accent-pink);
 $color-accent-teal: var(--accent-teal);
+$color-accent-yellow: var(--accent-yellow);
+$color-accent-orange: var(--accent-orange);
+$color-accent-purple: var(--accent-purple);
+$color-accent-blue: var(--accent-blue);
+$color-accent-dim: var(--accent-dim);
+$color-accent-black: var(--accent-black);
+$color-accent-white: var(--accent-white);

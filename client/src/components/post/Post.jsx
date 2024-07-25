@@ -175,7 +175,12 @@ const Post = ({ post, type }) => {
         console.log(err);
       }
     };
-    fetchData();
+    if (type === "theme") {
+      setUser({ name: "Twittle", username: "twittle" });
+      setIsLoadingPost(false);
+    } else {
+      fetchData();
+    }
   }, [
     post.userId,
     token,
@@ -183,6 +188,7 @@ const Post = ({ post, type }) => {
     post.likes,
     post.retweets,
     post._id,
+    type,
   ]);
 
   return (
@@ -240,21 +246,23 @@ const Post = ({ post, type }) => {
                     </Link>
                   </div>
                 </div>
-                <div>
-                  <PostMenu
-                    postUser={user}
-                    currentUser={currentUser}
-                    button={
-                      <div className="post-setting pointer">
-                        <MoreHoriz />
-                      </div>
-                    }
-                    handleDeletePost={handleDeletePost}
-                    setOpenDialog={setOpenDialog}
-                    openDialog={openDialog}
-                    isHaveMobileStyle={true}
-                  ></PostMenu>
-                </div>
+                {type !== "theme" && (
+                  <div>
+                    <PostMenu
+                      postUser={user}
+                      currentUser={currentUser}
+                      button={
+                        <div className="post-setting pointer">
+                          <MoreHoriz />
+                        </div>
+                      }
+                      handleDeletePost={handleDeletePost}
+                      setOpenDialog={setOpenDialog}
+                      openDialog={openDialog}
+                      isHaveMobileStyle={true}
+                    ></PostMenu>
+                  </div>
+                )}
               </div>
             ) : (
               <Skeleton width={"40%"} />
@@ -293,7 +301,7 @@ const Post = ({ post, type }) => {
                 </div>
               )}
             </div>
-            {!isLoadingPost && (
+            {!isLoadingPost && type !== "theme" && (
               <div className="post-info">
                 <div
                   onClick={() => setShowModalComment(true)}

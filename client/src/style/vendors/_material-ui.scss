@@ -30,9 +30,12 @@ body {
   .MuiPaper-root {
     box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px,
       rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
-    width: 20rem;
     border-radius: 0.75rem;
     align-items: center;
+  }
+
+  .MuiDialog-paperWidthXs {
+    max-width: 20rem;
   }
 
   .MuiPopover-root.mobile-device {
@@ -68,10 +71,10 @@ body {
   }
 
   .MuiDialog-container {
-    * {
+    & > * > * {
       font-family: inherit;
       line-height: inherit;
-      padding: 0;
+      padding-inline: 0;
     }
     & > * {
       padding: 2rem;
@@ -82,12 +85,16 @@ body {
       font-weight: $font-weight-bold;
       align-self: flex-start;
       margin-bottom: 0.5rem;
+      padding: 0;
     }
     p {
       font-size: $font-size-400;
       line-height: 1.3;
-      color: $color-neutral-600;
       margin-bottom: 1rem;
+    }
+
+    & .alert-dialog p {
+      color: $color-neutral-600;
     }
 
     .MuiDialogActions-root {

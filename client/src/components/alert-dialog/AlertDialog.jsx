@@ -21,16 +21,18 @@ const AlertDialog = ({
   return (
     <Fragment>
       <Dialog
+        maxWidth={"xs"}
         style={{ zIndex: "999999" }}
         open={openDialog}
         onClose={handleClose}
+        className={"alert-dialog"}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {content}
+            <p className="clr-neutral-600">{content}</p>
           </DialogContentText>
         </DialogContent>
         <DialogActions>
