@@ -1,9 +1,8 @@
-import { Cancel } from "@mui/icons-material";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { useRef } from "react";
 import useOutsideClick from "../../utils/hooks/useOutSideClick";
-import { SearchOutline } from "../../utils/icons/icons";
+import { Cancel, SearchOutline } from "../../utils/icons/icons";
 import axios from "axios";
 import "./search-bar.scss";
 import { API_URL, PF } from "../../config";
@@ -64,7 +63,7 @@ const SearchBar = ({ setIsSearchClicked, query }) => {
   };
 
   return (
-    <div className="search-bar" ref={searchBarRef}>
+    <div className="search-bar bg-neutral-000" ref={searchBarRef}>
       <form onSubmit={handleSubmit} className="bg-neutral-400 clr-neutral-600">
         <div className="d-flex align-center">
           <button className="search-bar-icon d-flex margin-inline-end-2">
@@ -72,7 +71,7 @@ const SearchBar = ({ setIsSearchClicked, query }) => {
           </button>
           <input
             placeholder="Search"
-            className="clr-neutral-600 fs-300"
+            className="clr-neutral-800 fs-300"
             type="input"
             ref={searchRef}
             value={searchValue}
@@ -91,7 +90,9 @@ const SearchBar = ({ setIsSearchClicked, query }) => {
           }}
         >
           <div
-            className={`remove-search-icon d-flex ${searchValue ? "" : "hide"}`}
+            className={`remove-search-icon d-flex bg-primary-000 clr-neutral-000 ${
+              searchValue ? "" : "hide"
+            }`}
           >
             <Cancel hidden onClick={() => setIsSearchClicked(true)} />
           </div>

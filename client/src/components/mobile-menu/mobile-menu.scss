@@ -34,7 +34,7 @@
     gap: 1.25rem;
 
     svg {
-      font-size: 2rem;
+      font-size: 1.7rem;
     }
   }
 }
@@ -62,7 +62,7 @@
   position: fixed;
   inset: 0;
   right: -100%;
-  background-color: rgba($color: black, $alpha: 0.3);
+  background-color: var(--modal-bg-color, rgba($color: black, $alpha: 0.3));
   z-index: -1;
   transition: transform 0ms;
 }

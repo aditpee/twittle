@@ -204,7 +204,7 @@ const Post = ({ post, type }) => {
       />
       <div ref={postRef} className="post">
         {!isLoadingPost && post.isRetweet && (
-          <div className="post-mark">
+          <div className="post-mark clr-neutral-600">
             <Repost />
             <p>
               {currentUser.username === username

@@ -25,11 +25,10 @@
     font-weight: bold;
 
     &:hover {
-      background-color: rgba(black, 0.05);
+      background-color: var(--nav-hover, rgba(black, 0.05));
     }
 
     &.active p {
-      color: $color-neutral-800;
       position: relative;
 
       &::after {

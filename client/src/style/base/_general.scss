@@ -11,6 +11,16 @@ body {
   overflow-x: hidden;
 }
 
+main > section.border-inline {
+  @media (max-width: 500px) {
+    border-inline: 0;
+  }
+}
+
 svg {
   width: 1.5rem;
+}
+
+button:disabled {
+  opacity: 0.8;
 }

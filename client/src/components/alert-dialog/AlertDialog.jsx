@@ -29,7 +29,9 @@ const AlertDialog = ({
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">
+          <h3 className="clr-neutral-800">{title}</h3>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <p className="clr-neutral-600">{content}</p>
@@ -50,7 +52,7 @@ const AlertDialog = ({
             onClick={handleClose}
             autoFocus
           >
-            Cancel
+            <span className="clr-neutral-800">Cancel</span>
           </Button>
         </DialogActions>
       </Dialog>

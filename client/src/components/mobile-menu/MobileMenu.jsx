@@ -27,7 +27,7 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
         className="mobile-menu-outside"
         onClick={() => setIsMenuHidden(true)}
       ></div>
-      <div className="mobile-menu-container">
+      <div className="mobile-menu-container bg-neutral-000">
         <div>
           <div className="mobile-menu-avatar">
             <img
@@ -36,7 +36,12 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
             />
           </div>
           <div className="mobile-menu-name">
-            <p className="fs-400 clr-neutral-800 fw-bold">{user.name}</p>
+            <p
+              style={{ fontSize: "17px" }}
+              className="fs-500 clr-neutral-800 fw-bold"
+            >
+              {user.name}
+            </p>
             <p className="clr-neutral-600">@{user.username}</p>
           </div>
           <div className="mobile-menu-info fs-300">
@@ -56,7 +61,7 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
         </div>
         <div>
           <Link to={`/${user.username}`}>
-            <div className="fs-500">
+            <div className="fs-600 clr-neutral-800">
               <ProfileOutline />
               <h4>Profile</h4>
             </div>
@@ -64,7 +69,7 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
         </div>
         <div>
           <Link to={"/bookmarks"}>
-            <div className="fs-500">
+            <div className="fs-600 clr-neutral-800">
               <BookmarkOutline />
               <h4>Bookmarks</h4>
             </div>
@@ -72,7 +77,7 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
         </div>
         <div onClick={() => setOpenDialog(true)}>
           <Link>
-            <div className="fs-500">
+            <div className="fs-600 clr-neutral-800">
               <MoreRoundOutline />
               <h4>More</h4>
             </div>

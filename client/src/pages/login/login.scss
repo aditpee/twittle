@@ -39,10 +39,10 @@
   .login {
     position: fixed;
     inset: 0;
-    background-color: rgba(black, 0.1);
+    background-color: var(--modal-bg-color, $color-neutral-000);
     align-content: center;
     min-height: 100vh;
-    z-index: 999;
+    z-index: 99999;
   }
 
   .login-modal {

@@ -1,4 +1,3 @@
-import { ArrowBack } from "@mui/icons-material";
 import { useEffect, useRef } from "react";
 import { useState } from "react";
 import "./register.scss";
@@ -9,6 +8,7 @@ import axios from "axios";
 import { API_URL, PF } from "../../config";
 import EmailVerify from "./EmailVerify";
 import { toast } from "react-toastify";
+import { ArrowBack } from "../../utils/icons/icons";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -137,13 +137,13 @@ const Register = () => {
 
   return (
     <main className="register section">
-      <div className="register-modal container">
+      <div className="register-modal bg-neutral-000 container">
         {isRegisterSuccess ? (
           <EmailVerify />
         ) : (
           <>
             <div
-              className="register-close pointer"
+              className="register-close pointer clr-neutral-800"
               onClick={() => {
                 navigate(-1);
               }}
@@ -154,7 +154,7 @@ const Register = () => {
               <div className="register-logo mx-auto">
                 <img src={PF + "/images/logo.svg"} alt="" />
               </div>
-              <h1 className="fs-800 fw-bold margin-block-end-5 text-left">
+              <h1 className="fs-800 clr-neutral-800 fw-bold margin-block-end-5 text-left">
                 Create an account
               </h1>
               <form onSubmit={handleSubmit}>
@@ -278,7 +278,7 @@ const Register = () => {
                   </div>
                 </div>
                 <button
-                  className={`register-button fw-bold fs-600 bg-neutral-800 clr-neutral-000 margin-block-start-10 radius-2 padding-block-3 ${
+                  className={`register-button fs-300 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2 margin-block-start-10 ${
                     loading ? "cursor-progerss" : ""
                   }`}
                   disabled={loading}

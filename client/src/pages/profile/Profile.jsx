@@ -1,4 +1,4 @@
-import { ArrowBack, Link as LinkIcon } from "@mui/icons-material";
+import { Link as LinkIcon } from "@mui/icons-material";
 import { Button, useMediaQuery } from "@mui/material";
 import { useState, useContext } from "react";
 import useDetectScroll from "@smakss/react-scroll-direction";
@@ -9,7 +9,7 @@ import SiteHeader from "../../components/site-header/SiteHeader";
 import "./profile.scss";
 import LeftBar from "../../components/left-bar/LeftBar";
 import RightBar from "../../components/right-bar/RightBar";
-import { Date as DateIcon, Location } from "../../utils/icons/icons";
+import { ArrowBack, Date as DateIcon, Location } from "../../utils/icons/icons";
 import { AuthContext } from "../../context/AuthContext";
 import { API_URL, PF } from "../../config";
 import { useEffect } from "react";
@@ -270,6 +270,7 @@ const Profile = () => {
         }
         setIsLoadingPage(false);
       } catch (error) {
+        setUser(null);
         setIsLoadingPage(false);
         console.log(error);
       }
@@ -335,11 +336,11 @@ const Profile = () => {
           <header
             className={`${scrollDir === "down" ? "hidden" : ""} profile-header`}
           >
-            <Link to={-1}>
+            <Link className="clr-neutral-800" to={-1}>
               <ArrowBack />
             </Link>
             <div className="profile-header-content padding-block-1">
-              <p className="fs-400 fw-bold">{user?.name}</p>
+              <p className="fs-400 clr-neutral-800 fw-bold">{user?.name}</p>
               <span className="fs-200 clr-neutral-600">0 posts</span>
             </div>
           </header>
@@ -353,10 +354,8 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="active">
-                      <span
-                        className={`fs-400 fw-medium clr-neutral-600 active`}
-                      >
+                    <div className="active clr-neutral-800">
+                      <span className={`fs-400 fw-medium active`}>
                         Verified Followers
                       </span>
                     </div>
@@ -367,10 +366,8 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div>
-                      <span className={`fs-400 fw-medium clr-neutral-600`}>
-                        Followers
-                      </span>
+                    <div className="clr-neutral-600">
+                      <span className={`fs-400 fw-medium`}>Followers</span>
                     </div>
                   </Button>
                 </Link>
@@ -379,10 +376,8 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div>
-                      <span className={`fs-400 fw-medium clr-neutral-600`}>
-                        Followings
-                      </span>
+                    <div className="clr-neutral-600">
+                      <span className={`fs-400 fw-medium`}>Followings</span>
                     </div>
                   </Button>
                 </Link>
@@ -501,7 +496,7 @@ const Profile = () => {
                     {currentUser.username === user?.username ? (
                       <button
                         onClick={() => setShowModalEdit(true)}
-                        className="fs-400 fw-bold"
+                        className="fs-400 clr-neutral-800 fw-bold"
                       >
                         Edit profile
                       </button>
@@ -524,10 +519,12 @@ const Profile = () => {
                     )}
                   </div>
                   <div className="profile-name">
-                    <p className="fs-500 fw-bold">{user?.name}</p>
+                    <p className="fs-500 clr-neutral-800 fw-bold">
+                      {user?.name}
+                    </p>
                     <p className="clr-neutral-600">{user?.username}</p>
                   </div>
-                  <div className="profile-desc margin-block-3">
+                  <div className="profile-desc margin-block-3 clr-neutral-800">
                     <p>{user?.bio}</p>
                   </div>
                   <div className="profile-small-info">
@@ -582,12 +579,8 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="active">
-                      <span
-                        className={`fs-400 fw-medium clr-neutral-600 active`}
-                      >
-                        Posts
-                      </span>
+                    <div className="active clr-neutral-800 ">
+                      <span className={`fs-400 fw-medium`}>Posts</span>
                     </div>
                   </Button>
                 </Link>
@@ -596,10 +589,8 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div>
-                      <span className={`fs-400 fw-medium clr-neutral-600`}>
-                        Replies
-                      </span>
+                    <div className="clr-neutral-600">
+                      <span className={`fs-400 fw-medium`}>Replies</span>
                     </div>
                   </Button>
                 </Link>
@@ -608,10 +599,8 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div>
-                      <span className={`fs-400 fw-medium clr-neutral-600`}>
-                        Media
-                      </span>
+                    <div className="clr-neutral-600">
+                      <span className={`fs-400 fw-medium`}>Media</span>
                     </div>
                   </Button>
                 </Link>
@@ -620,10 +609,8 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div>
-                      <span className={`fs-400 fw-medium clr-neutral-600`}>
-                        Likes
-                      </span>
+                    <div className="clr-neutral-600">
+                      <span className={`fs-400 fw-medium`}>Likes</span>
                     </div>
                   </Button>
                 </Link>

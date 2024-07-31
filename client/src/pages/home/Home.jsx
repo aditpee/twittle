@@ -109,7 +109,7 @@ const Home = () => {
             <SiteHeader type="logo" setIsMenuHidden={setIsMenuHidden} />
           )}
           <div className="home-nav-container">
-            <div className="pointer active">
+            <div className="pointer active clr-neutral-800">
               <p>For you</p>
             </div>
             <div className="pointer">

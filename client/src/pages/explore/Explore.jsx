@@ -19,6 +19,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import Loader from "../../components/Loader/Loader";
 import { Link, useSearchParams } from "react-router-dom";
 import UserCard from "../../components/user-card/UserCard";
+import MobilePost from "../../components/mobile-post/MobilePost";
 
 const Explore = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -116,6 +117,7 @@ const Explore = () => {
 
   useEffect(() => {
     setHasMore(true);
+    setIndex(1);
     setPosts([]);
     const fetchData = async () => {
       try {
@@ -166,14 +168,21 @@ const Explore = () => {
             setIsMenuHidden={setIsMenuHidden}
             user={user}
           />
-          <nav className={`explore-nav clr-neutral-600`}>
+          <nav
+            className={`${
+              scrollDir === "down" ? "hidden" : ""
+            } explore-nav clr-neutral-600`}
+          >
             <SiteHeader
               type="search"
               setIsMenuHidden={setIsMenuHidden}
               query={query}
             />
             <div className="explore-nav-container">
-              <Link className="pointer active" to={`/explore?q=${query.q}`}>
+              <Link
+                className="pointer active clr-neutral-800"
+                to={`/explore?q=${query.q}`}
+              >
                 <div>
                   <p>Post</p>
                 </div>
@@ -235,6 +244,12 @@ const Explore = () => {
                 ))}
               </InfiniteScroll>
             </div>
+          )}
+          {isPhoneScreen && (
+            <>
+              <MobileNav scrollDir={scrollDir} />
+              <MobilePost setShowModal={setShowModalPost} />
+            </>
           )}
         </section>
         {isDesktopScreen && <RightBar />}

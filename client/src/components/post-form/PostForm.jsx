@@ -122,7 +122,7 @@ const PostForm = ({
         <div className="postform-input">
           <textarea
             onFocus={() => setIsHide(false)}
-            className="fs-600"
+            className="fs-600 clr-neutral-800"
             type="text"
             value={valTextArea}
             placeholder="What is happening?!"

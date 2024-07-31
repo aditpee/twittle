@@ -49,10 +49,10 @@ const LeftBar = ({ user, setShowModal }) => {
                   isLargeDesktopScreen ? "" : "hidden"
                 }`}
               >
-                <div className="left-bar-icon d-flex">
+                <div className="left-bar-icon clr-neutral-800 d-flex">
                   <HomeOutline />
                 </div>
-                <h4>Home</h4>
+                <h4 className="clr-neutral-800">Home</h4>
               </div>
             </Link>
           </div>
@@ -63,10 +63,10 @@ const LeftBar = ({ user, setShowModal }) => {
                   isLargeDesktopScreen ? "" : "hidden"
                 }`}
               >
-                <div className="left-bar-icon d-flex">
+                <div className="left-bar-icon clr-neutral-800 d-flex">
                   <ProfileOutline />
                 </div>
-                <h4>Profile</h4>
+                <h4 className="clr-neutral-800">Profile</h4>
               </div>
             </Link>
           </div>
@@ -77,10 +77,10 @@ const LeftBar = ({ user, setShowModal }) => {
                   isLargeDesktopScreen ? "" : "hidden"
                 }`}
               >
-                <div className="left-bar-icon d-flex">
+                <div className="left-bar-icon clr-neutral-800 d-flex">
                   <SearchOutline />
                 </div>
-                <h4>Explore</h4>
+                <h4 className="clr-neutral-800">Explore</h4>
               </div>
             </Link>
           </div>
@@ -91,10 +91,10 @@ const LeftBar = ({ user, setShowModal }) => {
                   isLargeDesktopScreen ? "" : "hidden"
                 }`}
               >
-                <div className="left-bar-icon d-flex">
+                <div className="left-bar-icon clr-neutral-800 d-flex">
                   <MessageOutline />
                 </div>
-                <h4>Message</h4>
+                <h4 className="clr-neutral-800">Message</h4>
               </div>
             </Link>
           </div>
@@ -105,10 +105,10 @@ const LeftBar = ({ user, setShowModal }) => {
                   isLargeDesktopScreen ? "" : "hidden"
                 }`}
               >
-                <div className="left-bar-icon d-flex">
+                <div className="left-bar-icon clr-neutral-800 d-flex">
                   <BookmarkOutline />
                 </div>
-                <h4>Bookmarks</h4>
+                <h4 className="clr-neutral-800">Bookmarks</h4>
               </div>
             </Link>
           </div>
@@ -118,10 +118,10 @@ const LeftBar = ({ user, setShowModal }) => {
                 isLargeDesktopScreen ? "" : "hidden"
               }`}
             >
-              <div className="left-bar-icon d-flex">
+              <div className="left-bar-icon clr-neutral-800 d-flex">
                 <MoreRoundOutline />
               </div>
-              <h4>Display</h4>
+              <h4 className="clr-neutral-800">Display</h4>
             </div>
           </div>
           <div>
@@ -158,7 +158,9 @@ const LeftBar = ({ user, setShowModal }) => {
                     />
                   </div>
                   <div>
-                    <p className="fs-400 fw-bold">{user.name}</p>
+                    <p className="fs-400 clr-neutral-800 fw-bold">
+                      {user.name}
+                    </p>
                     <p className="fs-300 clr-neutral-600">{user.username}</p>
                   </div>
                 </div>

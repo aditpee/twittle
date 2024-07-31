@@ -13,21 +13,25 @@ const Welcome = () => {
             <img src={PF + "/images/logo.svg"} alt="" />
           </div>
           <div className="welcome-right-col flow-sm">
-            <h1 className="fs-900 fw-black">Welcome to Twittle</h1>
-            <h2 className="fs-800 fw-black margin-block-end-5">Join today.</h2>
+            <h1 className="fs-900 clr-neutral-800 fw-black">
+              Welcome to Twittle
+            </h1>
+            <h2 className="fs-800 clr-neutral-800 fw-black margin-block-end-5">
+              Join today.
+            </h2>
             <div className="welcome-wrapper-button flow-sm">
               <Link to={"/register"}>
-                <button className="welcome-button primary fs-500 bg-primary-000 clr-neutral-000 fw-bold radius-2">
+                <button className="welcome-button primary fs-300 bg-primary-000 clr-neutral-000 fw-bold radius-2">
                   Create Account
                 </button>
               </Link>
-              <div className="welcome-hr text-center ">
-                <span>or</span>
+              <div className="welcome-hr text-center bg-neutral-000">
+                <span className="bg-neutral-000 clr-neutral-800">or</span>
               </div>
-              <div className="fs-500 fw-bold flow-sm">
+              <div className="fs-300 fw-bold flow-sm clr-neutral-800">
                 <p>Already have account?</p>
                 <Link to={"/login"} className="d-block">
-                  <button className="welcome-button fs-500 clr-neutral-800 fw-bold radius-2">
+                  <button className="welcome-button fs-300 clr-neutral-800 fw-bold radius-2">
                     Sign In
                   </button>
                 </Link>

@@ -1,0 +1,99 @@
+html :has(body[data-bg="dim"]) {
+  color-scheme: dark;
+}
+
+body[data-bg="dim"] {
+  scrollbar-color: rgb(92, 110, 126) rgb(30, 39, 50);
+
+  background-color: hsl(210, 34.38%, 12.55%);
+  --border-color-avatar: hsl(210, 34.38%, 12.55%);
+  --bg-popup: hsl(210, 34.38%, 12.55%);
+
+  --neutral-400: hsl(205.71, 15.79%, 26.08%);
+
+  --paper-mui-bg: hsl(210, 34.38%, 12.55%);
+  --no-cover-color: hsl(210, 20.48%, 32.55%);
+  --line-reply: hsl(210, 12.62%, 59.61%);
+
+  --modal-bg-color: rgba(91, 112, 131, 0.4);
+  --color-default: hsl(180, 14.29%, 97.25%);
+
+  --button-border-color: hsl(206, 15.31%, 38.43%);
+  --nav-hover: rgba(255, 255, 255, 0.1);
+  --box-shadow-popup: rgba(136, 153, 166, 0.2) 0px 0px 15px,
+    rgba(136, 153, 166, 0.15) 0px 0px 3px 1px;
+
+  & .clr-neutral-000:not(.bg-primary-000) {
+    color: hsl(210 25% 8%);
+  }
+  & .clr-neutral-600 {
+    color: hsl(210, 12.62%, 59.61%);
+  }
+  & .clr-neutral-800 {
+    color: hsl(180, 14.29%, 97.25%);
+  }
+
+  *::placeholder {
+    color: hsl(210, 12.62%, 59.61%);
+  }
+
+  & .bg-neutral-000 {
+    background-color: hsl(210, 34.38%, 12.55%);
+  }
+  & .bg-neutral-800 {
+    background-color: hsl(180, 14.29%, 97.25%);
+  }
+  --text-default-color: hsl(180, 14.29%, 97.25%);
+
+  :is(.home-nav, .explore-nav, .profile-header) {
+    background: rgba(hsl(210, 34.38%, 12.55%), 0.9);
+  }
+}
+
+body[data-bg="black"] {
+  scrollbar-color: rgb(62, 65, 68) rgb(22, 24, 28);
+
+  background-color: hsl(0deg 0% 0%);
+  --border-color-avatar: hsl(0deg 0% 0%);
+  --bg-popup: hsl(0deg 0% 0%);
+
+  --neutral-400: hsl(214.29 9.86% 13.92%);
+
+  --paper-mui-bg: hsl(0deg 0% 0%);
+  --no-cover-color: hsl(210 5.56% 21.18%);
+  --line-reply: hsl(210, 12.62%, 59.61%);
+
+  --modal-bg-color: rgba(91, 112, 131, 0.4);
+  --color-default: hsl(200 6.67% 91.18%);
+
+  --button-border-color: hsl(206, 15.31%, 38.43%);
+  --nav-hover: rgba(255, 255, 255, 0.1);
+  --box-shadow-popup: rgba(255, 255, 255, 0.2) 0px 0px 15px,
+    rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;
+
+  & .clr-neutral-000:not(.bg-primary-000) {
+    color: hsl(210 25% 8%);
+  }
+  & .clr-neutral-600 {
+    color: hsl(210 4.24% 46.27%);
+  }
+  & .clr-neutral-800 {
+    color: hsl(200 6.67% 91.18%);
+  }
+
+  *::placeholder {
+    color: hsl(210 4.24% 46.27%);
+  }
+
+  & .bg-neutral-000 {
+    background-color: hsl(0deg 0% 0%);
+  }
+  & .bg-neutral-800 {
+    background-color: hsl(200 6.67% 91.18%);
+  }
+  --text-default-color: hsl(200 6.67% 91.18%);
+
+  :is(.home-nav, .explore-nav, .profile-header) {
+    background: rgba(hsl(0deg 0% 0%), 0.9);
+  }
+}

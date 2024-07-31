@@ -5,12 +5,15 @@ import { ToastContainer } from "react-toastify";
 
 import "./style/main.scss";
 import { AuthProvider } from "./context/AuthContext";
+import { ThemeProvider } from "./context/ThemeContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <ToastContainer style={{ zIndex: "999999" }} />
     <AuthProvider>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </AuthProvider>
   </React.StrictMode>
 );

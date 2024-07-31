@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import AuthReducer from "./AuthReducer";
 import { useEffect } from "react";
 import { Logout } from "./AuthAction";
-import { verifyJwtCall } from "../../apiCalls";
+import { verifyJwtCall } from "../apiCalls";
 import { useState } from "react";
 
 const INITIAL_STATE = {

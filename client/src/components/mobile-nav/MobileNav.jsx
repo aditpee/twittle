@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 const MobileNav = ({ scrollDir }) => {
   return (
     <nav className={scrollDir === "down" ? "mobile-nav scroll" : "mobile-nav"}>
-      <div className="mobile-nav-container">
+      <div className="mobile-nav-container bg-neutral-000">
         <Link to={"/home"}>
           <div className="home-icon d-flex clr-neutral-800">
             <HomeOutline />

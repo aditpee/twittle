@@ -95,7 +95,8 @@
   position: absolute;
   bottom: calc((clamp(5.5rem, 18vw, 7rem) / -2) - (clamp(4px, 0.5vw, 5px) * 2));
   left: 1rem;
-  border: clamp(4px, 0.5vw, 5px) solid $color-neutral-000;
+  border: clamp(4px, 0.5vw, 5px) solid
+    var(--border-color-avatar, $color-neutral-600);
   border-radius: 50%;
   overflow: hidden;
 
@@ -117,7 +118,7 @@
   .edit-profile {
     position: fixed;
     inset: 0;
-    background-color: rgba(black, 0.2);
+    background-color: var(--modal-bg-color, rgba(black, 0.2));
     align-content: center;
     z-index: 9999;
   }

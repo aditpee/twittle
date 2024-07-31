@@ -1,10 +1,6 @@
 import axios from "axios";
-import { API_URL } from "./src/config";
-import {
-  LoginFailure,
-  LoginStart,
-  LoginSuccess,
-} from "./src/context/AuthAction";
+import { API_URL } from "./config";
+import { LoginFailure, LoginStart, LoginSuccess } from "./context/AuthAction";
 
 export const LoginCall = async (userCredential, dispatch) => {
   dispatch(LoginStart());

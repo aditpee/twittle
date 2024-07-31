@@ -36,16 +36,9 @@
 
 .search-bar:has(:not(.search-bar-autocomplete.hide)) > * {
   &:has(:is(input:focus, .search-bar-icon-cancel:hover)) {
-    background-color: $color-neutral-000;
+    background-color: inherit;
     color: $color-primary-000;
     outline: 1px solid $color-primary-000;
-    path {
-      fill: $color-primary-000;
-    }
-
-    input {
-      color: $color-neutral-800;
-    }
 
     .search-bar-icon-cancel {
       display: flex;
@@ -95,8 +88,7 @@
     overflow: auto;
     top: 100%;
     border: 1px solid $color-neutral-400;
-    box-shadow: 0px 0px 20px
-      color-mix(in srgb, $color-neutral-800 20%, transparent);
+    box-shadow: $box-shadow-popup;
     border-radius: 0.5rem;
   }
 
@@ -107,6 +99,19 @@
 
 .search-bar-autocomplete-header {
   border-bottom: 1px solid $color-neutral-400;
+}
+
+.remove-search-icon {
+  display: flex;
+  padding: 0.2rem;
+  border-radius: 50%;
+
+  svg {
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .remove-search-icon.hide {

@@ -1,20 +1,36 @@
+@use "sass:color";
 @use "../../style/abstracts/" as *;
 
 .theme-dialog .MuiDialog-container {
-  @media (max-width: 500px) {
-    & > * {
+  & > * {
+    padding-inline: 0;
+
+    @media (max-width: 500px) {
+      height: 100vh;
       margin: 0;
       height: 100vh;
       max-height: unset;
       border-radius: 0;
     }
+
+    @media (max-width: 500px) {
+      .post {
+        padding-inline: 0;
+      }
+    }
+
+    & > * {
+      padding-inline: 2rem;
+    }
   }
 
   div button.cancel-dialog-button {
-    margin-block: 2rem;
+    margin-top: 2rem;
+    padding-inline: 4rem;
     color: $color-neutral-000;
     background-color: $color-primary-000;
     border: 0;
+    border-radius: 5rem;
   }
 }
 
@@ -27,23 +43,29 @@
   width: 100%;
   border-bottom: 1px solid $color-neutral-400;
 }
+.font-theme-content {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+}
 .bullets-container {
+  width: 100%;
   position: relative;
   padding-block: 1.2rem;
   display: flex;
   .bullets-track {
+    width: 100%;
+    position: relative;
     height: 0.25rem;
+    display: flex;
     background-color: $color-primary-000;
 
-    &::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      height: 0.25rem;
-      inset-inline: 0;
+    .bullets-fill {
+      line-height: calc(2.5rem / 2);
+      height: 100%;
       background-color: $color-primary-000;
-      opacity: 0.3;
+      // background-color: red;
     }
   }
 
@@ -91,8 +113,18 @@
       justify-content: center;
     }
     flex: 1;
+
+    svg {
+      opacity: 0;
+    }
+    &.active {
+      svg {
+        opacity: 1;
+      }
+    }
   }
   & > * > * {
+    cursor: pointer;
     color: white;
     display: flex;
     align-items: center;
@@ -117,6 +149,7 @@
   }
 
   & > * {
+    cursor: pointer;
     flex: 100%;
     @include mq(small) {
       flex: 1;
@@ -133,7 +166,7 @@
     justify-content: space-around;
 
     &.active {
-      outline: 2px solid $color-primary-000;
+      border: 2px solid $color-primary-000;
       .bg-theme-radio {
         background-color: $color-primary-000;
         color: $color-accent-white;
@@ -142,6 +175,16 @@
         svg {
           opacity: 1;
         }
+      }
+    }
+
+    &:not(.active) {
+      border: 1px solid var(--no-cover-color, hsl(200deg 18.52% 84.12%));
+    }
+
+    &:first-child {
+      p {
+        color: $color-neutral-800;
       }
     }
   }

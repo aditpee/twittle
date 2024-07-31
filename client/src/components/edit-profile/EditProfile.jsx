@@ -19,6 +19,7 @@ import { useContext } from "react";
 import { Cancel } from "../../utils/icons/icons";
 import AlertDialog from "../alert-dialog/AlertDialog";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({ showModal, setShowModal, user }) => {
   const [validateUsername, setValidateUsername] = useState("");
@@ -30,6 +31,7 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
 
   const [inputEdit, setInputEdit] = useState({});
   const modalRef = useRef();
+  const navigate = useNavigate();
 
   const usernameRef = useRef();
   const nameRef = useRef();
@@ -232,6 +234,9 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
         type: "EDIT_PROFILE",
         payload: data,
       });
+      if (user.username !== data.username) {
+        navigate(`/${data.username}`, { replace: true });
+      }
     } catch (err) {
       setIsLoadingEdit(false);
       const { errors } = err.response.data;
@@ -291,7 +296,10 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
           }}
           dialogParams={dialogParams}
         />
-        <form onSubmit={handleSubmit} className="edit-profile-modal">
+        <form
+          onSubmit={handleSubmit}
+          className="edit-profile-modal bg-neutral-000"
+        >
           <div className="edit-profile-header">
             <div onClick={handleClose} className="edit-profile-close">
               <ArrowBack />
@@ -301,7 +309,7 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
                 disabled={isLoadingEdit}
                 className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-start-3"
               >
-                {isLoadingEdit ? "..." : "Save"}
+                Save
               </button>
             </div>
           </div>

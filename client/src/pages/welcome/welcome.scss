@@ -17,7 +17,7 @@
   padding-block: 0.75rem;
 
   &:not(.primary) {
-    border: 2px solid $color-neutral-800;
+    border: 1px solid var(--line-reply, $color-neutral-800);
   }
 }
 
@@ -28,7 +28,7 @@
     content: "";
     width: 100%;
     height: 1px;
-    background-color: $color-neutral-800;
+    background-color: var(--line-reply, $color-neutral-800);
     position: absolute;
     top: 50%;
     left: 0;

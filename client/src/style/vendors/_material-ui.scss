@@ -2,6 +2,9 @@
 
 body {
   .MuiButtonBase-root {
+    font-family: $font-family-base;
+    text-transform: inherit;
+
     &.button-mui-hover {
       padding: unset;
       min-width: unset;
@@ -27,30 +30,41 @@ body {
     }
   }
 
+  .MuiBackdrop-root {
+    background-color: var(--modal-bg-color, inherit);
+  }
+
   .MuiPaper-root {
     box-shadow: rgba(101, 119, 134, 0.2) 0px 0px 15px,
       rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
     border-radius: 0.75rem;
     align-items: center;
+    background-color: var(--paper-mui-bg, $color-neutral-000);
   }
 
   .MuiDialog-paperWidthXs {
     max-width: 20rem;
   }
 
-  .MuiPopover-root.mobile-device {
-    @media (max-width: 500px) {
-      background-color: rgba(black, 0.3);
+  .MuiPopover-root {
+    .MuiPaper-root {
+      background-color: var(--bg-popup, $color-neutral-000);
+    }
 
-      .MuiPaper-root {
-        bottom: 0;
-        top: unset !important;
-        right: 0 !important;
-        left: 0 !important;
-        width: 100%;
-        max-width: unset !important;
-        border-bottom-right-radius: 0;
-        border-bottom-left-radius: 0;
+    &.mobile-device {
+      @media (max-width: 500px) {
+        background-color: rgba(black, 0.3);
+
+        .MuiPaper-root {
+          bottom: 0;
+          top: unset !important;
+          right: 0 !important;
+          left: 0 !important;
+          width: 100%;
+          max-width: unset !important;
+          border-bottom-right-radius: 0;
+          border-bottom-left-radius: 0;
+        }
       }
     }
   }
@@ -135,11 +149,20 @@ body {
           }
         }
         &.cancel-dialog-button {
-          color: $color-neutral-800;
-          background-color: $color-neutral-000;
-          border: 1px solid rgba($color: hsl(209 18% 44%), $alpha: 0.3);
+          background-color: transparent;
+          border: 1px solid
+            var(
+              --button-border-color,
+              rgba($color: hsl(209 18% 44%), $alpha: 0.3)
+            );
         }
       }
     }
+  }
+
+  .MuiSkeleton-root {
+    position: relative;
+    z-index: -1;
+    background-color: $color-neutral-400;
   }
 }

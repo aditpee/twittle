@@ -1,12 +1,12 @@
 import { useContext, useRef, useState } from "react";
-import { ArrowBack } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 import "./login.scss";
 import { PF } from "../../config";
-import { LoginCall } from "../../../apiCalls";
+import { LoginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { ArrowBack } from "../../utils/icons/icons";
 
 const Login = () => {
   const usernameRef = useRef(null);
@@ -14,7 +14,7 @@ const Login = () => {
   const [usernameErrMsg, setUsernameErrMsg] = useState("");
   const [passwordErrMsg, setpasswordErrMsg] = useState("");
 
-  const { user, dispatch, error } = useContext(AuthContext);
+  const { user, dispatch, error, isLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleSubmit = (e) => {
@@ -54,9 +54,9 @@ const Login = () => {
 
   return (
     <main className="login section">
-      <div className="login-modal container flow">
+      <div className="login-modal container bg-neutral-000 flow">
         <div
-          className="login-close pointer"
+          className="login-close pointer clr-neutral-800"
           onClick={() => {
             navigate("/");
           }}
@@ -66,7 +66,7 @@ const Login = () => {
         <div className="login-logo mx-auto">
           <img src={PF + "/images/logo.svg"} alt="" />
         </div>
-        <h1 className="fs-800 fw-bold margin-block-end-5 text-left">
+        <h1 className="fs-800 clr-neutral-800 fw-bold margin-block-end-5 text-left">
           Sign in to Twittle
         </h1>
         <form action="" onSubmit={handleSubmit}>
@@ -118,11 +118,14 @@ const Login = () => {
               )}
             </div>
           </div>
-          <button className="login-button fw-bold fs-600 bg-neutral-800 clr-neutral-000 margin-block-start-10 radius-2 padding-block-3">
+          <button
+            disabled={isLoading}
+            className="login-button fs-300 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2 margin-block-start-10 "
+          >
             Next
           </button>
         </form>
-        <p className="fs-300 text-left">
+        <p className="fs-300 clr-neutral-800 text-left">
           Don’t have an account?{" "}
           <span className="clr-primary-000">Sign up</span>
         </p>

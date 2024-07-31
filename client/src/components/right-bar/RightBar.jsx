@@ -77,7 +77,7 @@ const RightBar = () => {
         )}
         <div className="right-bar-card">
           <div className="flow">
-            <h4 className="fs-700">You might like</h4>
+            <h4 className="fs-700 clr-neutral-800">You might like</h4>
             {users.map((user) => (
               <div
                 key={user._id}
@@ -99,7 +99,9 @@ const RightBar = () => {
                   </Link>
                   <div>
                     <Link to={`/${user?.username}`}>
-                      <p className="fs-400 fw-bold">{user?.name}</p>
+                      <p className="fs-400 clr-neutral-800 fw-bold">
+                        {user?.name}
+                      </p>
                     </Link>
                     <Link to={`/${user?.username}`}>
                       <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
@@ -122,10 +124,10 @@ const RightBar = () => {
         </div>
         <div className="right-bar-card">
           <div className="flow">
-            <h4 className="fs-700">Trends for you</h4>
+            <h4 className="fs-700 clr-neutral-800">Trends for you</h4>
             <div className="right-bar-trend-card margin-block-start-6">
               <div>
-                <p className="fs-300 fw-bold">#trends2024</p>
+                <p className="fs-300 clr-neutral-800 fw-bold">#trends2024</p>
                 <p className="fs-100 clr-neutral-600">1247 posts</p>
               </div>
               <div className="right-bar-icon">
@@ -134,7 +136,7 @@ const RightBar = () => {
             </div>
             <div className="right-bar-trend-card">
               <div>
-                <p className="fs-300 fw-bold">#trends2024</p>
+                <p className="fs-300 clr-neutral-800 fw-bold">#trends2024</p>
                 <p className="fs-100 clr-neutral-600">1247 posts</p>
               </div>
               <div className="right-bar-icon">

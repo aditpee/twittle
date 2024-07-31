@@ -110,11 +110,8 @@ const PostMenu = ({
             <Delete className="clr-accent-red" />
             Delete
           </MenuItem>
-          <MenuItem className="fw-bold" onClick={handleClose}>
+          <MenuItem className="fw-bold clr-neutral-800" onClick={handleClose}>
             <PinOutline /> Pin to your profile
-          </MenuItem>
-          <MenuItem className="fw-bold" onClick={handleClose}>
-            Logout
           </MenuItem>
           {isPhoneScreen && (
             <div className="postmenu-cancel ">
@@ -143,7 +140,7 @@ const PostMenu = ({
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem className="fw-bold" onClick={handleFollow}>
+          <MenuItem className="fw-bold clr-neutral-800" onClick={handleFollow}>
             {isFollowed ? (
               <>
                 <PeopleAdd /> {`Unfollow @${postUser?.username}`}
@@ -154,10 +151,10 @@ const PostMenu = ({
               </>
             )}
           </MenuItem>
-          <MenuItem className="fw-bold" onClick={handleClose}>
+          <MenuItem className="fw-bold clr-neutral-800" onClick={handleClose}>
             <StopOutline /> {`Block @${postUser?.username}`}
           </MenuItem>
-          <MenuItem className="fw-bold" onClick={handleClose}>
+          <MenuItem className="fw-bold clr-neutral-800" onClick={handleClose}>
             <FlagOutline /> Report post
           </MenuItem>
           {isPhoneScreen && (
