@@ -1,9 +1,9 @@
-import { ArrowBack } from "@mui/icons-material";
 import PostForm from "../post-form/PostForm";
 import Post from "../post/Post";
 import "./post-modal.scss";
 import PropTypes from "prop-types";
 import { useRef } from "react";
+import { ArrowBack } from "../../utils/icons/icons";
 
 const PostModal = ({
   showModal,
@@ -25,11 +25,11 @@ const PostModal = ({
         }}
         className="post-modal"
       >
-        <div className="post-modal-container">
+        <div className="post-modal-container bg-neutral-000">
           <div className="post-modal-header">
             <div
               onClick={() => setShowModal(false)}
-              className="post-modal-close"
+              className="post-modal-close clr-neutral-800"
             >
               <ArrowBack />
             </div>
