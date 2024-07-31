@@ -42,7 +42,9 @@ const editProfileValidator = [
   body("website", "Website cannot have more than 100 characters").isLength({
     max: 100,
   }),
-  body("website", "Please input a valid url").isURL(),
+  body("website", "Please input a valid url")
+    .optional({ checkFalsy: true })
+    .isURL(),
 ];
 
 module.exports = { registerValidator, editProfileValidator };

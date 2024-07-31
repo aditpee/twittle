@@ -204,6 +204,7 @@ router.put(
       await User.findByIdAndUpdate(user._id, editedUser);
       res.status(200).json({ message: "Edited user successfully" });
     } catch (err) {
+      console.log(err);
       res.status(500).json({ error: "Internal server error" });
     }
   }
