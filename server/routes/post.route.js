@@ -43,6 +43,27 @@ router.get("/all", async (req, res) => {
   }
 });
 
+// get post what user followed
+router.get("/follow", verifyJwt, async (req, res) => {
+  try {
+    const user = await User.findById(req.userId);
+    const post = await Post.aggregate([
+      { $match: { userId: { $in: [...user.followings, req.userId] } } },
+      { $sort: { createdAt: -1 } },
+      { $skip: Number(req.query.offset * req.query.limit) },
+      { $limit: Number(req.query.limit) },
+    ]);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    res.status(200).json(post);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // get all post by user id
 router.get("/", async (req, res) => {
   try {
