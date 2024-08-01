@@ -270,7 +270,7 @@ const Profile = () => {
         }
         setIsLoadingPage(false);
       } catch (error) {
-        setUser(null);
+        setUser({ name: `@${username}`, notFound: true });
         setIsLoadingPage(false);
         console.log(error);
       }
@@ -284,9 +284,11 @@ const Profile = () => {
         className="clr-neutral-800 fw-black margin-block-end-2"
         style={{ fontSize: "2rem" }}
       >
-        {title}
+        {user?.notFound ? "This account doesn’t exist" : title}
       </h1>
-      <p className="fs-300 clr-neutral-600">{subTitle}</p>
+      <p className="fs-300 clr-neutral-600">
+        {user?.notFound ? "Try searching for another." : subTitle}
+      </p>
     </div>
   );
 
@@ -495,7 +497,10 @@ const Profile = () => {
                   </div>
                 </div>
                 <div className="profile-info-content">
-                  <div className="profile-edit-button">
+                  <div
+                    style={{ visibility: user?.notFound ? "hidden" : "" }}
+                    className="profile-edit-button"
+                  >
                     {currentUser.username === user?.username ? (
                       <button
                         onClick={() => setShowModalEdit(true)}
@@ -545,14 +550,20 @@ const Profile = () => {
                         </a>
                       </div>
                     )}
-                    <div className="profile-date clr-neutral-600">
+                    <div
+                      style={{ display: user?.notFound ? "none" : "" }}
+                      className="profile-date clr-neutral-600"
+                    >
                       <DateIcon />
                       {user?.createdAt && (
                         <p>{`Joined ${getMonth} ${getYear}`}</p>
                       )}
                     </div>
                   </div>
-                  <div className="profile-info-follow">
+                  <div
+                    style={{ display: user?.notFound ? "none" : "" }}
+                    className="profile-info-follow"
+                  >
                     <div className="">
                       <Link to={`/${username}/followings`}>
                         <p className="clr-neutral-600">
@@ -563,7 +574,10 @@ const Profile = () => {
                         </p>
                       </Link>
                     </div>
-                    <div className="">
+                    <div
+                      style={{ display: user?.notFound ? "none" : "" }}
+                      className=""
+                    >
                       <Link to={`/${username}/followers`}>
                         <p className="clr-neutral-600">
                           <span className="clr-neutral-800 fw-bold">
@@ -576,7 +590,10 @@ const Profile = () => {
                   </div>
                 </div>
               </div>
-              <nav className="profile-nav margin-block-start-4">
+              <nav
+                style={{ display: user?.notFound ? "none" : "" }}
+                className="profile-nav margin-block-start-4"
+              >
                 <Link to={`/${user?.username}`}>
                   <Button
                     // onClick={() => setIndex(1)}
