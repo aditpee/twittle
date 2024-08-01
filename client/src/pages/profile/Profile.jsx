@@ -355,7 +355,10 @@ const Profile = () => {
                     className="profile-nav-button"
                   >
                     <div className="active clr-neutral-800">
-                      <span className={`fs-400 fw-medium active`}>
+                      <span
+                        style={{ textWrap: "nowrap" }}
+                        className={`fs-400 fw-medium active`}
+                      >
                         Verified Followers
                       </span>
                     </div>

@@ -20,6 +20,7 @@ body[data-bg="dim"] {
 
   --button-border-color: hsl(206, 15.31%, 38.43%);
   --nav-hover: rgba(255, 255, 255, 0.1);
+  --card-hover: rgba(255, 255, 255, 0.01);
   --box-shadow-popup: rgba(136, 153, 166, 0.2) 0px 0px 15px,
     rgba(136, 153, 166, 0.15) 0px 0px 3px 1px;
 
@@ -68,6 +69,7 @@ body[data-bg="black"] {
 
   --button-border-color: hsl(206, 15.31%, 38.43%);
   --nav-hover: rgba(255, 255, 255, 0.1);
+  --card-hover: rgba(255, 255, 255, 0.03);
   --box-shadow-popup: rgba(255, 255, 255, 0.2) 0px 0px 15px,
     rgba(255, 255, 255, 0.15) 0px 0px 3px 1px;
 

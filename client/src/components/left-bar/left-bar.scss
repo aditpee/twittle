@@ -69,7 +69,7 @@
     position: absolute;
     inset-inline: -0.75rem -1rem;
     inset-block: -0.5rem;
-    background-color: $color-neutral-800;
+    background-color: var(--text-default-color, $color-neutral-800);
     border-radius: 5rem;
     opacity: 0;
     transition: opacity 300ms;
