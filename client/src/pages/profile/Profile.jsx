@@ -473,6 +473,12 @@ const Profile = () => {
                     </InfiniteScroll>
                   ))}
               </div>
+              {isPhoneScreen && (
+                <>
+                  <MobileNav scrollDir={scrollDir} />
+                  <MobilePost setShowModal={setShowModalPost} />
+                </>
+              )}
             </>
           ) : (
             <>
