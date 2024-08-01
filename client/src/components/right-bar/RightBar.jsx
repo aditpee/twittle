@@ -111,7 +111,7 @@ const RightBar = () => {
                 <button
                   disabled={isLoadingFollow}
                   onClick={() => handleFollow(user)}
-                  className="fs-300 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+                  className="fs-200 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
                 >
                   {currentUser?.followings.includes(user?._id)
                     ? "Following"
