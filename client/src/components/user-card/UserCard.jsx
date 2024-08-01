@@ -10,7 +10,6 @@ const UserCard = ({ user }) => {
   const { token, user: currentUser, dispatch } = useContext(AuthContext);
 
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
-  const navigate = useNavigate();
 
   const handleFollow = async (e, user) => {
     e.preventDefault();
@@ -42,35 +41,22 @@ const UserCard = ({ user }) => {
   };
 
   return (
-    <div
-      onClick={(e) => {
-        console.log(e.currentTarget);
-        console.log(e.target);
-      }}
-      key={user._id}
-      className="usercard"
-    >
+    <div key={user._id} className="usercard">
       <Link to={`/${user?.username}`}>
         <div className="">
-          <Link to={`/${user?.username}`}>
-            <div className="usercard-avatar margin-inline-end-3">
-              <img
-                className="radius-circle"
-                src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
-                alt=""
-              />
-            </div>
-          </Link>
+          <div className="usercard-avatar margin-inline-end-3">
+            <img
+              className="radius-circle"
+              src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
+              alt=""
+            />
+          </div>
         </div>
         <div>
           <div className="usercard-header">
             <div>
-              <Link to={`/${user?.username}`}>
-                <p className="fs-400 clr-neutral-800 fw-bold">{user?.name}</p>
-              </Link>
-              <Link to={`/${user?.username}`}>
-                <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
-              </Link>
+              <p className="fs-400 clr-neutral-800 fw-bold">{user?.name}</p>
+              <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
             </div>
             {currentUser?.followings.includes(user?._id) ? (
               <button
