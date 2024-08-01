@@ -356,7 +356,13 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="active clr-neutral-800">
+                    <div
+                      className={`${
+                        page === "verified_followers"
+                          ? "active clr-neutral-800"
+                          : "clr-neutral-600"
+                      }`}
+                    >
                       <span
                         style={{ textWrap: "nowrap" }}
                         className={`fs-400 fw-medium active`}
@@ -371,7 +377,13 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="clr-neutral-600">
+                    <div
+                      className={`${
+                        page === "followers"
+                          ? "active clr-neutral-800"
+                          : "clr-neutral-600"
+                      }`}
+                    >
                       <span className={`fs-400 fw-medium`}>Followers</span>
                     </div>
                   </Button>
@@ -381,7 +393,13 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="clr-neutral-600">
+                    <div
+                      className={`${
+                        page === "followings"
+                          ? "active clr-neutral-800"
+                          : "clr-neutral-600"
+                      }`}
+                    >
                       <span className={`fs-400 fw-medium`}>Followings</span>
                     </div>
                   </Button>
@@ -605,7 +623,11 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="active clr-neutral-800 ">
+                    <div
+                      className={`${
+                        !page ? "active clr-neutral-800" : "clr-neutral-600"
+                      }`}
+                    >
                       <span className={`fs-400 fw-medium`}>Posts</span>
                     </div>
                   </Button>
@@ -615,7 +637,13 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="clr-neutral-600">
+                    <div
+                      className={`${
+                        page === "replies"
+                          ? "active clr-neutral-800"
+                          : "clr-neutral-600"
+                      }`}
+                    >
                       <span className={`fs-400 fw-medium`}>Replies</span>
                     </div>
                   </Button>
@@ -625,7 +653,13 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="clr-neutral-600">
+                    <div
+                      className={`${
+                        page === "media"
+                          ? "active clr-neutral-800"
+                          : "clr-neutral-600"
+                      }`}
+                    >
                       <span className={`fs-400 fw-medium`}>Media</span>
                     </div>
                   </Button>
@@ -635,7 +669,13 @@ const Profile = () => {
                     // onClick={() => setIndex(1)}
                     className="profile-nav-button"
                   >
-                    <div className="clr-neutral-600">
+                    <div
+                      className={`${
+                        page === "likes"
+                          ? "active clr-neutral-800"
+                          : "clr-neutral-600"
+                      }`}
+                    >
                       <span className={`fs-400 fw-medium`}>Likes</span>
                     </div>
                   </Button>

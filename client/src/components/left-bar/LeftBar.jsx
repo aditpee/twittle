@@ -2,15 +2,19 @@ import { MoreHoriz } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { PF } from "../../config";
 import {
+  Bookmark,
   BookmarkOutline,
   DisplayOutline,
   ExploreOutline,
+  Home,
   HomeOutline,
+  Message,
   MessageOutline,
   MoreRoundOutline,
+  Profile,
   ProfileOutline,
   Search,
   SearchOutline,
@@ -22,6 +26,20 @@ import "./left-bar.scss";
 const LeftBar = ({ user, setShowModal }) => {
   const isLargeDesktopScreen = useMediaQuery("(min-width: 1280px)");
   const [openDialog, setOpenDialog] = useState(false);
+  const page = useLocation().pathname?.split("/")[1];
+  const getPage = () => {
+    switch (page) {
+      case "home":
+      case "bookmarks":
+      case "message":
+      case "explore":
+        return page;
+      case user.username:
+        return user.username;
+      default:
+        return "";
+    }
+  };
 
   const dialogParams = {
     title: "Delete Post?",
@@ -50,9 +68,15 @@ const LeftBar = ({ user, setShowModal }) => {
                 }`}
               >
                 <div className="left-bar-icon clr-neutral-800 d-flex">
-                  <HomeOutline />
+                  {getPage() === "home" ? <Home /> : <HomeOutline />}
                 </div>
-                <h4 className="clr-neutral-800">Home</h4>
+                <h4
+                  className={`clr-neutral-800 fw-default ${
+                    getPage() === "home" ? "fw-bold" : ""
+                  }`}
+                >
+                  Home
+                </h4>
               </div>
             </Link>
           </div>
@@ -64,9 +88,19 @@ const LeftBar = ({ user, setShowModal }) => {
                 }`}
               >
                 <div className="left-bar-icon clr-neutral-800 d-flex">
-                  <ProfileOutline />
+                  {getPage() === user.username ? (
+                    <Profile />
+                  ) : (
+                    <ProfileOutline />
+                  )}
                 </div>
-                <h4 className="clr-neutral-800">Profile</h4>
+                <h4
+                  className={`clr-neutral-800 fw-default ${
+                    getPage() === user.username ? "fw-bold" : ""
+                  }`}
+                >
+                  Profile
+                </h4>
               </div>
             </Link>
           </div>
@@ -78,9 +112,15 @@ const LeftBar = ({ user, setShowModal }) => {
                 }`}
               >
                 <div className="left-bar-icon clr-neutral-800 d-flex">
-                  <SearchOutline />
+                  {getPage() === "explore" ? <Search /> : <SearchOutline />}
                 </div>
-                <h4 className="clr-neutral-800">Explore</h4>
+                <h4
+                  className={`clr-neutral-800 fw-default ${
+                    getPage() === "explore" ? "fw-bold" : ""
+                  }`}
+                >
+                  Explore
+                </h4>
               </div>
             </Link>
           </div>
@@ -92,9 +132,15 @@ const LeftBar = ({ user, setShowModal }) => {
                 }`}
               >
                 <div className="left-bar-icon clr-neutral-800 d-flex">
-                  <MessageOutline />
+                  {getPage() === "message" ? <Message /> : <MessageOutline />}
                 </div>
-                <h4 className="clr-neutral-800">Message</h4>
+                <h4
+                  className={`clr-neutral-800 fw-default ${
+                    getPage() === "message" ? "fw-bold" : ""
+                  }`}
+                >
+                  Message
+                </h4>
               </div>
             </Link>
           </div>
@@ -106,9 +152,19 @@ const LeftBar = ({ user, setShowModal }) => {
                 }`}
               >
                 <div className="left-bar-icon clr-neutral-800 d-flex">
-                  <BookmarkOutline />
+                  {getPage() === "bookmarks" ? (
+                    <Bookmark />
+                  ) : (
+                    <BookmarkOutline />
+                  )}
                 </div>
-                <h4 className="clr-neutral-800">Bookmarks</h4>
+                <h4
+                  className={`clr-neutral-800 fw-default ${
+                    getPage() === "bookmarks" ? "fw-bold" : ""
+                  }`}
+                >
+                  Bookmarks
+                </h4>
               </div>
             </Link>
           </div>
@@ -119,9 +175,16 @@ const LeftBar = ({ user, setShowModal }) => {
               }`}
             >
               <div className="left-bar-icon clr-neutral-800 d-flex">
+                {getPage() === "home" ? "" : ""}
                 <MoreRoundOutline />
               </div>
-              <h4 className="clr-neutral-800">Display</h4>
+              <h4
+                className={`clr-neutral-800 fw-default ${
+                  getPage() === "home" ? "fw-bold" : ""
+                }`}
+              >
+                Display
+              </h4>
             </div>
           </div>
           <div>

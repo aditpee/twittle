@@ -30,16 +30,29 @@ const Home = () => {
   const [isMenuHidden, setIsMenuHidden] = useState(true);
   const { scrollDir } = useDetectScroll({ thr: 100 });
   const [showModalPost, setShowModalPost] = useState(false);
+  const [isPostAll, setIsPostAll] = useState(true);
 
   const [posts, setPosts] = useState([]);
   const homeRef = useRef();
-  const initialEffect = useRef();
 
-  const { user } = useContext(AuthContext);
+  const { user, token } = useContext(AuthContext);
 
   // infinite scroll
   const [hasMore, setHasMore] = useState(true);
   const [index, setIndex] = useState(1);
+
+  const fetchData = useCallback(async () => {
+    window.scrollTo(0, 0);
+    setIndex(1);
+    setPosts([]);
+    try {
+      const res = await axios.get(API_URL + "/api/posts/all?offset=0&limit=10");
+      setPosts(res.data);
+      res.data.length < 10 ? setHasMore(false) : setHasMore(true);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   const fetchMoreData = useCallback(async () => {
     try {
@@ -54,6 +67,37 @@ const Home = () => {
       console.log(err);
     }
   }, [index]);
+
+  const fetchDataFollow = useCallback(async () => {
+    window.scrollTo(0, 0);
+    setIndex(1);
+    setPosts([]);
+    try {
+      const res = await axios.get(
+        API_URL + `/api/posts/follow?offset=0&limit=10`,
+        { headers: { Authorization: token } }
+      );
+      setPosts(res.data);
+
+      res.data.length < 10 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [token]);
+  const fetchMoreDataFollow = useCallback(async () => {
+    try {
+      const res = await axios.get(
+        API_URL + `/api/posts/follow?offset=${index}&limit=10`,
+        { headers: { Authorization: token } }
+      );
+      setPosts((prevPosts) => [...prevPosts, ...res.data]);
+      setIndex(index + 1);
+
+      res.data.length > 0 ? setHasMore(true) : setHasMore(false);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [index, token]);
   // console.log(hasMore);
 
   // prefill when post not react at bottom of page
@@ -65,19 +109,9 @@ const Home = () => {
   // }, [fetchMoreData, hasMore]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get(
-          API_URL + "/api/posts/all?offset=0&limit=10"
-        );
-        setPosts(res.data);
-        res.data.length < 10 ? setHasMore(false) : setHasMore(true);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     fetchData();
-  }, []);
+    isPostAll ? fetchData() : fetchDataFollow();
+  }, [fetchData, fetchDataFollow, isPostAll]);
 
   return (
     <main ref={homeRef} className="home grid-container">
@@ -109,10 +143,18 @@ const Home = () => {
             <SiteHeader type="logo" setIsMenuHidden={setIsMenuHidden} />
           )}
           <div className="home-nav-container">
-            <div className="pointer active clr-neutral-800">
+            <div
+              onClick={() => setIsPostAll(true)}
+              className={`pointer ${isPostAll ? "active clr-neutral-800" : ""}`}
+            >
               <p>For you</p>
             </div>
-            <div className="pointer">
+            <div
+              onClick={() => setIsPostAll(false)}
+              className={`pointer ${
+                !isPostAll ? "active clr-neutral-800" : ""
+              }`}
+            >
               <p>Following</p>
             </div>
           </div>
@@ -120,7 +162,7 @@ const Home = () => {
         <InfiniteScroll
           // scrollableTarget={"home-scrollable"}
           dataLength={posts.length}
-          next={fetchMoreData}
+          next={isPostAll ? fetchMoreData : fetchMoreDataFollow}
           hasMore={hasMore}
           loader={<Loader />}
           scrollThreshold={0.5}

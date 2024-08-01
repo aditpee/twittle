@@ -180,19 +180,31 @@ const Explore = () => {
             />
             <div className="explore-nav-container">
               <Link
-                className="pointer active clr-neutral-800"
+                className={`pointer ${
+                  !query.f ? "active clr-neutral-800" : ""
+                }`}
                 to={`/explore?q=${query.q}`}
               >
                 <div>
                   <p>Post</p>
                 </div>
               </Link>
-              <Link className="pointer " to={`/explore?q=${query.q}&f=people`}>
+              <Link
+                className={`pointer ${
+                  query.f === "people" ? "active clr-neutral-800" : ""
+                }`}
+                to={`/explore?q=${query.q}&f=people`}
+              >
                 <div>
                   <p>People</p>
                 </div>
               </Link>
-              <Link className="pointer " to={`/explore?q=${query.q}&f=media`}>
+              <Link
+                className={`pointer ${
+                  query.f === "media" ? "active clr-neutral-800" : ""
+                }`}
+                to={`/explore?q=${query.q}&f=media`}
+              >
                 <div>
                   <p>Media</p>
                 </div>
