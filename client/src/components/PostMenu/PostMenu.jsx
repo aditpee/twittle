@@ -115,7 +115,10 @@ const PostMenu = ({
           </MenuItem>
           {isPhoneScreen && (
             <div className="postmenu-cancel ">
-              <Button onClick={handleClose} className="fs-400 fw-bold">
+              <Button
+                onClick={handleClose}
+                className="fs-400 clr-neutral-800 fw-bold"
+              >
                 Cancel
               </Button>
             </div>
@@ -159,7 +162,10 @@ const PostMenu = ({
           </MenuItem>
           {isPhoneScreen && (
             <div className="postmenu-cancel ">
-              <Button onClick={handleClose} className="fs-400 fw-bold">
+              <Button
+                onClick={handleClose}
+                className="fs-400 clr-neutral-800  fw-bold"
+              >
                 Cancel
               </Button>
             </div>
