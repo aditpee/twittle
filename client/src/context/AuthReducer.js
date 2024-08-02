@@ -49,7 +49,7 @@ const AuthReducer = (state, action) => {
         isLoading: false,
         user: {
           ...state.user,
-          followings: [...state.user.followers, action.newFollower],
+          followings: [...state.user.followings, action.newFollower],
         },
         error: false,
         token: state.token,
@@ -59,7 +59,7 @@ const AuthReducer = (state, action) => {
         isLoading: false,
         user: {
           ...state.user,
-          followings: state.user.followers.filter(
+          followings: state.user.followings.filter(
             (id) => id !== action.oldFollower
           ),
         },
