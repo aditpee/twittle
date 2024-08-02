@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 
 const Comment = require("../models/Comment");
 const Post = require("../models/Post");
@@ -78,9 +79,11 @@ router.get("/media/", verifyJwt, async (req, res) => {
 // search people by query
 router.get("/people/", verifyJwt, async (req, res) => {
   try {
+    const userId = new mongoose.Types.ObjectId(req.userId);
     const users = await User.aggregate([
       {
         $match: {
+          _id: { $ne: userId },
           verifiedEmail: true,
           $or: [
             { name: { $regex: `${req.query.q}`, $options: "mi" } },
