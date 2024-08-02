@@ -1,4 +1,4 @@
-import { AddAPhotoOutlined, ArrowBack } from "@mui/icons-material";
+import { AddAPhotoOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { validate } from "react-email-validator";
 import PostForm from "../post-form/PostForm";
@@ -16,10 +16,11 @@ import axios from "axios";
 import { useRef } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
-import { Cancel } from "../../utils/icons/icons";
+import { ArrowBack, Cancel } from "../../utils/icons/icons";
 import AlertDialog from "../alert-dialog/AlertDialog";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDebouncedCallback } from "use-debounce";
 
 const EditProfile = ({ showModal, setShowModal, user }) => {
   const [validateUsername, setValidateUsername] = useState("");
@@ -55,6 +56,10 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
   const [totalCharName, setTotalCharName] = useState(null);
 
   const { token, dispatch } = useContext(AuthContext);
+
+  const debounced = useDebouncedCallback((e, fnCallback) => {
+    fnCallback(e);
+  }, 1000);
 
   const restoreInput = () => {
     setInputEdit({
@@ -183,6 +188,25 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
     // console.log(oldInput, newInput);
   };
 
+  const checkExistingUserByUsername = async (e) => {
+    if (e.target.value.length < 4) {
+      return;
+    }
+    try {
+      if (e.target.value !== user.username) {
+        await axios.get(
+          API_URL + "/api/auth/checkExistUser?username=" + e.target.value
+        );
+      }
+    } catch (err) {
+      setCustomErrorMessage(
+        usernameRef.current,
+        err.response.data,
+        setValidateUsername
+      );
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoadingEdit(true);
@@ -301,7 +325,10 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
           className="edit-profile-modal bg-neutral-000"
         >
           <div className="edit-profile-header">
-            <div onClick={handleClose} className="edit-profile-close">
+            <div
+              onClick={handleClose}
+              className="edit-profile-close clr-neutral-800"
+            >
               <ArrowBack />
             </div>
             <div>
@@ -422,6 +449,7 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
                           ...prev,
                           username: e.target.value,
                         }));
+                        debounced(e, checkExistingUserByUsername);
                       }}
                       id="username"
                       className="clr-neutral-800"

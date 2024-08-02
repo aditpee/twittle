@@ -12,45 +12,56 @@ const Login = () => {
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
   const [usernameErrMsg, setUsernameErrMsg] = useState("");
-  const [passwordErrMsg, setpasswordErrMsg] = useState("");
+  const [passwordErrMsg, setPasswordErrMsg] = useState("");
+
+  const [isEmail, setIsEmail] = useState(false);
 
   const { user, dispatch, error, isLoading } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setUsernameErrMsg("");
-    setpasswordErrMsg("");
+    setPasswordErrMsg("");
 
     const userCredential = {
-      username: usernameRef.current.value,
+      username: !isEmail ? usernameRef.current.value : null,
+      email: isEmail ? usernameRef.current.value : null,
       password: passwordRef.current.value,
     };
     LoginCall(userCredential, dispatch);
   };
 
   useEffect(() => {
-    const { username: usernameErr, password: passwordErr } = error;
+    const {
+      username: usernameErr,
+      password: passwordErr,
+      email: emailErr,
+    } = error;
     if (error) {
       if (usernameErr) {
         setUsernameErrMsg(usernameErr);
       }
-      if (passwordErr) {
-        setpasswordErrMsg(passwordErr);
+      if (emailErr) {
+        setUsernameErrMsg(emailErr);
       }
-      toast.error(error.error, {
-        position: "top-center",
-        theme: "colored",
-        closeOnClick: true,
-        pauseOnHover: false,
-        hideProgressBar: true,
-        autoClose: false,
-      });
+      if (passwordErr) {
+        setPasswordErrMsg(passwordErr);
+      } else {
+        toast.error(error.error, {
+          position: "top-center",
+          theme: "colored",
+          closeOnClick: true,
+          pauseOnHover: false,
+          hideProgressBar: true,
+          autoClose: false,
+        });
+      }
     }
     if (user) {
       // navigate("/home");
     }
-  }, [error, user, navigate]);
+  }, [error, user]);
 
   return (
     <main className="login section">
@@ -78,6 +89,13 @@ const Login = () => {
                   id="username-email"
                   className="coba clr-neutral-800"
                   placeholder=" "
+                  onInput={(e) => {
+                    setUsernameErrMsg("");
+
+                    /@/.test(e.target.value)
+                      ? setIsEmail(true)
+                      : setIsEmail(false);
+                  }}
                   type="text"
                   required
                 />
@@ -102,6 +120,9 @@ const Login = () => {
                   className="clr-neutral-800"
                   placeholder=" "
                   type="password"
+                  onInput={() => {
+                    setPasswordErrMsg("");
+                  }}
                   required
                 />
                 <label

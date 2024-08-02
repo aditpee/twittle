@@ -3,7 +3,7 @@ import { API_URL } from "./config";
 import { LoginFailure, LoginStart, LoginSuccess } from "./context/AuthAction";
 
 export const LoginCall = async (userCredential, dispatch) => {
-  dispatch(LoginStart());
+  // dispatch(LoginStart());
   try {
     const res = await axios.post(API_URL + "/api/auth/login", userCredential);
     dispatch(LoginSuccess(res.data.user, res.data.token));

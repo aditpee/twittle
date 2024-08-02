@@ -54,11 +54,19 @@ router.post("/register", [registerValidator], async (req, res) => {
 
 router.post("/login", async (req, res) => {
   try {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
 
-    const user = await User.findOne({ username });
+    let user;
+
+    username
+      ? (user = await User.findOne({ username }))
+      : (user = await User.findOne({ email }));
+
     if (!user) {
-      return res.status(401).json({ username: "Username doesn't exist" });
+      username
+        ? res.status(401).json({ username: "Username doesn't exist" })
+        : res.status(401).json({ email: "Email doesn't exist" });
+      return;
     }
     const isMatchPassword = await bcrypt.compare(password, user.password);
     if (!isMatchPassword) {
@@ -95,12 +103,10 @@ router.post("/login", async (req, res) => {
         "Twittle email verification",
         `VERIF YOUR EMAIL ${url}`
       );
-      return res
-        .status(401)
-        .json({
-          error:
-            "Your account not verified. An email has been resent to your email, please check your inbox or spam folder",
-        });
+      return res.status(401).json({
+        error:
+          "Your account not verified. An email has been resent to your email, please check your inbox or spam folder",
+      });
     }
 
     const tokenJwt = jwt.sign(
