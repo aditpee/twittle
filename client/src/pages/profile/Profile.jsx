@@ -34,7 +34,6 @@ const Profile = () => {
   const navigate = useNavigate();
   const [isLoadingFollow, setIsLoadingFollow] = useState(false);
   const [isFollowed, setIsFollowed] = useState(true);
-  const [followings, setFollowings] = useState([]);
   const [followers, setFollowers] = useState([]);
   const [isLoadingPage, setIsLoadingPage] = useState(true);
   const [showModalPost, setShowModalPost] = useState(false);
@@ -42,7 +41,7 @@ const Profile = () => {
 
   const { scrollDir } = useDetectScroll({ thr: 100 });
 
-  const { user: currentUser, token } = useContext(AuthContext);
+  const { user: currentUser, token, dispatch } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [replyPosts, setReplyPosts] = useState([]);
 
@@ -71,9 +70,17 @@ const Profile = () => {
       if (followers.includes(currentUser._id)) {
         // unfollow
         setFollowers((prev) => prev.filter((id) => id !== currentUser._id));
+        dispatch({
+          type: "UNFOLLOW",
+          oldFollower: user?._id,
+        });
       } else {
         // follow
         setFollowers((prev) => [...prev, currentUser._id]);
+        dispatch({
+          type: "FOLLOW",
+          newFollower: user?._id,
+        });
       }
     } catch (err) {
       setIsLoadingFollow(false);
@@ -261,7 +268,6 @@ const Profile = () => {
 
         setUser(res.data);
         setFollowers(res.data.followers);
-        setFollowings(res.data.followings);
         // check is follwed user
         if (res.data.followers.includes(currentUser._id)) {
           setIsFollowed(true);
@@ -592,7 +598,7 @@ const Profile = () => {
                       <Link to={`/${username}/followings`}>
                         <p className="clr-neutral-600">
                           <span className="clr-neutral-800 fw-bold">
-                            {followings.length}
+                            {user?.followings.length}
                           </span>{" "}
                           Following
                         </p>
