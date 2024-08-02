@@ -18,6 +18,13 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: white;
+      }
+      .loading-first.dim {
+        background-color: hsl(210, 34.38%, 12.55%);
+      }
+      .loading-first.black {
+        background-color: black;
       }
 
       .loading-logo img {
@@ -34,5 +41,13 @@
       </div>
     </div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      const themeBG = localStorage.getItem("themebg");
+      const loadingFirst = document.querySelector(".loading-first");
+
+      if (themeBG) {
+        loadingFirst.classList.add(themeBG);
+      }
+    </script>
   </body>
 </html>
