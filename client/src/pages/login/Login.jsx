@@ -6,13 +6,18 @@ import { LoginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { ArrowBack } from "../../utils/icons/icons";
+import {
+  ArrowBack,
+  VisibilityOff,
+  VisibilityOn,
+} from "../../utils/icons/icons";
 
 const Login = () => {
   const usernameRef = useRef(null);
   const passwordRef = useRef(null);
   const [usernameErrMsg, setUsernameErrMsg] = useState("");
   const [passwordErrMsg, setPasswordErrMsg] = useState("");
+  const [isHidePassword, setIsHidePassword] = useState(true);
 
   const [isEmail, setIsEmail] = useState(false);
 
@@ -113,13 +118,13 @@ const Login = () => {
               )}
             </div>
             <div>
-              <div>
+              <div className="d-flex">
                 <input
                   ref={passwordRef}
                   id="password"
                   className="clr-neutral-800"
                   placeholder=" "
-                  type="password"
+                  type={isHidePassword ? "password" : "text"}
                   onInput={() => {
                     setPasswordErrMsg("");
                   }}
@@ -130,6 +135,13 @@ const Login = () => {
                   className="login-label clr-neutral-600"
                 >
                   Password
+                </label>
+                <label
+                  htmlFor="password"
+                  onClick={() => setIsHidePassword((prev) => !prev)}
+                  className="twittle-input-icon clr-neutral-800"
+                >
+                  {isHidePassword ? <VisibilityOn /> : <VisibilityOff />}
                 </label>
               </div>
               {passwordErrMsg && (

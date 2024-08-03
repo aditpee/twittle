@@ -8,7 +8,11 @@ import axios from "axios";
 import { API_URL, PF } from "../../config";
 import EmailVerify from "./EmailVerify";
 import { toast } from "react-toastify";
-import { ArrowBack } from "../../utils/icons/icons";
+import {
+  ArrowBack,
+  VisibilityOff,
+  VisibilityOn,
+} from "../../utils/icons/icons";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -18,6 +22,8 @@ const Register = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const confirmPasswordRef = useRef(null);
+  const [isHidePassword, setIsHidePassword] = useState(true);
+  const [isHideConfirmPassword, setIsHideConfirmPassword] = useState(true);
 
   const [validateUsername, setValidateUsername] = useState(null);
   const [validateEmail, setValidateEmail] = useState(null);
@@ -219,13 +225,13 @@ const Register = () => {
                     )}
                   </div>
                   <div>
-                    <div>
+                    <div className="d-flex">
                       <input
                         ref={passwordRef}
                         id="password"
                         className="clr-neutral-800"
                         placeholder=" "
-                        type="password"
+                        type={isHidePassword ? "password" : "text"}
                         required
                         onInput={(e) =>
                           removeCustomErrorMessage(
@@ -240,6 +246,13 @@ const Register = () => {
                       >
                         Password
                       </label>
+                      <label
+                        htmlFor="password"
+                        onClick={() => setIsHidePassword((prev) => !prev)}
+                        className="twittle-input-icon clr-neutral-800"
+                      >
+                        {isHidePassword ? <VisibilityOn /> : <VisibilityOff />}
+                      </label>
                     </div>
                     {validatePassword && (
                       <p className="twittle-input-invalid text-left margin-inline-start-2 clr-accent-red fs-100">
@@ -248,13 +261,13 @@ const Register = () => {
                     )}
                   </div>
                   <div>
-                    <div>
+                    <div className="d-flex">
                       <input
                         ref={confirmPasswordRef}
                         id="confirm-password"
                         className="clr-neutral-800"
                         placeholder=" "
-                        type="password"
+                        type={isHideConfirmPassword ? "password" : "text"}
                         required
                         onInput={(e) =>
                           removeCustomErrorMessage(
@@ -268,6 +281,19 @@ const Register = () => {
                         className="register-label clr-neutral-600"
                       >
                         Confirm password
+                      </label>
+                      <label
+                        htmlFor="password"
+                        onClick={() =>
+                          setIsHideConfirmPassword((prev) => !prev)
+                        }
+                        className="twittle-input-icon clr-neutral-800"
+                      >
+                        {isHideConfirmPassword ? (
+                          <VisibilityOn />
+                        ) : (
+                          <VisibilityOff />
+                        )}
                       </label>
                     </div>
                     {validateConfirmPassword && (

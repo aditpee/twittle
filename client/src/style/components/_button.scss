@@ -23,7 +23,7 @@
   textarea {
     resize: none;
   }
-  label {
+  label:not(.twittle-input-icon) {
     position: absolute;
     font-size: 1rem;
     max-width: fit-content;
@@ -34,13 +34,19 @@
     transition: all 300ms;
   }
 
+  .twittle-input-icon {
+    display: flex;
+    padding-left: 0.25rem;
+    cursor: pointer;
+  }
+
   :is(input, textarea) {
-    &:focus + label {
+    &:focus + label:not(.twittle-input-icon) {
       font-size: $font-size-200;
       top: 0.3rem;
       transform: translateY(0);
     }
-    &:not(:placeholder-shown) + label {
+    &:not(:placeholder-shown) + label:not(.twittle-input-icon) {
       font-size: $font-size-200;
       top: 0.3rem;
       transform: translateY(0);
@@ -50,35 +56,35 @@
   &:has(:is(input, textarea):not(:placeholder-shown):valid) {
     border-color: $color-primary-000;
     outline: 1px solid $color-primary-000;
-    label {
+    label:not(.twittle-input-icon) {
       color: $color-primary-000;
     }
   }
   &:has(:is(input, textarea):not(:placeholder-shown):invalid) {
     border-color: $color-accent-red;
     outline: 1px solid $color-accent-red;
-    label {
+    label:not(.twittle-input-icon) {
       color: $color-accent-red;
     }
   }
   &:has(:is(input, textarea):focus:invalid) {
     border-color: $color-accent-red;
     outline: 1px solid $color-accent-red;
-    label {
+    label:not(.twittle-input-icon) {
       color: $color-accent-red;
     }
   }
   &:has(:is(input, textarea):not(:placeholder-shown).invalid) {
     border-color: $color-accent-red;
     outline: 1px solid $color-accent-red;
-    label {
+    label:not(.twittle-input-icon) {
       color: $color-accent-red;
     }
   }
   &:has(:is(input, textarea).invalid:focus) {
     border-color: $color-accent-red;
     outline: 1px solid $color-accent-red;
-    label {
+    label:not(.twittle-input-icon) {
       color: $color-accent-red;
     }
   }
