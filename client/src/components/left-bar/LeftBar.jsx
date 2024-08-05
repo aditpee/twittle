@@ -227,7 +227,7 @@ const LeftBar = ({ user, setShowModal }) => {
                     <p className="fs-300 clr-neutral-600">{user.username}</p>
                   </div>
                 </div>
-                <div>
+                <div className="clr-neutral-600">
                   <MoreHoriz />
                 </div>
               </>

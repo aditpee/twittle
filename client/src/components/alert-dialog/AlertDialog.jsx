@@ -30,11 +30,11 @@ const AlertDialog = ({
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">
-          <h3 className="clr-neutral-800">{title}</h3>
+          <span className="clr-neutral-800">{title}</span>
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            <p className="clr-neutral-600">{content}</p>
+            <span className="clr-neutral-600">{content}</span>
           </DialogContentText>
         </DialogContent>
         <DialogActions>

@@ -4,7 +4,7 @@ import { useReducer } from "react";
 import { useEffect } from "react";
 
 const INITIAL_STATE = {
-  color: "blue",
+  color: "",
   bg: "black",
   font: "15",
 };
@@ -37,6 +37,7 @@ export const ThemeContext = createContext(null);
 export const ThemeProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
   const themebg = localStorage.getItem("themebg");
+  const themecolor = localStorage.getItem("themecolor");
 
   useEffect(() => {
     // const changeTheme = () => {
@@ -59,7 +60,13 @@ export const ThemeProvider = ({ children }) => {
     } else {
       document.body.setAttribute("data-bg", "black");
     }
-  }, [themebg]);
+    if (themecolor) {
+      document.body.setAttribute("data-color", themecolor);
+      dispatch({ type: "CHANGE_COLOR", theme: themecolor });
+    } else {
+      document.body.setAttribute("data-color", "");
+    }
+  }, [themebg, themecolor]);
 
   return (
     <ThemeContext.Provider

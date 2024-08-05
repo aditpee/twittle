@@ -175,11 +175,13 @@ const PostForm = ({
                   />
                   <label
                     htmlFor="twittle-upload-img"
-                    className="d-flex align-center"
+                    className="d-flex align-center clr-primary-000 pointer"
                   >
                     <Picture />
                   </label>
-                  <Gif />
+                  <label className="d-flex align-center clr-primary-000 pointer">
+                    <Gif />
+                  </label>
                 </div>
               )}
               <div className="">

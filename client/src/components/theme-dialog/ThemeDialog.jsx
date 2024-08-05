@@ -49,14 +49,21 @@ const ThemeDialog = ({
     localStorage.setItem("themebg", theme);
   };
 
-  useEffect(() => {
-    const hslPrimary = getComputedStyle(document.body).getPropertyValue(
-      "--primary-000"
-    );
+  const changeThemeColor = (theme) => {
+    dispatch({
+      type: "CHANGE_COLOR",
+      theme,
+    });
+    localStorage.setItem("themecolor", theme);
+  };
 
+  const hslPrimary = getComputedStyle(document.body).getPropertyValue(
+    "--primary-000"
+  );
+  useEffect(() => {
     const [hue, sat] = hslPrimary.match(/\d+\.?\d*/g).map(Number);
     setAccentPrimary(`hsl(${hue}, ${sat}%, 75%)`);
-  }, []);
+  }, [hslPrimary]);
 
   return (
     <Fragment>
@@ -124,33 +131,51 @@ const ThemeDialog = ({
               Color
             </h3>
             <div className="color-theme-buttons padding-block-3">
-              <div className={color === "blue" ? "active" : ""}>
-                <button className="bg-accent-blue">
+              <div className={color === "" ? "active" : ""}>
+                <button
+                  onClick={() => changeThemeColor("")}
+                  className="bg-accent-blue"
+                >
                   <CheckList />
                 </button>
               </div>
               <div className={color === "yellow" ? "active" : ""}>
-                <button className="bg-accent-yellow">
+                <button
+                  onClick={() => changeThemeColor("yellow")}
+                  className="bg-accent-yellow"
+                >
                   <CheckList />
                 </button>
               </div>
               <div className={color === "pink" ? "active" : ""}>
-                <button className="bg-accent-pink">
+                <button
+                  onClick={() => changeThemeColor("pink")}
+                  className="bg-accent-pink"
+                >
                   <CheckList />
                 </button>
               </div>
               <div className={color === "purple" ? "active" : ""}>
-                <button className="bg-accent-purple">
+                <button
+                  onClick={() => changeThemeColor("purple")}
+                  className="bg-accent-purple"
+                >
                   <CheckList />
                 </button>
               </div>
               <div className={color === "orange" ? "active" : ""}>
-                <button className="bg-accent-orange">
+                <button
+                  onClick={() => changeThemeColor("orange")}
+                  className="bg-accent-orange"
+                >
                   <CheckList />
                 </button>
               </div>
               <div className={color === "teal" ? "active" : ""}>
-                <button className="bg-accent-teal">
+                <button
+                  onClick={() => changeThemeColor("teal")}
+                  className="bg-accent-teal"
+                >
                   <CheckList />
                 </button>
               </div>

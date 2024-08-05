@@ -2,6 +2,9 @@ html :has(body[data-bg="dim"]) {
   color-scheme: dark;
 }
 
+// =========
+// THEME BG
+// =========
 body[data-bg="dim"] {
   scrollbar-color: rgb(92, 110, 126) rgb(30, 39, 50);
 
@@ -97,5 +100,27 @@ body[data-bg="black"] {
 
   :is(.home-nav, .explore-nav, .profile-header) {
     background: rgba(hsl(0deg 0% 0%), 0.9);
+  }
+}
+
+// =========
+// THEME COLOR
+// =========
+
+:root {
+  body[data-color="yellow"] {
+    --primary-000: hsl(49.88, 100%, 50%);
+  }
+  body[data-color="pink"] {
+    --primary-000: hsl(332.27, 94.94%, 53.53%);
+  }
+  body[data-color="purple"] {
+    --primary-000: hsl(252.07, 100%, 66.86%);
+  }
+  body[data-color="orange"] {
+    --primary-000: hsl(28.71, 100%, 50%);
+  }
+  body[data-color="teal"] {
+    --primary-000: hsl(160 100% 36.47%);
   }
 }

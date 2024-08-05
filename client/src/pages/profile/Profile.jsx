@@ -598,7 +598,7 @@ const Profile = () => {
                       <Link to={`/${username}/followings`}>
                         <p className="clr-neutral-600">
                           <span className="clr-neutral-800 fw-bold">
-                            {user?.followings.length}
+                            {user?.followings?.length}
                           </span>{" "}
                           Following
                         </p>

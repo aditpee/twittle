@@ -127,9 +127,9 @@
       }
 
       &.post-comment {
-        color: $color-primary-000;
+        color: $color-accent-blue;
         .post-icon::after {
-          background-color: $color-primary-000;
+          background-color: $color-accent-blue;
         }
       }
       &.post-retweet {

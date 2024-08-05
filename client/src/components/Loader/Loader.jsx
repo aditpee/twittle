@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 const Loader = ({ isCenterPage }) => {
   return (
     <div className={`loader ${isCenterPage ? "loader-center" : ""}`}>
-      <div className="loader-container">
+      <div className="loader-container clr-primary-000">
         <LoaderIcon />
       </div>
     </div>
