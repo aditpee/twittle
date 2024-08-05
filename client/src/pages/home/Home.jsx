@@ -23,6 +23,7 @@ import { Suspense } from "react";
 import PostModal from "../../components/post-modal/PostModal";
 import { useCallback } from "react";
 import { useRef } from "react";
+import PageEmpty from "../../components/page-emtpy/PageEmpty";
 
 const Home = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -54,6 +55,23 @@ const Home = () => {
     }
   }, []);
 
+  const fetchDataFollow = useCallback(async () => {
+    window.scrollTo(0, 0);
+    setIndex(1);
+    setPosts([]);
+    try {
+      const res = await axios.get(
+        API_URL + `/api/posts/follow?offset=0&limit=10`,
+        { headers: { Authorization: token } }
+      );
+      setPosts(res.data);
+
+      res.data.length < 10 ? setHasMore(false) : setHasMore(true);
+    } catch (err) {
+      console.log(err);
+    }
+  }, [token]);
+
   const fetchMoreData = useCallback(async () => {
     try {
       const res = await axios.get(
@@ -68,22 +86,6 @@ const Home = () => {
     }
   }, [index]);
 
-  const fetchDataFollow = useCallback(async () => {
-    window.scrollTo(0, 0);
-    setIndex(1);
-    setPosts([]);
-    try {
-      const res = await axios.get(
-        API_URL + `/api/posts/follow?offset=0&limit=10`,
-        { headers: { Authorization: token } }
-      );
-      setPosts(res.data);
-
-      res.data.length < 10 ? setHasMore(true) : setHasMore(false);
-    } catch (err) {
-      console.log(err);
-    }
-  }, [token]);
   const fetchMoreDataFollow = useCallback(async () => {
     try {
       const res = await axios.get(
@@ -98,7 +100,6 @@ const Home = () => {
       console.log(err);
     }
   }, [index, token]);
-  // console.log(hasMore);
 
   // prefill when post not react at bottom of page
 
@@ -174,6 +175,12 @@ const Home = () => {
             ))}
           </section>
         </InfiniteScroll>
+        {!posts.length && !hasMore && !isPostAll && (
+          <PageEmpty
+            title={`Welcome to Twittle!`}
+            subTitle={`This is the best place to see what’s happening in your world. Find some people and topics to follow now.`}
+          />
+        )}
         {isPhoneScreen && (
           <>
             <MobileNav scrollDir={scrollDir} />

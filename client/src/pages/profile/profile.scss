@@ -169,12 +169,3 @@
     width: 100%;
   }
 }
-
-.profile-empty {
-  padding: clamp(2rem, 5vh, 3rem);
-  padding-inline: clamp(2rem, 5vh, 3rem);
-
-  @include mq(medium) {
-    padding-inline: 9rem;
-  }
-}

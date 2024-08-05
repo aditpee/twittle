@@ -20,6 +20,7 @@ import Loader from "../../components/Loader/Loader";
 import { Link, useSearchParams } from "react-router-dom";
 import UserCard from "../../components/user-card/UserCard";
 import MobilePost from "../../components/mobile-post/MobilePost";
+import PageEmpty from "../../components/page-emtpy/PageEmpty";
 
 const Explore = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -225,6 +226,12 @@ const Explore = () => {
                   <UserCard key={user._id} user={user} />
                 ))}
               </InfiniteScroll>
+              {!posts.length && !hasMore && (
+                <PageEmpty
+                  title={`No results for ${query.q}`}
+                  subTitle={`Try searching for something else, or check your Search settings to see if they’re protecting you from potentially sensitive content.`}
+                />
+              )}
             </div>
           ) : query.f === "media" ? (
             <div className="profile-posts">
@@ -240,6 +247,12 @@ const Explore = () => {
                   <Post key={post._id} post={post} />
                 ))}
               </InfiniteScroll>
+              {!posts.length && !hasMore && (
+                <PageEmpty
+                  title={`No results for ${query.q}`}
+                  subTitle={`Try searching for something else, or check your Search settings to see if they’re protecting you from potentially sensitive content.`}
+                />
+              )}
             </div>
           ) : (
             <div className="profile-posts">
@@ -255,6 +268,12 @@ const Explore = () => {
                   <Post key={post._id} post={post} />
                 ))}
               </InfiniteScroll>
+              {!posts.length && !hasMore && (
+                <PageEmpty
+                  title={`No results for ${query.q}`}
+                  subTitle={`Try searching for something else, or check your Search settings to see if they’re protecting you from potentially sensitive content.`}
+                />
+              )}
             </div>
           )}
           {isPhoneScreen && (

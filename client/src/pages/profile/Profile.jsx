@@ -25,6 +25,7 @@ import PostModal from "../../components/post-modal/PostModal";
 import EditProfile from "../../components/edit-profile/EditProfile";
 import PostReply from "../../components/post/PostReply";
 import UserCard from "../../components/user-card/UserCard";
+import PageEmpty from "../../components/page-emtpy/PageEmpty";
 
 const Profile = () => {
   const isPhoneScreen = useMediaQuery("(max-width: 500px)");
@@ -284,24 +285,24 @@ const Profile = () => {
     fetchData();
   }, [token, username, currentUser, page]);
 
-  const ProfileEmpty = ({ title, subTitle }) => (
-    <div className="profile-empty">
-      <h1
-        className="clr-neutral-800 fw-black margin-block-end-2"
-        style={{ fontSize: "2rem" }}
-      >
-        {user?.notFound ? "This account doesn’t exist" : title}
-      </h1>
-      <p className="fs-300 clr-neutral-600">
-        {user?.notFound ? "Try searching for another." : subTitle}
-      </p>
-    </div>
-  );
+  // const PageEmpty = ({ title, subTitle }) => (
+  //   <div className="profile-empty">
+  //     <h1
+  //       className="clr-neutral-800 fw-black margin-block-end-2"
+  //       style={{ fontSize: "2rem" }}
+  //     >
+  //       {user?.notFound ? "This account doesn’t exist" : title}
+  //     </h1>
+  //     <p className="fs-300 clr-neutral-600">
+  //       {user?.notFound ? "Try searching for another." : subTitle}
+  //     </p>
+  //   </div>
+  // );
 
-  ProfileEmpty.propTypes = {
-    title: PropTypes.string,
-    subTitle: PropTypes.string,
-  };
+  // PageEmpty.propTypes = {
+  //   title: PropTypes.string,
+  //   subTitle: PropTypes.string,
+  // };
   const testUser = {
     avatar:
       "https://res.cloudinary.com/dlovbdzns/image/upload/v1720259866/pzeteldl2meahirx5ltz.jpg",
@@ -415,14 +416,16 @@ const Profile = () => {
                 {page === "followers" &&
                   (posts.length === 0 && !isLoadingPage ? (
                     username === currentUser.username ? (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"Looking for followers?"}
                         subTitle={`When someone follows this account, they’ll show up here. Posting and interacting with others helps boost followers.`}
+                        notFound={user?.notFound}
                       />
                     ) : (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"Looking for followers?"}
                         subTitle={`When someone follows this account, they’ll show up here. Posting and interacting with others helps boost followers.`}
+                        notFound={user?.notFound}
                       />
                     )
                   ) : (
@@ -443,14 +446,16 @@ const Profile = () => {
                 {page === "verified_followers" &&
                   (posts.length === 0 && !isLoadingPage ? (
                     username === currentUser.username ? (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"You don’t have any verified followers yet"}
                         subTitle={`When a verified account follows you, you’ll see them here.`}
+                        notFound={user?.notFound}
                       />
                     ) : (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={`@${username} doesn’t have any verified followers.`}
                         subTitle={`When someone verified follows this account, they’ll show up here.`}
+                        notFound={user?.notFound}
                       />
                     )
                   ) : (
@@ -471,14 +476,16 @@ const Profile = () => {
                 {page === "followings" &&
                   (posts.length === 0 && !isLoadingPage ? (
                     username === currentUser.username ? (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={`Be in the know`}
                         subTitle={`Following accounts is an easy way to curate your timeline and know what’s happening with the topics and people you’re interested in.`}
+                        notFound={user?.notFound}
                       />
                     ) : (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={`@${username} isn’t following anyone`}
                         subTitle={`Once they follow accounts, they’ll show up here.`}
+                        notFound={user?.notFound}
                       />
                     )
                   ) : (
@@ -691,14 +698,16 @@ const Profile = () => {
                 {!page &&
                   (posts.length === 0 && !isLoadingPage ? (
                     username === currentUser.username ? (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"You don’t have any posts yet"}
                         subTitle={`When you do, your posts will show up here.`}
+                        notFound={user?.notFound}
                       />
                     ) : (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"This account don’t have any posts yet"}
                         subTitle={`When they do, their posts will show up here.`}
+                        notFound={user?.notFound}
                       />
                     )
                   ) : (
@@ -719,14 +728,16 @@ const Profile = () => {
                 {page === "media" &&
                   (posts.length === 0 && !isLoadingPage ? (
                     username === currentUser.username ? (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"Lights, camera … attachments!"}
                         subTitle={`When you post photos or videos, they will show up here.`}
+                        notFound={user?.notFound}
                       />
                     ) : (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"This account don’t have any media yet"}
                         subTitle={`When they do, their media will show up here.`}
+                        notFound={user?.notFound}
                       />
                     )
                   ) : (
@@ -749,14 +760,16 @@ const Profile = () => {
                 {page === "likes" &&
                   (posts.length === 0 && !isLoadingPage ? (
                     username === currentUser.username ? (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"You don’t have any likes yet"}
                         subTitle={`Tap the heart on any post to show it some love. When you do, it’ll show up here.`}
+                        notFound={user?.notFound}
                       />
                     ) : (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"This account don’t have any likes yet"}
                         subTitle={`When they do, it will show up here.`}
+                        notFound={user?.notFound}
                       />
                     )
                   ) : (
@@ -777,14 +790,16 @@ const Profile = () => {
                 {page === "replies" &&
                   (posts.length === 0 && !isLoadingPage ? (
                     username === currentUser.username ? (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"You don’t have any replies yet"}
                         subTitle={`When you do, your replies will show up here.`}
+                        notFound={user?.notFound}
                       />
                     ) : (
-                      <ProfileEmpty
+                      <PageEmpty
                         title={"This account don’t have any replies yet"}
                         subTitle={`When they do, their replies will show up here.`}
+                        notFound={user?.notFound}
                       />
                     )
                   ) : (
