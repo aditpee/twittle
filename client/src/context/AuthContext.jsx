@@ -16,16 +16,14 @@ const INITIAL_STATE = {
 export const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
   const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
+  const tokenJwt = localStorage.getItem("token");
 
   useEffect(() => {
-    const tokenJwt = localStorage.getItem("token");
     if (!tokenJwt) return dispatch(Logout());
 
     verifyJwtCall(tokenJwt, dispatch);
-    setToken(tokenJwt);
-  }, []);
+  }, [tokenJwt]);
 
   return (
     <AuthContext.Provider

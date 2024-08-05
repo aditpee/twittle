@@ -45,7 +45,7 @@ const AlertDialog = ({
               dialogAction();
             }}
           >
-            {textButton}
+            <div>{textButton}</div>
           </Button>
           <Button
             className="cancel-dialog-button"

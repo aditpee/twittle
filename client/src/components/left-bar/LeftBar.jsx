@@ -1,13 +1,15 @@
 import { MoreHoriz } from "@mui/icons-material";
 import { useMediaQuery } from "@mui/material";
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { PF } from "../../config";
+import { AuthContext } from "../../context/AuthContext";
 import {
   Bookmark,
   BookmarkOutline,
   DisplayOutline,
+  Exit,
   ExploreOutline,
   Home,
   HomeOutline,
@@ -20,12 +22,16 @@ import {
   SearchOutline,
   Tweet,
 } from "../../utils/icons/icons";
+import AlertDialog from "../alert-dialog/AlertDialog";
 import ThemeDialog from "../theme-dialog/ThemeDialog";
 import "./left-bar.scss";
 
 const LeftBar = ({ user, setShowModal }) => {
   const isLargeDesktopScreen = useMediaQuery("(min-width: 1280px)");
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogLogout, setOpenDialogLogout] = useState(false);
+
+  const { dispatch } = useContext(AuthContext);
   const page = useLocation().pathname?.split("/")[1];
   const getPage = () => {
     switch (page) {
@@ -48,9 +54,25 @@ const LeftBar = ({ user, setShowModal }) => {
     colorButton: "bg-accent-red",
     textButton: "Delete",
   };
+  const dialogParamsLogout = {
+    title: "Log out of Twittle?",
+    content:
+      "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.",
+    colorButton: "bg-neutral-800",
+    textButton: "Log out",
+  };
 
   return (
     <section className="left-bar">
+      <AlertDialog
+        openDialog={openDialogLogout}
+        setOpenDialog={setOpenDialogLogout}
+        dialogParams={dialogParamsLogout}
+        dialogAction={() => {
+          localStorage.setItem("token", "");
+          dispatch({ type: "LOGOUT" });
+        }}
+      />
       <div className="left-bar-container">
         <div>
           <div className="left-bar-logo">
@@ -175,16 +197,21 @@ const LeftBar = ({ user, setShowModal }) => {
               }`}
             >
               <div className="left-bar-icon clr-neutral-800 d-flex">
-                {getPage() === "home" ? "" : ""}
-                <MoreRoundOutline />
+                <DisplayOutline />
               </div>
-              <h4
-                className={`clr-neutral-800 fw-default ${
-                  getPage() === "home" ? "fw-bold" : ""
-                }`}
-              >
-                Display
-              </h4>
+              <h4 className={`clr-neutral-800 fw-default`}>Display</h4>
+            </div>
+          </div>
+          <div onClick={() => setOpenDialogLogout(true)}>
+            <div
+              className={`left-bar-content fs-500 ${
+                isLargeDesktopScreen ? "" : "hidden"
+              }`}
+            >
+              <div className="left-bar-icon clr-neutral-800 d-flex">
+                <Exit />
+              </div>
+              <h4 className={`clr-neutral-800 fw-default`}>Log out</h4>
             </div>
           </div>
           <div>

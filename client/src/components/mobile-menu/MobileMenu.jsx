@@ -1,17 +1,23 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import { PF } from "../../config";
+import { AuthContext } from "../../context/AuthContext";
 import {
   ProfileOutline,
   BookmarkOutline,
-  MoreRoundOutline,
+  DisplayOutline,
+  Exit,
 } from "../../utils/icons/icons";
+import AlertDialog from "../alert-dialog/AlertDialog";
 import ThemeDialog from "../theme-dialog/ThemeDialog";
 import "./mobile-menu.scss";
 
 const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
   const [openDialog, setOpenDialog] = useState(false);
+  const [openDialogLogout, setOpenDialogLogout] = useState(false);
+
+  const { dispatch } = useContext(AuthContext);
 
   const dialogParams = {
     title: "Delete Post?",
@@ -19,6 +25,13 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
       "This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from search results.",
     colorButton: "bg-accent-red",
     textButton: "Delete",
+  };
+  const dialogParamsLogout = {
+    title: "Log out of Twittle?",
+    content:
+      "You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.",
+    colorButton: "bg-neutral-800",
+    textButton: "Log out",
   };
 
   return (
@@ -78,8 +91,16 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
         <div onClick={() => setOpenDialog(true)}>
           <Link>
             <div className="fs-600 clr-neutral-800">
-              <MoreRoundOutline />
-              <h4>More</h4>
+              <DisplayOutline />
+              <h4>Display</h4>
+            </div>
+          </Link>
+        </div>
+        <div onClick={() => setOpenDialogLogout(true)}>
+          <Link>
+            <div className="fs-600 clr-neutral-800">
+              <Exit />
+              <h4>Log out</h4>
             </div>
           </Link>
         </div>
@@ -88,6 +109,15 @@ const MobileMenu = ({ isMenuHidden, setIsMenuHidden, user }) => {
         openDialog={openDialog}
         setOpenDialog={setOpenDialog}
         dialogParams={dialogParams}
+      />
+      <AlertDialog
+        openDialog={openDialogLogout}
+        setOpenDialog={setOpenDialogLogout}
+        dialogParams={dialogParamsLogout}
+        dialogAction={() => {
+          localStorage.setItem("token", "");
+          dispatch({ type: "LOGOUT" });
+        }}
       />
     </div>
   );

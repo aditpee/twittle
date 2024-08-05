@@ -145,7 +145,8 @@ body {
             background-color: $color-accent-red;
           }
           &.bg-neutral-800 {
-            background-color: $color-neutral-800;
+            background-color: var(--color-default, $color-neutral-800);
+            color: var(--border-color-avatar, $color-neutral-000);
           }
         }
         &.cancel-dialog-button {
