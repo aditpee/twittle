@@ -54,10 +54,10 @@
   }
 
   &:has(:is(input, textarea):not(:placeholder-shown):valid) {
-    border-color: $color-primary-000;
-    outline: 1px solid $color-primary-000;
+    border-color: $color-accent-blue;
+    outline: 1px solid $color-accent-blue;
     label:not(.twittle-input-icon) {
-      color: $color-primary-000;
+      color: $color-accent-blue;
     }
   }
   &:has(:is(input, textarea):not(:placeholder-shown):invalid) {

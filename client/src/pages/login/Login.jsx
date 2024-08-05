@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./login.scss";
 import { PF } from "../../config";
 import { LoginCall } from "../../apiCalls";
@@ -160,7 +160,9 @@ const Login = () => {
         </form>
         <p className="fs-300 clr-neutral-800 text-left">
           Don’t have an account?{" "}
-          <span className="clr-primary-000">Sign up</span>
+          <Link to={"/register"} replace={true} className="clr-accent-blue">
+            Sign up
+          </Link>
         </p>
       </div>
     </main>

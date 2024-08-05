@@ -21,7 +21,7 @@ const Welcome = () => {
             </h2>
             <div className="welcome-wrapper-button flow-sm">
               <Link to={"/register"}>
-                <button className="welcome-button primary fs-300 bg-primary-000 clr-neutral-000 fw-bold radius-2">
+                <button className="welcome-button primary fs-300 bg-accent-blue clr-accent-white fw-bold radius-2">
                   Create Account
                 </button>
               </Link>
