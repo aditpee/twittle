@@ -47,8 +47,10 @@ router.get("/all", async (req, res) => {
 router.get("/follow", verifyJwt, async (req, res) => {
   try {
     const user = await User.findById(req.userId);
+    const userId = new mongoose.Types.ObjectId(req.userId);
+
     const post = await Post.aggregate([
-      { $match: { userId: { $in: [...user.followings, req.userId] } } },
+      { $match: { userId: { $in: [...user.followings, userId] } } },
       { $sort: { createdAt: -1 } },
       { $skip: Number(req.query.offset * req.query.limit) },
       { $limit: Number(req.query.limit) },

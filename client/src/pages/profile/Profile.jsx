@@ -283,7 +283,7 @@ const Profile = () => {
       }
     };
     fetchData();
-  }, [token, username, currentUser, page]);
+  }, [token, username, currentUser._id, page]);
 
   // const PageEmpty = ({ title, subTitle }) => (
   //   <div className="profile-empty">
