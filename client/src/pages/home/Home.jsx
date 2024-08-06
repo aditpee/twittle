@@ -50,10 +50,6 @@ const Home = () => {
       const res = await axios.get(API_URL + "/api/posts/all?offset=0&limit=10");
       setPosts(res.data);
       res.data.length < 10 ? setHasMore(false) : setHasMore(true);
-
-      if (!user.followings.length) {
-        setHasMore(false);
-      }
     } catch (err) {
       console.log(err);
     }
@@ -164,24 +160,23 @@ const Home = () => {
             </div>
           </div>
         </nav>
-        {user.followings.length ||
-          (isPostAll && (
-            <InfiniteScroll
-              // scrollableTarget={"home-scrollable"}
-              dataLength={posts.length}
-              next={isPostAll ? fetchMoreData : fetchMoreDataFollow}
-              hasMore={hasMore}
-              loader={<Loader />}
-              scrollThreshold={0.5}
-            >
-              <section className="timelines">
-                {!isPhoneScreen && <PostForm setPosts={setPosts} />}
-                {posts.map((post) => (
-                  <Post key={post._id} post={post} />
-                ))}
-              </section>
-            </InfiniteScroll>
-          ))}
+        {(user.followings.length || isPostAll) && (
+          <InfiniteScroll
+            // scrollableTarget={"home-scrollable"}
+            dataLength={posts.length}
+            next={isPostAll ? fetchMoreData : fetchMoreDataFollow}
+            hasMore={hasMore}
+            loader={<Loader />}
+            scrollThreshold={0.5}
+          >
+            <section className="timelines">
+              {!isPhoneScreen && <PostForm setPosts={setPosts} />}
+              {posts.map((post) => (
+                <Post key={post._id} post={post} />
+              ))}
+            </section>
+          </InfiniteScroll>
+        )}
         {!user.followings.length && (
           <PageEmpty
             title={`Welcome to Twittle!`}
