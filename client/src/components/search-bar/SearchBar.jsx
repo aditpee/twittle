@@ -8,8 +8,9 @@ import "./search-bar.scss";
 import { API_URL, PF } from "../../config";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDebouncedCallback } from "use-debounce";
+import { Verified } from "@mui/icons-material";
 
 const SearchBar = ({ setIsSearchClicked, query }) => {
   const [searchValue, setSearchValue] = useState(query?.q ? query.q : "");
@@ -126,15 +127,24 @@ const SearchBar = ({ setIsSearchClicked, query }) => {
                     />
                   </div>
                   <div>
-                    <p className="fs-400 clr-neutral-800 fw-bold">
-                      {user?.name}
-                    </p>
+                    <div className="fs-400 clr-neutral-800 fw-bold d-flex align-center">
+                      <p>{user?.name}</p>
+                      {user?.verifiedAccount && (
+                        <span className="verified-icon d-flex margin-inline-start-1">
+                          <Verified />
+                        </span>
+                      )}
+                    </div>
                     <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
                   </div>
                 </div>
               </div>
             ))}
-            <p className="fs-200 clr-neutral-800">{"go to @" + searchValue}</p>
+            <div>
+              <Link to={`/${searchValue}`} className="fs-200 clr-neutral-800">
+                {"go to @" + searchValue}
+              </Link>
+            </div>
           </>
         ) : (
           <div>

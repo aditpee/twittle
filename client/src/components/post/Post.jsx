@@ -10,6 +10,7 @@ import {
   MoreHoriz,
   Repost,
   RepostOutline,
+  Verified,
 } from "../../utils/icons/icons";
 import "./post.scss";
 import { useContext } from "react";
@@ -213,7 +214,7 @@ const Post = ({ post, type }) => {
             </p>
           </div>
         )}
-        <div className="post-container">
+        <Link className="post-container">
           <div className="post-avatar">
             {!isLoadingPost ? (
               <img
@@ -230,8 +231,13 @@ const Post = ({ post, type }) => {
               <div>
                 <div className="post-desc">
                   <Link to={`/${user?.username}`}>
-                    <h4 className="fs-300 fw-bold clr-neutral-800">
-                      {user?.name || ""}
+                    <h4 className="fs-300 fw-bold clr-neutral-800 d-flex align-center">
+                      <span>{user?.name || ""}</span>
+                      {user?.verifiedAccount && (
+                        <span className="verified-icon d-flex margin-inline-start-1">
+                          <Verified />
+                        </span>
+                      )}
                     </h4>
                   </Link>
                   <div>
@@ -353,7 +359,7 @@ const Post = ({ post, type }) => {
               </div>
             )}
           </div>
-        </div>
+        </Link>
       </div>
     </>
   );

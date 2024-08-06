@@ -49,7 +49,7 @@ body[data-bg="dim"] {
   }
   --text-default-color: hsl(180, 14.29%, 97.25%);
 
-  :is(.home-nav, .explore-nav, .profile-header) {
+  :is(.home-nav, .explore-nav, .profile-header, .postdetails-header) {
     background: rgba(hsl(210, 34.38%, 12.55%), 0.9);
   }
 }
@@ -98,7 +98,7 @@ body[data-bg="black"] {
   }
   --text-default-color: hsl(200 6.67% 91.18%);
 
-  :is(.home-nav, .explore-nav, .profile-header) {
+  :is(.home-nav, .explore-nav, .profile-header, .postdetails-header) {
     background: rgba(hsl(0deg 0% 0%), 0.9);
   }
 }

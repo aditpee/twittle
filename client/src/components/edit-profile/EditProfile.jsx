@@ -327,14 +327,14 @@ const EditProfile = ({ showModal, setShowModal, user }) => {
           <div className="edit-profile-header">
             <div
               onClick={handleClose}
-              className="edit-profile-close clr-neutral-800"
+              className="edit-profile-close clr-neutral-800 pointer"
             >
               <ArrowBack />
             </div>
             <div>
               <button
                 disabled={isLoadingEdit}
-                className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-start-3"
+                className="fs-300 fw-bold padding-block-2 padding-inline-4 radius-2 clr-neutral-000 bg-neutral-800 margin-inline-start-3 pointer"
               >
                 Save
               </button>

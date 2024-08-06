@@ -1,4 +1,4 @@
-import { MoreHoriz } from "@mui/icons-material";
+import { MoreHoriz, Verified } from "@mui/icons-material";
 import axios from "axios";
 import { useEffect } from "react";
 import { useRef } from "react";
@@ -99,9 +99,14 @@ const RightBar = () => {
                   </Link>
                   <div>
                     <Link to={`/${user?.username}`}>
-                      <p className="fs-400 clr-neutral-800 fw-bold">
-                        {user?.name}
-                      </p>
+                      <div className="fs-400 clr-neutral-800 fw-bold d-flex align-center">
+                        <p>{user?.name}</p>
+                        {user?.verifiedAccount && (
+                          <span className="verified-icon d-flex margin-inline-start-1">
+                            <Verified />
+                          </span>
+                        )}
+                      </div>
                     </Link>
                     <Link to={`/${user?.username}`}>
                       <p className="fs-300 clr-neutral-600">{`@${user?.username}`}</p>
@@ -111,7 +116,7 @@ const RightBar = () => {
                 <button
                   disabled={isLoadingFollow}
                   onClick={() => handleFollow(user)}
-                  className="fs-200 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2"
+                  className="fs-200 fw-bold bg-neutral-800 clr-neutral-000 padding-inline-4 padding-block-2 radius-2 pointer"
                 >
                   {currentUser?.followings.includes(user?._id)
                     ? "Following"

@@ -288,11 +288,11 @@ const PostDetails = () => {
             scrollDir === "down" ? "hidden" : ""
           } postdetails-header padding-block-3`}
         >
-          <Link to={-1} className="d-flex">
+          <Link to={-1} className="d-flex clr-neutral-800">
             <ArrowBack />
           </Link>
           <div className="postdetails-header-content">
-            <p className="fs-400 fw-bold">Post</p>
+            <p className="fs-400 fw-bold clr-neutral-800">Post</p>
           </div>
         </header>
         {originPost && <Post post={originPost} />}
@@ -386,7 +386,9 @@ const PostDetails = () => {
               </>
             )}
             {!isLoadingPage && post?.text && (
-              <p style={{ fontSize: "17px" }}>{post.text}</p>
+              <p style={{ fontSize: "17px" }} className="clr-neutral-800">
+                {post.text}
+              </p>
             )}
             {!isLoadingPage && post?.image && (
               <div className="postdetails-img margin-block-start-3">

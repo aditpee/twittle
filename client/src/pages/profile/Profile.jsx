@@ -541,7 +541,7 @@ const Profile = () => {
                     {currentUser.username === user?.username ? (
                       <button
                         onClick={() => setShowModalEdit(true)}
-                        className="fs-400 clr-neutral-800 fw-bold"
+                        className="fs-400 clr-neutral-800 fw-bold pointer"
                       >
                         Edit profile
                       </button>
