@@ -65,8 +65,6 @@ const RightBar = () => {
     fetchData();
   }, [token]);
 
-  console.log(users);
-
   return (
     <section className="right-bar">
       <div className="right-bar-container flow">
