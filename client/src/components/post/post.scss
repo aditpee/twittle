@@ -8,6 +8,10 @@
   &.remove {
     display: none;
   }
+
+  &:hover {
+    background-color: var(--card-hover, rgba(hsl(0deg 0% 0%), 0.02));
+  }
 }
 
 .post-avatar {

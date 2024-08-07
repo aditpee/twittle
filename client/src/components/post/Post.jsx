@@ -20,14 +20,16 @@ import PropTypes from "prop-types";
 import PostMenu from "../PostMenu/PostMenu";
 import { toast } from "react-toastify";
 import useFormatTime from "../../utils/hooks/useFormatTime";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Skeleton } from "@mui/material";
 import PostModal from "../post-modal/PostModal";
 
 const Post = ({ post, type }) => {
+  const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const { token, user: currentUser } = useContext(AuthContext);
   const postRef = useRef();
+  const postContainerRef = useRef();
   const [isLoadingPost, setIsLoadingPost] = useState(true);
   const { username } = useParams();
 
@@ -46,9 +48,9 @@ const Post = ({ post, type }) => {
 
   const [showModalComment, setShowModalComment] = useState(false);
 
-  const handleLike = async () => {
+  const handleLike = async (e) => {
+    e.stopPropagation();
     if (likes?.includes(currentUser?._id)) {
-      console.log(postRef);
       // remove id from likes
       setIsLiked(false);
       setLikes((prev) => prev.filter((id) => id !== currentUser._id));
@@ -75,7 +77,8 @@ const Post = ({ post, type }) => {
     }
   };
 
-  const handleRetweet = async () => {
+  const handleRetweet = async (e) => {
+    e.stopPropagation();
     if (retweets?.some((obj) => obj.userId === currentUser?._id)) {
       // remove id from likes
       setIsRetweeted(false);
@@ -203,7 +206,13 @@ const Post = ({ post, type }) => {
         originPost={post}
         isModal={true}
       />
-      <div ref={postRef} className="post">
+      <div
+        onClick={() => {
+          navigate(`/${user?.username}/status/${post._id}`);
+        }}
+        ref={postRef}
+        className="post"
+      >
         {!isLoadingPost && post.isRetweet && (
           <div className="post-mark clr-neutral-600">
             <Repost />
@@ -214,22 +223,36 @@ const Post = ({ post, type }) => {
             </p>
           </div>
         )}
-        <Link className="post-container">
-          <div className="post-avatar">
-            {!isLoadingPost ? (
-              <img
-                className="radius-circle hidden"
-                src={user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"}
-                alt=""
-              />
-            ) : (
-              <Skeleton variant="circular" width={40} height={40} />
-            )}
-          </div>
+        <div ref={postContainerRef} className="post-container">
+          <Link
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            to={`/${user?.username}`}
+          >
+            <div className="post-avatar">
+              {!isLoadingPost ? (
+                <img
+                  className="radius-circle hidden"
+                  src={
+                    user?.avatar ? user?.avatar : PF + "/images/no-avatar.svg"
+                  }
+                  alt=""
+                />
+              ) : (
+                <Skeleton variant="circular" width={40} height={40} />
+              )}
+            </div>
+          </Link>
           <div className="post-content">
             {!isLoadingPost ? (
               <div>
-                <div className="post-desc">
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="post-desc"
+                >
                   <Link to={`/${user?.username}`}>
                     <h4 className="fs-300 fw-bold clr-neutral-800 d-flex align-center">
                       <span>{user?.name || ""}</span>
@@ -253,7 +276,11 @@ const Post = ({ post, type }) => {
                   </div>
                 </div>
                 {type !== "theme" && (
-                  <div>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                    }}
+                  >
                     <PostMenu
                       postUser={user}
                       currentUser={currentUser}
@@ -310,7 +337,10 @@ const Post = ({ post, type }) => {
             {!isLoadingPost && type !== "theme" && (
               <div className="post-info">
                 <div
-                  onClick={() => setShowModalComment(true)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setShowModalComment(true);
+                  }}
                   className="post-comment pointer clr-neutral-600"
                 >
                   <div className="post-icon d-flex">
@@ -346,12 +376,22 @@ const Post = ({ post, type }) => {
                     {likes.length > 0 && likes.length}
                   </span>
                 </div>
-                <div className="post-bookmark pointer clr-neutral-600">
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="post-bookmark pointer clr-neutral-600"
+                >
                   <div className="post-icon d-flex">
                     <Analytic />
                   </div>
                 </div>
-                <div className="post-bookmark pointer clr-neutral-600">
+                <div
+                  onClick={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="post-bookmark pointer clr-neutral-600"
+                >
                   <div className="post-icon d-flex">
                     <BookmarkOutline />
                   </div>
@@ -359,7 +399,7 @@ const Post = ({ post, type }) => {
               </div>
             )}
           </div>
-        </Link>
+        </div>
       </div>
     </>
   );
