@@ -224,13 +224,13 @@ const Post = ({ post, type }) => {
           </div>
         )}
         <div ref={postContainerRef} className="post-container">
-          <Link
+          <div
             onClick={(e) => {
               e.stopPropagation();
             }}
-            to={`/${user?.username}`}
+            className="post-avatar"
           >
-            <div className="post-avatar">
+            <Link to={`/${user?.username}`}>
               {!isLoadingPost ? (
                 <img
                   className="radius-circle hidden"
@@ -242,8 +242,8 @@ const Post = ({ post, type }) => {
               ) : (
                 <Skeleton variant="circular" width={40} height={40} />
               )}
-            </div>
-          </Link>
+            </Link>
+          </div>
           <div className="post-content">
             {!isLoadingPost ? (
               <div>
